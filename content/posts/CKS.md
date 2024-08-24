@@ -6,34 +6,23 @@ description = "This blog is a summary of the first chapter from CKS Exam (Certif
 +++
 
 
-## Table of Content
+## Overview
 
-- [[#Using Network Policies to Restrict Pod-to-Pod Communication|Using Network Policies to Restrict Pod-to-Pod Communication]]
-	- [[#Using Network Policies to Restrict Pod-to-Pod Communication#Attacker gain initial access to a Pod|Attacker gain initial access to a Pod]]
-	- [[#Using Network Policies to Restrict Pod-to-Pod Communication#Denying Directional Network Traffic|Denying Directional Network Traffic]]
-- [[#Run CIS Benchmark to identify security risks for cluster components|Run CIS Benchmark to identify security risks for cluster components]]
-- [[#Creating an Ingress with TLS Termination|Creating an Ingress with TLS Termination]]
-	- [[#Creating an Ingress with TLS Termination#Deploy service and pods|Deploy service and pods]]
-	- [[#Creating an Ingress with TLS Termination#Create TLS Certificate and Key|Create TLS Certificate and Key]]
-	- [[#Creating an Ingress with TLS Termination#Creating the TLS-Typed Secret:|Creating the TLS-Typed Secret:]]
-	- [[#Creating an Ingress with TLS Termination#Create Ingress:|Create Ingress:]]
-		- [[#Create Ingress:#Securing Internal Communication (Pod-To-Pod):|Securing Internal Communication (Pod-To-Pod):]]
-- [[#Protecting Node Metadata and Endpoints|Protecting Node Metadata and Endpoints]]
-- [[#Protecting GUI Elements|Protecting GUI Elements]]
-	- [[#Protecting GUI Elements#Creating a User with Administration Privileges|Creating a User with Administration Privileges]]
-	- [[#Protecting GUI Elements#Creating a User with Restricted Privileges|Creating a User with Restricted Privileges]]
-	- [[#Protecting GUI Elements#Avoiding Insecure Configuration Arguments|Avoiding Insecure Configuration Arguments]]
-- [[#Verifying Kubernetes Platform Binaries|Verifying Kubernetes Platform Binaries]]
-- [[#Summary|Summary]]
-		- [[#Avoiding Insecure Configuration Arguments#Understand the Purpose and Effects of Network Policies|Understand the Purpose and Effects of Network Policies]]
-		- [[#Avoiding Insecure Configuration Arguments#Practice the Use of `kube-bench` to Detect Cluster Component Vulnerabilities|Practice the Use of `kube-bench` to Detect Cluster Component Vulnerabilities]]
-		- [[#Avoiding Insecure Configuration Arguments#Know How to Configure Ingress with TLS Termination**|Know How to Configure Ingress with TLS Termination**]]
-		- [[#Avoiding Insecure Configuration Arguments#Know How to Configure GUI Elements for Secure Access**|Know How to Configure GUI Elements for Secure Access**]]
-		- [[#Avoiding Insecure Configuration Arguments#Know How to Detect Modified Platform Binaries|Know How to Detect Modified Platform Binaries]]
+![image](https://flowhero.github.io/assets/images/shemas/2024_08_24_150951.png)
 
 
+The first domain of the exam (**Cluster Setup**) delves into the security-specific aspects of setting up and configuring Kubernetes clusters, distinct from the broader responsibilities of a Kubernetes administrator. This chapter focuses on advanced security considerations, assuming a foundational understanding of Kubernetes.
 
-![image](https://flowhero.github.io/assets/images/shemas/2024_08_17_192014.png)
+At a high level, the chapter addresses the following key areas:
+
+- **Implementing Network Policies**: Restricting Pod-to-Pod communication within and across namespaces to minimize the attack surface.
+- **Using CIS Benchmark Tools**: Identifying and addressing security risks within cluster components by running automated tools like kube-bench.
+- **Configuring Ingress with TLS**: Setting up Ingress objects with Transport Layer Security (TLS) termination to secure external access.
+- **Securing Cluster Components**: Protecting node ports, API endpoints, and graphical user interfaces (GUIs) to prevent unauthorized access.
+- **Validating Platform Binaries**: Ensuring the integrity of Kubernetes binaries such as kubectl, kubeadm, and kubelet by verifying their checksums to detect any tampering.
+
+This blog is a practical summary of everything covered in this chapter.
+
 
 ## Using Network Policies to Restrict Pod-to-Pod Communication
 

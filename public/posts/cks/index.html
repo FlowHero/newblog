@@ -140,44 +140,18 @@
   
 
   <div class="post-content"><div>
-        <h2 id="table-of-content">Table of Content<a href="#table-of-content" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+        <h2 id="overview">Overview<a href="#overview" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p><img src="https://flowhero.github.io/assets/images/shemas/2024_08_24_150951.png" alt="image"></p>
+<p>The first domain of the exam (<strong>Cluster Setup</strong>) delves into the security-specific aspects of setting up and configuring Kubernetes clusters, distinct from the broader responsibilities of a Kubernetes administrator. This chapter focuses on advanced security considerations, assuming a foundational understanding of Kubernetes.</p>
+<p>At a high level, the chapter addresses the following key areas:</p>
 <ul>
-<li>[[#Using Network Policies to Restrict Pod-to-Pod Communication|Using Network Policies to Restrict Pod-to-Pod Communication]]
-<ul>
-<li>[[#Using Network Policies to Restrict Pod-to-Pod Communication#Attacker gain initial access to a Pod|Attacker gain initial access to a Pod]]</li>
-<li>[[#Using Network Policies to Restrict Pod-to-Pod Communication#Denying Directional Network Traffic|Denying Directional Network Traffic]]</li>
+<li><strong>Implementing Network Policies</strong>: Restricting Pod-to-Pod communication within and across namespaces to minimize the attack surface.</li>
+<li><strong>Using CIS Benchmark Tools</strong>: Identifying and addressing security risks within cluster components by running automated tools like kube-bench.</li>
+<li><strong>Configuring Ingress with TLS</strong>: Setting up Ingress objects with Transport Layer Security (TLS) termination to secure external access.</li>
+<li><strong>Securing Cluster Components</strong>: Protecting node ports, API endpoints, and graphical user interfaces (GUIs) to prevent unauthorized access.</li>
+<li><strong>Validating Platform Binaries</strong>: Ensuring the integrity of Kubernetes binaries such as kubectl, kubeadm, and kubelet by verifying their checksums to detect any tampering.</li>
 </ul>
-</li>
-<li>[[#Run CIS Benchmark to identify security risks for cluster components|Run CIS Benchmark to identify security risks for cluster components]]</li>
-<li>[[#Creating an Ingress with TLS Termination|Creating an Ingress with TLS Termination]]
-<ul>
-<li>[[#Creating an Ingress with TLS Termination#Deploy service and pods|Deploy service and pods]]</li>
-<li>[[#Creating an Ingress with TLS Termination#Create TLS Certificate and Key|Create TLS Certificate and Key]]</li>
-<li>[[#Creating an Ingress with TLS Termination#Creating the TLS-Typed Secret:|Creating the TLS-Typed Secret:]]</li>
-<li>[[#Creating an Ingress with TLS Termination#Create Ingress:|Create Ingress:]]
-<ul>
-<li>[[#Create Ingress:#Securing Internal Communication (Pod-To-Pod):|Securing Internal Communication (Pod-To-Pod):]]</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>[[#Protecting Node Metadata and Endpoints|Protecting Node Metadata and Endpoints]]</li>
-<li>[[#Protecting GUI Elements|Protecting GUI Elements]]
-<ul>
-<li>[[#Protecting GUI Elements#Creating a User with Administration Privileges|Creating a User with Administration Privileges]]</li>
-<li>[[#Protecting GUI Elements#Creating a User with Restricted Privileges|Creating a User with Restricted Privileges]]</li>
-<li>[[#Protecting GUI Elements#Avoiding Insecure Configuration Arguments|Avoiding Insecure Configuration Arguments]]</li>
-</ul>
-</li>
-<li>[[#Verifying Kubernetes Platform Binaries|Verifying Kubernetes Platform Binaries]]</li>
-<li>[[#Summary|Summary]]
-- [[#Avoiding Insecure Configuration Arguments#Understand the Purpose and Effects of Network Policies|Understand the Purpose and Effects of Network Policies]]
-- [[#Avoiding Insecure Configuration Arguments#Practice the Use of <code>kube-bench</code> to Detect Cluster Component Vulnerabilities|Practice the Use of <code>kube-bench</code> to Detect Cluster Component Vulnerabilities]]
-- [[#Avoiding Insecure Configuration Arguments#Know How to Configure Ingress with TLS Termination**|Know How to Configure Ingress with TLS Termination**]]
-- [[#Avoiding Insecure Configuration Arguments#Know How to Configure GUI Elements for Secure Access**|Know How to Configure GUI Elements for Secure Access**]]
-- [[#Avoiding Insecure Configuration Arguments#Know How to Detect Modified Platform Binaries|Know How to Detect Modified Platform Binaries]]</li>
-</ul>
-<p><img src="https://flowhero.github.io/assets/images/shemas/2024_08_17_192014.png" alt="image"></p>
+<p>This blog is a practical summary of everything covered in this chapter.</p>
 <h2 id="using-network-policies-to-restrict-pod-to-pod-communication">Using Network Policies to Restrict Pod-to-Pod Communication<a href="#using-network-policies-to-restrict-pod-to-pod-communication" class="hanchor" ariaLabel="Anchor">#</a> </h2>
 <p>For a Microservice architecture to function in Kubernetes, a Pod needs to be able to communicate with another pod running on same or different node without NAT. Kubernetes assign IP to a pod upon creation from the pod CIDR range of its node, the IP is ephemeral (not stable overtime), every restart of a pod leases a new IP Address.
 It&rsquo;s recommended to use Pod-to-Service Communication over Pod-to-Pod communication so that you can rely on a consistent Network Interface.</p>
