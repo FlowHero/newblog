@@ -772,14 +772,14 @@ weaknesses.&lt;/p&gt;
       <pubDate>Sun, 13 Aug 2023 11:47:29 +0100</pubDate>
       
       <guid>https://flowhero.github.io/newblog/posts/jwts-attacks/</guid>
-      <description>Toolkits jwt.io hashcat JSON Web Key Burp Extension jwt_tool.py rsa_sign2n I - JWKS common locations If you don&amp;rsquo;t know what JWTs are yet, please check https://jwt.io/introduction, it&amp;rsquo;ll take you about 5 minutes to read.
+      <description>Toolkits jwt.io hashcat JSON Web Key Burpsuite Extension jwt_tool.py rsa_sign2n I - JWKS common locations If you don&amp;rsquo;t know what JWTs are yet, please check https://jwt.io/introduction, it&amp;rsquo;ll take you about 5 minutes to read.
 First thing we can do, is looking for any exposed JWTs keys (or set of keys) on common locations (JSON Web Key Store) file. Some common locations for this would be:
 /.well-known/jwks.json /openid/connect/jwks.json /jwks.json /api/keys /api/v1/keys To automate this, you can use common.</description>
       <content>&lt;h2 id=&#34;toolkits&#34;&gt;Toolkits&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://jwt.io&#34;&gt;jwt.io&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;hashcat&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;JSON Web Key&lt;/code&gt; Burp Extension&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;JSON Web Key&lt;/code&gt; Burpsuite Extension&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;jwt_tool.py&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;rsa_sign2n&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
