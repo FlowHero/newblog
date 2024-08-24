@@ -454,14 +454,9 @@ aws_session_token=IQoJb3JpZ2luX....
       <pubDate>Tue, 22 Aug 2023 00:40:26 +0100</pubDate>
       
       <guid>https://flowhero.github.io/newblog/posts/fuzzing-apis/</guid>
-      <description>title = &amp;lsquo;CKS&amp;rsquo; date = 2024-08-23T23:17:59+01:00 draft = false +++
-1 - Toolkits wfuzz Burp Intruder Postman’s Collection Runner 2 - Goal We’ll cover two strategies to increase your success:
+      <description>1 - Toolkits wfuzz Burp Intruder Postman’s Collection Runner 2 - Goal We’ll cover two strategies to increase your success:
 Fuzzing wide and fuzzing deep. How to fuzz for improper assets management vulnerabilities, find the accepted HTTP methods for a request, and bypass input sanitization. 3 - What is API Fuzzing ? API fuzzing is the process of sending requests with various types of input to an endpoint in order to provoke an unintended result.</description>
-      <content>&lt;p&gt;title = &amp;lsquo;CKS&amp;rsquo;
-date = 2024-08-23T23:17:59+01:00
-draft = false
-+++&lt;/p&gt;
-&lt;h2 id=&#34;1---toolkits&#34;&gt;1 - Toolkits&lt;/h2&gt;
+      <content>&lt;h2 id=&#34;1---toolkits&#34;&gt;1 - Toolkits&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;wfuzz&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;Burp Intruder&lt;/code&gt;&lt;/li&gt;
@@ -1491,28 +1486,6 @@ uname -a
 If you want to scan in pitchfork mode, add the &lt;code&gt;-mode pitchfork&lt;/code&gt; flag to your command:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ffuf -u http://targetwebsite.com -w /path/to/list/username.txt:FUZZ1 -w /path/to/list/password.txt:FUZZ2 -X POST -d &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;username=FUZZ1&amp;amp;passwd=FUZZ2&amp;amp;submit=Submit&amp;#39;&lt;/span&gt; -H &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Content-Type: application/x-www-form-urlencoded&amp;#39;&lt;/span&gt; -mode pitchfork
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
-    </item>
-    
-    <item>
-      <title>Hello Friend</title>
-      <link>https://flowhero.github.io/newblog/posts/hello/</link>
-      <pubDate>Fri, 25 Jan 2019 00:00:00 +0000</pubDate>
-      
-      <guid>https://flowhero.github.io/newblog/posts/hello/</guid>
-      <description>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec interdum metus. Aenean rutrum ligula sodales ex auctor, sed tempus dui mollis. Curabitur ipsum dui, aliquet nec commodo at, tristique eget ante. Donec quis dolor nec nunc mollis interdum vel in purus. Sed vitae leo scelerisque, sollicitudin elit sed, congue ante. In augue nisl, vestibulum commodo est a, tristique porttitor est. Proin laoreet iaculis ornare. Nullam ut neque quam.
-Fusce pharetra suscipit orci nec tempor.</description>
-      <content>&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec interdum metus. Aenean rutrum ligula sodales ex auctor, sed tempus dui mollis. Curabitur ipsum dui, aliquet nec commodo at, tristique eget ante. &lt;strong&gt;Donec quis dolor nec nunc mollis interdum vel in purus&lt;/strong&gt;. Sed vitae leo scelerisque, sollicitudin elit sed, congue ante. In augue nisl, vestibulum commodo est a, tristique porttitor est. Proin laoreet iaculis ornare. Nullam ut neque quam.&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;Fusce pharetra suscipit orci nec tempor. Quisque vitae sem sit amet sem mollis consequat. Sed at imperdiet lorem. Vestibulum pharetra faucibus odio, ac feugiat tellus sollicitudin at. Pellentesque varius tristique mi imperdiet dapibus. Duis orci odio, sodales lacinia venenatis sit amet, feugiat et diam.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;Sed a leo id risus venenatis vulputate non quis nulla. Aenean nisl quam, lacinia pulvinar orci sit amet, eleifend eleifend dui. Nulla tempor ligula leo, eu vehicula quam condimentum a. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla gravida tristique nunc sed semper. Morbi nec felis odio.&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Sed efficitur, lacus ac scelerisque pellentesque, lectus risus dignissim nisl, fermentum semper lectus diam eget lacus.&lt;/li&gt;
-&lt;li&gt;Nunc ornare purus enim, id eleifend mauris vestibulum volutpat.&lt;/li&gt;
-&lt;li&gt;Aenean facilisis ut ipsum condimentum ultrices.&lt;/li&gt;
-&lt;li&gt;Fusce sed metus vulputate, lobortis purus et, finibus purus. Suspendisse quis posuere lorem. Vivamus vulputate nec risus in pulvinar.&lt;/li&gt;
-&lt;/ul&gt;
-</content>
     </item>
     
   </channel>
