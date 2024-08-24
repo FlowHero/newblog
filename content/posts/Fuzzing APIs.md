@@ -6,12 +6,6 @@ description = "Deep dive into API Fuzzing w/ Postman, Burp & Wfuzz."
 +++
 
 
-title = 'CKS'
-date = 2024-08-23T23:17:59+01:00
-draft = false
-+++
-
-
 ## 1 - Toolkits 
 
 - `wfuzz`

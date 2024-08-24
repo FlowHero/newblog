@@ -454,14 +454,9 @@ aws_session_token=IQoJb3JpZ2luX....
       <pubDate>Tue, 22 Aug 2023 00:40:26 +0100</pubDate>
       
       <guid>http://localhost:1313/newblog/posts/fuzzing-apis/</guid>
-      <description>title = &amp;lsquo;CKS&amp;rsquo; date = 2024-08-23T23:17:59+01:00 draft = false +++
-1 - Toolkits wfuzz Burp Intruder Postman’s Collection Runner 2 - Goal We’ll cover two strategies to increase your success:
+      <description>1 - Toolkits wfuzz Burp Intruder Postman’s Collection Runner 2 - Goal We’ll cover two strategies to increase your success:
 Fuzzing wide and fuzzing deep. How to fuzz for improper assets management vulnerabilities, find the accepted HTTP methods for a request, and bypass input sanitization. 3 - What is API Fuzzing ? API fuzzing is the process of sending requests with various types of input to an endpoint in order to provoke an unintended result.</description>
-      <content>&lt;p&gt;title = &amp;lsquo;CKS&amp;rsquo;
-date = 2024-08-23T23:17:59+01:00
-draft = false
-+++&lt;/p&gt;
-&lt;h2 id=&#34;1---toolkits&#34;&gt;1 - Toolkits&lt;/h2&gt;
+      <content>&lt;h2 id=&#34;1---toolkits&#34;&gt;1 - Toolkits&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;wfuzz&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;Burp Intruder&lt;/code&gt;&lt;/li&gt;
