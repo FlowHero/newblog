@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Docs on My New Hugo Site</title>
-    <link>http://localhost:59468/docs/</link>
+    <link>http://localhost:1313/newblog/docs/</link>
     <description>Recent content in Docs on My New Hugo Site</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 23 Aug 2024 23:17:59 +0100</lastBuildDate><atom:link href="http://localhost:59468/docs/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 23 Aug 2024 23:17:59 +0100</lastBuildDate><atom:link href="http://localhost:1313/newblog/docs/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>CKS</title>
-      <link>http://localhost:59468/docs/cks/</link>
+      <link>http://localhost:1313/newblog/docs/cks/</link>
       <pubDate>Fri, 23 Aug 2024 23:17:59 +0100</pubDate>
       
-      <guid>http://localhost:59468/docs/cks/</guid>
+      <guid>http://localhost:1313/newblog/docs/cks/</guid>
       <description>[[#Using Network Policies to Restrict Pod-to-Pod Communication|Using Network Policies to Restrict Pod-to-Pod Communication]] [[#Using Network Policies to Restrict Pod-to-Pod Communication#Attacker gain initial access to a Pod|Attacker gain initial access to a Pod]] [[#Using Network Policies to Restrict Pod-to-Pod Communication#Denying Directional Network Traffic|Denying Directional Network Traffic]] [[#Run CIS Benchmark to identify security risks for cluster components|Run CIS Benchmark to identify security risks for cluster components]] [[#Creating an Ingress with TLS Termination|Creating an Ingress with TLS Termination]] [[#Creating an Ingress with TLS Termination#Deploy service and pods|Deploy service and pods]] [[#Creating an Ingress with TLS Termination#Create TLS Certificate and Key|Create TLS Certificate and Key]] [[#Creating an Ingress with TLS Termination#Creating the TLS-Typed Secret:|Creating the TLS-Typed Secret:]] [[#Creating an Ingress with TLS Termination#Create Ingress:|Create Ingress:]] [[#Create Ingress:#Securing Internal Communication (Pod-To-Pod):|Securing Internal Communication (Pod-To-Pod):]] [[#Protecting Node Metadata and Endpoints|Protecting Node Metadata and Endpoints]] [[#Protecting GUI Elements|Protecting GUI Elements]] [[#Protecting GUI Elements#Creating a User with Administration Privileges|Creating a User with Administration Privileges]] [[#Protecting GUI Elements#Creating a User with Restricted Privileges|Creating a User with Restricted Privileges]] [[#Protecting GUI Elements#Avoiding Insecure Configuration Arguments|Avoiding Insecure Configuration Arguments]] [[#Verifying Kubernetes Platform Binaries|Verifying Kubernetes Platform Binaries]] [[#Summary|Summary]] - [[#Avoiding Insecure Configuration Arguments#Understand the Purpose and Effects of Network Policies|Understand the Purpose and Effects of Network Policies]] - [[#Avoiding Insecure Configuration Arguments#Practice the Use of kube-bench to Detect Cluster Component Vulnerabilities|Practice the Use of kube-bench to Detect Cluster Component Vulnerabilities]] - [[#Avoiding Insecure Configuration Arguments#Know How to Configure Ingress with TLS Termination**|Know How to Configure Ingress with TLS Termination**]] - [[#Avoiding Insecure Configuration Arguments#Know How to Configure GUI Elements for Secure Access**|Know How to Configure GUI Elements for Secure Access**]] - [[#Avoiding Insecure Configuration Arguments#Know How to Detect Modified Platform Binaries|Know How to Detect Modified Platform Binaries]] !</description>
       <content>&lt;ul&gt;
 &lt;li&gt;[[#Using Network Policies to Restrict Pod-to-Pod Communication|Using Network Policies to Restrict Pod-to-Pod Communication]]

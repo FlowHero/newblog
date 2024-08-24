@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on My New Hugo Site</title>
-    <link>http://localhost:59468/posts/</link>
+    <link>http://localhost:1313/newblog/posts/</link>
     <description>Recent content in Posts on My New Hugo Site</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 25 Jan 2019 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:59468/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 25 Jan 2019 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/newblog/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Hello Friend</title>
-      <link>http://localhost:59468/posts/hello/</link>
+      <link>http://localhost:1313/newblog/posts/hello/</link>
       <pubDate>Fri, 25 Jan 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:59468/posts/hello/</guid>
+      <guid>http://localhost:1313/newblog/posts/hello/</guid>
       <description>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec interdum metus. Aenean rutrum ligula sodales ex auctor, sed tempus dui mollis. Curabitur ipsum dui, aliquet nec commodo at, tristique eget ante. Donec quis dolor nec nunc mollis interdum vel in purus. Sed vitae leo scelerisque, sollicitudin elit sed, congue ante. In augue nisl, vestibulum commodo est a, tristique porttitor est. Proin laoreet iaculis ornare. Nullam ut neque quam.
 Fusce pharetra suscipit orci nec tempor.</description>
       <content>&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec interdum metus. Aenean rutrum ligula sodales ex auctor, sed tempus dui mollis. Curabitur ipsum dui, aliquet nec commodo at, tristique eget ante. &lt;strong&gt;Donec quis dolor nec nunc mollis interdum vel in purus&lt;/strong&gt;. Sed vitae leo scelerisque, sollicitudin elit sed, congue ante. In augue nisl, vestibulum commodo est a, tristique porttitor est. Proin laoreet iaculis ornare. Nullam ut neque quam.&lt;/p&gt;

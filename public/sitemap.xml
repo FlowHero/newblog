@@ -2,29 +2,29 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:59468/docs/cks/</loc>
+    <loc>http://localhost:1313/newblog/docs/cks/</loc>
     <lastmod>2024-08-23T23:17:59+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:59468/docs/</loc>
+    <loc>http://localhost:1313/newblog/docs/</loc>
     <lastmod>2024-08-23T23:17:59+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:59468/</loc>
+    <loc>http://localhost:1313/newblog/</loc>
     <lastmod>2024-08-23T23:17:59+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:59468/showcase/</loc>
+    <loc>http://localhost:1313/newblog/showcase/</loc>
     <lastmod>2019-03-11T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:59468/about/</loc>
+    <loc>http://localhost:1313/newblog/about/</loc>
     <lastmod>2019-01-25T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:59468/posts/hello/</loc>
+    <loc>http://localhost:1313/newblog/posts/hello/</loc>
     <lastmod>2019-01-25T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:59468/posts/</loc>
+    <loc>http://localhost:1313/newblog/posts/</loc>
     <lastmod>2019-01-25T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:59468/categories/</loc>
+    <loc>http://localhost:1313/newblog/categories/</loc>
   </url><url>
-    <loc>http://localhost:59468/tags/</loc>
+    <loc>http://localhost:1313/newblog/tags/</loc>
   </url>
 </urlset>
