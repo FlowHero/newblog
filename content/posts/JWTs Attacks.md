@@ -9,7 +9,7 @@ description = "Explore the most common JWTs Attacks !"
 
 - [jwt.io](https://jwt.io)
 - `hashcat`
-- `JSON Web Key` Burp Extension
+- `JSON Web Key` Burpsuite Extension
 - `jwt_tool.py`
 - `rsa_sign2n`
 
