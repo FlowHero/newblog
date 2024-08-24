@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/newblog/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=newblog/livereload" data-no-instant defer></script>
+  
+    <title>CKS :: My New Hugo Site</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="[[#Using Network Policies to Restrict Pod-to-Pod Communication|Using Network Policies to Restrict Pod-to-Pod Communication]] [[#Using Network Policies to Restrict Pod-to-Pod Communication#Attacker gain initial access to a Pod|Attacker gain initial access to a Pod]] [[#Using Network Policies to Restrict Pod-to-Pod Communication#Denying Directional Network Traffic|Denying Directional Network Traffic]] [[#Run CIS Benchmark to identify security risks for cluster components|Run CIS Benchmark to identify security risks for cluster components]] [[#Creating an Ingress with TLS Termination|Creating an Ingress with TLS Termination]] [[#Creating an Ingress with TLS Termination#Deploy service and pods|Deploy service and pods]] [[#Creating an Ingress with TLS Termination#Create TLS Certificate and Key|Create TLS Certificate and Key]] [[#Creating an Ingress with TLS Termination#Creating the TLS-Typed Secret:|Creating the TLS-Typed Secret:]] [[#Creating an Ingress with TLS Termination#Create Ingress:|Create Ingress:]] [[#Create Ingress:#Securing Internal Communication (Pod-To-Pod):|Securing Internal Communication (Pod-To-Pod):]] [[#Protecting Node Metadata and Endpoints|Protecting Node Metadata and Endpoints]] [[#Protecting GUI Elements|Protecting GUI Elements]] [[#Protecting GUI Elements#Creating a User with Administration Privileges|Creating a User with Administration Privileges]] [[#Protecting GUI Elements#Creating a User with Restricted Privileges|Creating a User with Restricted Privileges]] [[#Protecting GUI Elements#Avoiding Insecure Configuration Arguments|Avoiding Insecure Configuration Arguments]] [[#Verifying Kubernetes Platform Binaries|Verifying Kubernetes Platform Binaries]] [[#Summary|Summary]] - [[#Avoiding Insecure Configuration Arguments#Understand the Purpose and Effects of Network Policies|Understand the Purpose and Effects of Network Policies]] - [[#Avoiding Insecure Configuration Arguments#Practice the Use of kube-bench to Detect Cluster Component Vulnerabilities|Practice the Use of kube-bench to Detect Cluster Component Vulnerabilities]] - [[#Avoiding Insecure Configuration Arguments#Know How to Configure Ingress with TLS Termination**|Know How to Configure Ingress with TLS Termination**]] - [[#Avoiding Insecure Configuration Arguments#Know How to Configure GUI Elements for Secure Access**|Know How to Configure GUI Elements for Secure Access**]] - [[#Avoiding Insecure Configuration Arguments#Know How to Detect Modified Platform Binaries|Know How to Detect Modified Platform Binaries]] !" />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="http://localhost:1313/newblog/posts/cks/" />
+
+
+  
+
+
+
+
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/buttons.min.3be0bba9fe18b5b77c8fe97175a5ff803eb3b8d6b94a4c43e6c842bc229040f1.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/code.min.00125962708925857e7b66dbc58391d55be1191a3d0ce2034de8c9cd2c481c36.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/fonts.min.90c955c31dd7c0e05aae3d4f583d4d8a2af799d69c961337eaf2a825063a55dd.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/footer.min.2e3eb191baee58dd05a9f0104ac1fab0827bca7c64dafe0b2579f934c33a1d69.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/gist.min.a751e8b0abe1ba8bc53ced52a38b19d8950fe78ca29454ea8c2595cf26aad5c0.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/header.min.b6fb4423cf82a9f9d7abc9cd010223fa3d70a6526a3f28f8e17d814c06e18f9e.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/main.min.1d8be2dd1b5de9fdaed058c8c59fcf4485f36619574abfb47ed0cfda4812c16d.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/menu.min.83637a90d903026bc280d3f82f96ceb06c5fc72b7c1a8d686afb5bbf818a29f7.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/pagination.min.82f6400eae7c7c6dc3c866733c2ec0579e4089608fea69400ff85b3880aa0d3c.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/post.min.ae96bd858b485e91dd4d30f50f4298bdc371cb1a2a55dcfa043d76a6c95b59b0.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/prism.min.9023bbc24533d09e97a51a0a42a5a7bfe4c591ae167c5551fb1d2191d11977c0.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/syntax.min.cc789ed9377260d7949ea4c18781fc58959a89287210fe4edbff44ebfc1511b6.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/terminal.min.fa7e148bd9d175a5fda1e62ea44a0e535f3bb05f7634ec615154cccbe71b3a9a.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/terms.min.b81791663c3790e738e571cdbf802312390d30e4b1d8dc9d814a5b5454d0ac11.css">
+
+
+
+
+
+
+
+<link rel="shortcut icon" href="http://localhost:1313/newblog/favicon.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/newblog/apple-touch-icon.png">
+
+
+<meta name="twitter:card" content="summary" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="CKS">
+<meta property="og:description" content="[[#Using Network Policies to Restrict Pod-to-Pod Communication|Using Network Policies to Restrict Pod-to-Pod Communication]] [[#Using Network Policies to Restrict Pod-to-Pod Communication#Attacker gain initial access to a Pod|Attacker gain initial access to a Pod]] [[#Using Network Policies to Restrict Pod-to-Pod Communication#Denying Directional Network Traffic|Denying Directional Network Traffic]] [[#Run CIS Benchmark to identify security risks for cluster components|Run CIS Benchmark to identify security risks for cluster components]] [[#Creating an Ingress with TLS Termination|Creating an Ingress with TLS Termination]] [[#Creating an Ingress with TLS Termination#Deploy service and pods|Deploy service and pods]] [[#Creating an Ingress with TLS Termination#Create TLS Certificate and Key|Create TLS Certificate and Key]] [[#Creating an Ingress with TLS Termination#Creating the TLS-Typed Secret:|Creating the TLS-Typed Secret:]] [[#Creating an Ingress with TLS Termination#Create Ingress:|Create Ingress:]] [[#Create Ingress:#Securing Internal Communication (Pod-To-Pod):|Securing Internal Communication (Pod-To-Pod):]] [[#Protecting Node Metadata and Endpoints|Protecting Node Metadata and Endpoints]] [[#Protecting GUI Elements|Protecting GUI Elements]] [[#Protecting GUI Elements#Creating a User with Administration Privileges|Creating a User with Administration Privileges]] [[#Protecting GUI Elements#Creating a User with Restricted Privileges|Creating a User with Restricted Privileges]] [[#Protecting GUI Elements#Avoiding Insecure Configuration Arguments|Avoiding Insecure Configuration Arguments]] [[#Verifying Kubernetes Platform Binaries|Verifying Kubernetes Platform Binaries]] [[#Summary|Summary]] - [[#Avoiding Insecure Configuration Arguments#Understand the Purpose and Effects of Network Policies|Understand the Purpose and Effects of Network Policies]] - [[#Avoiding Insecure Configuration Arguments#Practice the Use of kube-bench to Detect Cluster Component Vulnerabilities|Practice the Use of kube-bench to Detect Cluster Component Vulnerabilities]] - [[#Avoiding Insecure Configuration Arguments#Know How to Configure Ingress with TLS Termination**|Know How to Configure Ingress with TLS Termination**]] - [[#Avoiding Insecure Configuration Arguments#Know How to Configure GUI Elements for Secure Access**|Know How to Configure GUI Elements for Secure Access**]] - [[#Avoiding Insecure Configuration Arguments#Know How to Detect Modified Platform Binaries|Know How to Detect Modified Platform Binaries]] !" />
+<meta property="og:url" content="http://localhost:1313/newblog/posts/cks/" />
+<meta property="og:site_name" content="My New Hugo Site" />
+
+  <meta property="og:image" content="http://localhost:1313/newblog/og-image.png">
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+  <meta property="article:published_time" content="2024-08-23 23:17:59 &#43;0100 &#43;01" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body>
+
+
+<div class="container">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="http://localhost:1313/newblog/">
+  <div class="logo">
+    Terminal
+  </div>
+</a>
+
+    </div>
+    
+    
+  </div>
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="http://localhost:1313/newblog/posts/cks/">CKS</a>
+  </h1>
+  <div class="post-meta"><time class="post-date">2024-08-23</time></div>
+
+  
+  
+
+
+  
+
+  <div class="post-content"><div>
+        <ul>
+<li>[[#Using Network Policies to Restrict Pod-to-Pod Communication|Using Network Policies to Restrict Pod-to-Pod Communication]]
+<ul>
+<li>[[#Using Network Policies to Restrict Pod-to-Pod Communication#Attacker gain initial access to a Pod|Attacker gain initial access to a Pod]]</li>
+<li>[[#Using Network Policies to Restrict Pod-to-Pod Communication#Denying Directional Network Traffic|Denying Directional Network Traffic]]</li>
+</ul>
+</li>
+<li>[[#Run CIS Benchmark to identify security risks for cluster components|Run CIS Benchmark to identify security risks for cluster components]]</li>
+<li>[[#Creating an Ingress with TLS Termination|Creating an Ingress with TLS Termination]]
+<ul>
+<li>[[#Creating an Ingress with TLS Termination#Deploy service and pods|Deploy service and pods]]</li>
+<li>[[#Creating an Ingress with TLS Termination#Create TLS Certificate and Key|Create TLS Certificate and Key]]</li>
+<li>[[#Creating an Ingress with TLS Termination#Creating the TLS-Typed Secret:|Creating the TLS-Typed Secret:]]</li>
+<li>[[#Creating an Ingress with TLS Termination#Create Ingress:|Create Ingress:]]
+<ul>
+<li>[[#Create Ingress:#Securing Internal Communication (Pod-To-Pod):|Securing Internal Communication (Pod-To-Pod):]]</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>[[#Protecting Node Metadata and Endpoints|Protecting Node Metadata and Endpoints]]</li>
+<li>[[#Protecting GUI Elements|Protecting GUI Elements]]
+<ul>
+<li>[[#Protecting GUI Elements#Creating a User with Administration Privileges|Creating a User with Administration Privileges]]</li>
+<li>[[#Protecting GUI Elements#Creating a User with Restricted Privileges|Creating a User with Restricted Privileges]]</li>
+<li>[[#Protecting GUI Elements#Avoiding Insecure Configuration Arguments|Avoiding Insecure Configuration Arguments]]</li>
+</ul>
+</li>
+<li>[[#Verifying Kubernetes Platform Binaries|Verifying Kubernetes Platform Binaries]]</li>
+<li>[[#Summary|Summary]]
+- [[#Avoiding Insecure Configuration Arguments#Understand the Purpose and Effects of Network Policies|Understand the Purpose and Effects of Network Policies]]
+- [[#Avoiding Insecure Configuration Arguments#Practice the Use of <code>kube-bench</code> to Detect Cluster Component Vulnerabilities|Practice the Use of <code>kube-bench</code> to Detect Cluster Component Vulnerabilities]]
+- [[#Avoiding Insecure Configuration Arguments#Know How to Configure Ingress with TLS Termination**|Know How to Configure Ingress with TLS Termination**]]
+- [[#Avoiding Insecure Configuration Arguments#Know How to Configure GUI Elements for Secure Access**|Know How to Configure GUI Elements for Secure Access**]]
+- [[#Avoiding Insecure Configuration Arguments#Know How to Detect Modified Platform Binaries|Know How to Detect Modified Platform Binaries]]</li>
+</ul>
+<p>![[Capture d’écran 2024-08-17 192014.png]]</p>
+<h2 id="using-network-policies-to-restrict-pod-to-pod-communication">Using Network Policies to Restrict Pod-to-Pod Communication<a href="#using-network-policies-to-restrict-pod-to-pod-communication" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>For a Microservice architecture to function in Kubernetes, a Pod needs to be able to communicate with another pod running on same or different node without NAT. Kubernetes assign IP to a pod upon creation from the pod CIDR range of its node, the IP is ephemeral (not stable overtime), every restart of a pod leases a new IP Address.
+It&rsquo;s recommended to use Pod-to-Service Communication over Pod-to-Pod communication so that you can rely on a consistent Network Interface.</p>
+<p>The IP of a pod is unique across different nodes and namespaces. This is achieved by assigning a dedicated subnet to every node when registering it.</p>
+<p>Newly created pod will then get an ip from the subnet of the node, this is handled by CNI plugin</p>
+<p>Pods on a node can communicate with all other pods running on any other node of the cluster.</p>
+<ul>
+<li><a href="https://networkpolicy.io/">https://networkpolicy.io/</a> : Provide a visual editor for network policies that renders a graphical representation in the browser</li>
+</ul>
+<h3 id="attacker-gain-initial-access-to-a-pod">Attacker gain initial access to a Pod<a href="#attacker-gain-initial-access-to-a-pod" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<p>![[Capture d’écran 2024-08-17 193605.png]]</p>
+<p>Without defining Network Policies, Attacker can talk to all pods and cause additional damage.</p>
+<h3 id="denying-directional-network-traffic">Denying Directional Network Traffic<a href="#denying-directional-network-traffic" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<p>The best way to restrict Pod-to-Pod network traffic is with the principle of least privilege</p>
+<p>Setup the cluster on <code>ng04.yml</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yml" data-lang="yml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Namespace</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">labels</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">app</span>: <span style="color:#ae81ff">orion</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">g04</span>
+</span></span><span style="display:flex;"><span>---
+</span></span><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Pod</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">labels</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">tier</span>: <span style="color:#ae81ff">backend</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">backend</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">g04</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">containers</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">image</span>: <span style="color:#ae81ff">bmuschko/nodejs-hello-world:1.0.0</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">name</span>: <span style="color:#ae81ff">hello</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">ports</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">containerPort</span>: <span style="color:#ae81ff">3000</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">restartPolicy</span>: <span style="color:#ae81ff">Never</span>
+</span></span><span style="display:flex;"><span>---
+</span></span><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Pod</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">labels</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">tier</span>: <span style="color:#ae81ff">frontend</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">frontend</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">g04</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">containers</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">image</span>: <span style="color:#ae81ff">alpine</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">name</span>: <span style="color:#ae81ff">frontend</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">args</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#ae81ff">/bin/sh</span>
+</span></span><span style="display:flex;"><span>    - -<span style="color:#ae81ff">c</span>
+</span></span><span style="display:flex;"><span>    - <span style="color:#ae81ff">while true; do sleep 5; done;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">restartPolicy</span>: <span style="color:#ae81ff">Never</span>
+</span></span><span style="display:flex;"><span>---
+</span></span><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Pod</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">labels</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">tier</span>: <span style="color:#ae81ff">outside</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">other</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">containers</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">image</span>: <span style="color:#ae81ff">alpine</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">name</span>: <span style="color:#ae81ff">other</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">args</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#ae81ff">/bin/sh</span>
+</span></span><span style="display:flex;"><span>    - -<span style="color:#ae81ff">c</span>
+</span></span><span style="display:flex;"><span>    - <span style="color:#ae81ff">while true; do sleep 5; done;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">restartPolicy</span>: <span style="color:#ae81ff">Never</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>kubectl apply -f ng04.yml
+</span></span></code></pre></div><p>Verify that the pods are up and running:</p>
+<p>![[Capture d’écran 2024-08-18 222913.png]]</p>
+<p>![[Capture d’écran 2024-08-18 222953.png]]</p>
+<p>The cluster have 2 pods on g04 namespace and a pod on default namespace.
+By default communication is allowed between these pods, even though the namespace is different.</p>
+<p>To test the connectivity from frontend to backend:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>kubectl exec frontend -it -n g04 -- /bin/sh
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>/ <span style="color:#75715e"># wget --spider --timeout=1 10.0.0.43:3000 </span>
+</span></span><span style="display:flex;"><span>Connecting to 10.0.0.43:3000 <span style="color:#f92672">(</span>10.0.0.43:3000<span style="color:#f92672">)</span> 
+</span></span><span style="display:flex;"><span>remote file exists
+</span></span><span style="display:flex;"><span>/ <span style="color:#75715e"># exit</span>
+</span></span></code></pre></div><p>same applies from other to backend:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>kubectl exec other -it -- /bin/sh 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>/ <span style="color:#75715e"># wget --spider --timeout=1 10.0.0.43:3000 </span>
+</span></span><span style="display:flex;"><span>Connecting to 10.0.0.43:3000 <span style="color:#f92672">(</span>10.0.0.43:3000<span style="color:#f92672">)</span> 
+</span></span><span style="display:flex;"><span>remote file exists 
+</span></span><span style="display:flex;"><span>/ <span style="color:#75715e"># exit</span>
+</span></span></code></pre></div><p>Let&rsquo;s now apply the default deny all ingress traffic policy.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yml" data-lang="yml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">networking.k8s.io/v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">NetworkPolicy</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">default-deny-all</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">g04</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">podSelector</span>: {}
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">policyTypes</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">Ingress</span>
+</span></span></code></pre></div><p>Selecting all Pods is denoted by the value <code>{}</code> assigned to the <code>spec.podSelector</code> attribute. The value attribute <code>spec.policyTypes</code> defines the denied direction of traffic. For incoming traffic, you can add <em>Ingress</em> to the array. Outgoing traffic can be specified by the value <em>Egress</em>. In this particular example, we disallow all ingress traffic. Egress traffic is still permitted.</p>
+<p>You’d usually start by disallowing traffic in any direction and then opening up the traffic needed by the application architecture.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>kubectl apply -f deny-all-ingress-network-policy.yaml
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>networkpolicy.networking.k8s.io/default-deny-ingress created
+</span></span></code></pre></div><p>Pod-to-pod connectivity is now denied:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>kubectl exec frontend -it -n g04 -- /bin/sh
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>/ <span style="color:#75715e"># wget --spider --timeout=1 10.0.0.43:3000 </span>
+</span></span><span style="display:flex;"><span>Connecting to 10.0.0.43:3000 <span style="color:#f92672">(</span>10.0.0.43:3000<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>wget: download timed out
+</span></span><span style="display:flex;"><span>/ <span style="color:#75715e"># exit</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>kubectl exec other -it -- /bin/sh 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>/ <span style="color:#75715e"># wget --spider --timeout=1 10.0.0.43:3000 </span>
+</span></span><span style="display:flex;"><span>Connecting to 10.0.0.43:3000 <span style="color:#f92672">(</span>10.0.0.43:3000<span style="color:#f92672">)</span> 
+</span></span><span style="display:flex;"><span>wget: download timed out
+</span></span><span style="display:flex;"><span>/ <span style="color:#75715e"># exit</span>
+</span></span></code></pre></div><p>Now we&rsquo;ll use the namespace label (orion) and pod label (frontend), and port 3000, and add them to the policy to be the only one who could talk to backend:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yml" data-lang="yml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">networking.k8s.io/v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">NetworkPolicy</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">backend-ingress</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">g04</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">podSelector</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">matchLabels</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">tier</span>: <span style="color:#ae81ff">backend</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">policyTypes</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">Ingress</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">ingress</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">from</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">namespaceSelector</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">matchLabels</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">app</span>: <span style="color:#ae81ff">orion</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">podSelector</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">matchLabels</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">tier</span>: <span style="color:#ae81ff">frontend</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">ports</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">protocol</span>: <span style="color:#ae81ff">TCP</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">port</span>: <span style="color:#ae81ff">3000</span>
+</span></span></code></pre></div><p>This is how the network policy look like now:
+Frontend &ndash;&gt; Backend , Port: 3000 ✅ Allow
+Other &ndash;&gt; Backend ❌ Deny</p>
+<h2 id="run-cis-benchmark-to-identify-security-risks-for-cluster-components">Run CIS Benchmark to identify security risks for cluster components<a href="#run-cis-benchmark-to-identify-security-risks-for-cluster-components" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>To run CIS benchmark on Control Plane:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>kubectl apply -f https://raw.githubusercontent.com/aquasecurity/kube-bench/main/job-master.yaml
+</span></span></code></pre></div><p>![[Capture d’écran 2024-08-18 230627.png]]</p>
+<p>Upon Job execution, the corresponding Pod running the verification process can be identified by its name in the default namespace. The Pod’s name starts with the prefix kube-bench, then appended with the type of the node plus a hash at the end.</p>
+<p>Wait until the Pod transitions into the “Completed” status to ensure that all verifica‐ tion checks have finished. You can have a look at the benchmark result by dumping the logs of the Pod. A more convenient way would be to redirect logs to a file.</p>
+<p>To see pods in a different POV:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>minikube ssh
+</span></span><span style="display:flex;"><span>docker ps
+</span></span></code></pre></div><h2 id="creating-an-ingress-with-tls-termination">Creating an Ingress with TLS Termination<a href="#creating-an-ingress-with-tls-termination" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>![[Capture d’écran 2024-08-18 132607.png]]</p>
+<p>It’s important to point out that the communication typically uses unencrypted HTTP network communication as soon as it passes the Ingress.</p>
+<p>Configuring the Ingress for HTTPS communication relieves you from having to deal with securing the network communication on the Service level. In this section, we will learn how to create a TLS certificate and key, how to feed the certificate and key to a TLS-typed Secret object, and how to configure an Ingress object so that it supports HTTPS communication</p>
+<h3 id="deploy-service-and-pods">Deploy service and pods<a href="#deploy-service-and-pods" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<p>In the context of an Ingress, a backend is the combination of Service name and port. Before creating the Ingress, we’ll take care of the Service, a Deployment, and the Pods running nginx so we can later on demonstrate the routing of HTTPS traffic to an actual application. All of those objects are supposed to exist in the namespace t75. <code>t75.yml</code> defines all of those resources as a means to quickly create the Ingress backend.</p>
+<p>![[Capture d’écran 2024-08-18 115911.png]]</p>
+<p>This command runs a one-off Pod named <code>tmp</code> with the <code>busybox</code> image. It does not automatically restart if the container exits and will be deleted after the command completes. Inside this Pod, it executes <code>wget</code> to attempt a connection to the IP address <code>10.107.8.33</code> on port <code>80</code>, which is useful for testing network connectivity or checking if a web server is reachable from within the cluster.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>kubectl run tmp --image<span style="color:#f92672">=</span>busybox --restart<span style="color:#f92672">=</span>Never -it --rm -- wget 10.107.8.33:80
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Connecting to 10.107.8.33:80 <span style="color:#f92672">(</span>10.107.8.33:80<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>saving to <span style="color:#e6db74">&#39;index.html&#39;</span>
+</span></span><span style="display:flex;"><span>index.html           100% |********************************|   <span style="color:#ae81ff">612</span>  0:00:00 ETA
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;index.html&#39;</span> saved
+</span></span><span style="display:flex;"><span>pod <span style="color:#e6db74">&#34;tmp&#34;</span> deleted
+</span></span></code></pre></div><h3 id="create-tls-certificate-and-key">Create TLS Certificate and Key<a href="#create-tls-certificate-and-key" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$env:OPENSSL_CONF <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;C:\Program Files\Git\usr\ssl\openssl.cnf
+</span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>openssl req -nodes -new -x509 -keyout accounting.key -out accounting.crt -subj <span style="color:#e6db74">&#34;/CN=accounting.tls&#34;</span>
+</span></span></code></pre></div><p>This command generates a new self-signed TLS certificate and private key without encrypting the key. The certificate will have the Common Name (CN) set to <code>accounting.tls</code>, and the files will be saved as <code>accounting.key</code> and <code>accounting.crt</code>, respectively.</p>
+<p>Here’s what each file is used for:</p>
+<ul>
+<li><strong><code>accounting.key</code></strong>: The private key used to sign the certificate.</li>
+<li><strong><code>accounting.crt</code></strong>: The self-signed certificate that can be used for SSL/TLS connections.</li>
+</ul>
+<p>For use in production environments, you’d generate a key file and use it to obtain a TLS certificate from a certificate authority (CA). For more information on creating a TLS certification and key.</p>
+<h3 id="creating-the-tls-typed-secret">Creating the TLS-Typed Secret:<a href="#creating-the-tls-typed-secret" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<p>using kubectl will automatically base64 encode the tls certificate accounting.crt.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>kubectl create secret tls accounting-secret --cert<span style="color:#f92672">=</span>accounting.crt key<span style="color:#f92672">=</span>accounting.key -n t75
+</span></span></code></pre></div><p>or you can manually base64 encode it then put it on a yaml then apply the tls secret.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yml" data-lang="yml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Secret</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">accounting-secret</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">t75</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">type</span>: <span style="color:#ae81ff">kubernetes.io/tls</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">data</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">tls.crt</span>: <span style="color:#ae81ff">LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk...</span> <span style="color:#75715e"># (Truncated base64-encoded certificate data)</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">tls.key</span>: <span style="color:#ae81ff">LS0tLS1CRUdJTiBQUklWVRFIEtFWS0tLS0tCk...</span> <span style="color:#75715e"># (Truncated base64-encoded private key data)</span>
+</span></span></code></pre></div><p>This command will create a Kubernetes Secret named <code>accounting-secret</code> in the <code>t75</code> namespace. The Secret will contain the TLS certificate and private key that you generated earlier. This Secret can be used by Kubernetes resources like Ingress controllers or Pods to secure communications using SSL/TLS.</p>
+<h3 id="create-ingress">Create Ingress:<a href="#create-ingress" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<pre tabindex="0"><code class="language-ad-info" data-lang="ad-info">*Ingress*, *LoadBalancer*, and *NodePort* are all ways of exposing services within your K8S cluster for external consumption.
+
+An ingress controller acts as a reverse proxy and load balancer inside the Kubernetes cluster. It provides an entry point for external traffic based on the defined Ingress rules. Without the Ingress Controller, Ingress resources won’t work.
+
+The Ingress Controller doesn’t run automatically with a Kubernetes cluster, so you will need to configure your own. An ingress controller is typically a reverse web proxy server implementation in the cluster.
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>kubectl apply -f accounting-ingress.yml
+</span></span></code></pre></div><p>![[Capture d’écran 2024-08-18 120222.png]]</p>
+<p>or with kubectl:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>kubectl create ingress accounting-ingress <span style="color:#ae81ff">\ </span>--rule<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;accounting.internal.acme.com/*=accounting-service:80, \ tls=accounting-secret&#34;</span> -n t75
+</span></span></code></pre></div><p>the port 443 is listed in the “PORT” column, indicating that TLS termination has been enabled.</p>
+<p>Creating an ingress object with no ingress controller in place will result in the following outpout:</p>
+<p>![[Capture d’écran 2024-08-18 123006.png]]</p>
+<p>your ingress object will not get an ip address.</p>
+<p>so we first need to create an ingress controller which will be type: LoadBalancer, then the ingress object will get an ip from this LB.</p>
+<p>to install the ingress controller:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.3.0/deploy/static/provider/cloud/deploy.yaml
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl get service ingress-nginx-controller --namespace<span style="color:#f92672">=</span>ingress-nginx
+</span></span></code></pre></div><p>![[Capture d’écran 2024-08-18 123146.png]]</p>
+<p>Now your ingress object will get an ip:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>kubectl get ingress accounting-ingress -n t75 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>NAME                 CLASS   HOSTS                          ADDRESS         PORTS     AGE
+</span></span><span style="display:flex;"><span>accounting-ingress   nginx   accounting.internal.acme.com   10.102.150.36   80, <span style="color:#ae81ff">443</span>   10m
+</span></span></code></pre></div><p>or for more details on the ingress object, use describe:</p>
+<p>![[Capture d’écran 2024-08-18 123415.png]]</p>
+<p>add this line to your hosts file, for windows it&rsquo;s on <code>C:\Windows\system32\drivers\etc\hosts</code>:</p>
+<pre tabindex="0"><code>10.102.150.36 accounting.internal.acme.com 
+</code></pre><p>![[Capture d’écran 2024-08-18 124233.png]]</p>
+<ul>
+<li><strong>Encryption Provided by TLS:</strong> The TLS configuration in the Ingress resource only encrypts traffic from external clients to the Ingress controller.</li>
+<li><strong>Internal Communication (Service to Pod):</strong> Within the Kubernetes cluster, communication between services and pods remains unencrypted unless additional measures are taken.</li>
+</ul>
+<h4 id="securing-internal-communication-pod-to-pod">Securing Internal Communication (Pod-To-Pod):<a href="#securing-internal-communication-pod-to-pod" class="hanchor" ariaLabel="Anchor">#</a> </h4>
+<p>If you need to encrypt internal traffic between services and pods (e.g., for sensitive data or compliance reasons), consider the following options:</p>
+<ul>
+<li><strong>mTLS (Mutual TLS):</strong> Implement mTLS using tools like Istio or Linkerd to encrypt traffic within the cluster.</li>
+<li><strong>Service Mesh:</strong> Deploy a service mesh like Istio to manage and enforce encryption policies for inter-service communication.</li>
+<li><strong>Pod-Level TLS:</strong> Implement TLS directly in the applications running in your pods.</li>
+</ul>
+<h2 id="protecting-node-metadata-and-endpoints">Protecting Node Metadata and Endpoints<a href="#protecting-node-metadata-and-endpoints" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>Kubernetes clusters expose ports used to communicate with cluster components. For example, the API server uses the port 6443 by default to enable clients like kubectl to talk to it when executing commands.</p>
+<p>Inbound control plane node ports:</p>
+<p>![[Capture d’écran 2024-08-18 135818.png]]</p>
+<p>Many of those ports are configurable. For example, you can modify the API server port by providing a different value with the flag &ndash;secure-port in the configuration file <code>/etc/kubernetes/manifests/kube-apiserver.yaml</code>, as documented for the cluster component. For all other cluster components, please refer to their corresponding documentation.</p>
+<p>![[Capture d’écran 2024-08-18 135919.png]]</p>
+<p>To secure the ports used by cluster components, set up firewall rules to minimize the attack surface area. For example, you could decide not to expose the API server to anyone outside of the intranet. Clients using kubectl would only be able to run commands against the Kubernetes cluster if logged into the VPN, making the cluster less vulnerable to attacks.</p>
+<p>Cloud provider Kubernetes clusters (e.g., on AWS, Azure, or Google Cloud) expose so-called metadata services. Metadata services are APIs that can provide sensitive data like an authentication token for consumption from VMs or Pods without any additional authorization</p>
+<p>![[Capture d’écran 2024-08-18 140112.png]]</p>
+<p>For example, In AWS, the metadata server can be reached with the IP address 169.254.169.254.</p>
+<p>This link for example is the metadata endpoint of an Ec2 Instance in aws <a href="http://4d0cf09b9b2d761a7d87be99d17507bce8b86f3b.flaws.cloud/proxy/169.254.169.254/latest/meta-data/identity-credentials/ec2/security-credentials/ec2-instance">http://4d0cf09b9b2d761a7d87be99d17507bce8b86f3b.flaws.cloud/proxy/169.254.169.254/latest/meta-data/identity-credentials/ec2/security-credentials/ec2-instance</a></p>
+<p>This is how content would look like:</p>
+<p>![[Capture d’écran 2024-08-18 224321.png]]</p>
+<p>The attacker would then simply create a profile file under  <code>~/.aws/credentials/exploited-endpoint</code></p>
+<pre tabindex="0"><code>[exploited-endpoint]
+aws_acces_key_id=ASIA6GG7PSQG6BYGNVKC
+aws_secret_key_access=Hm2Bcnbgjy+fUUhnLRejnKGTl8AcoIDrNP/HZjfY
+aws_session_token=IQoJb3JpZ2luX....
+</code></pre><p>then run the following line to use this user when using aws cli to interact with the target.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>export AWS_PROFILE<span style="color:#f92672">=</span>exploited-endpoint
+</span></span></code></pre></div><p>To prevent any Pod in a namespace from reaching the IP address of the metadata server, set up a network policy that allows egress traffic to all IP addresses except 169.254.169.254.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yml" data-lang="yml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">networking.k8s.io/v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">NetworkPolicy</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">default-deny-egress-metadata-server</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">a12</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">podSelector</span>: {}
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">policyTypes</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">Egress</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">egress</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">to</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">ipBlock</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">cidr</span>: <span style="color:#ae81ff">0.0.0.0</span><span style="color:#ae81ff">/0</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">except</span>:
+</span></span><span style="display:flex;"><span>        - <span style="color:#ae81ff">169.254.169.254</span><span style="color:#ae81ff">/32</span>
+</span></span></code></pre></div><p>Once the network policy has been created, Pods in the namespace a12 should not be able to reach the metadata endpoints anymore.</p>
+<h2 id="protecting-gui-elements">Protecting GUI Elements<a href="#protecting-gui-elements" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>The kubectl tool isn’t the only user interface (UI) for managing a cluster. While kubectl allows for fine-grained operations, most organizations prefer a more convenient graphical user interface (GUI) for managing the objects of a cluster. You can choose from a variety of options. The Kubernetes <em>Dashboard</em> is a free, web-based application.</p>
+<p>Other GUI dashboards for Kubernetes like <em>Portainer</em> go beyond the basic functionality by adding tracing of events or visualizations of hardware resource consumption. In this section, we’ll focus on the Kubernetes Dashboard as it is easy to install and configure.</p>
+<p>The Kubernetes Dashboard runs as a Pod inside of the cluster.</p>
+<p>In order to install Kubernetes Dashboard simply run:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#75715e"># Add kubernetes-dashboard repository</span>
+</span></span><span style="display:flex;"><span>helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Deploy a Helm Release named &#34;kubernetes-dashboard&#34; using the kubernetes-dashboard chart</span>
+</span></span><span style="display:flex;"><span>helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --create-namespace --namespace kubernetes-dashboard
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>kubectl get deployments,pods,services -n kubernetes-dashboard
+</span></span></code></pre></div><p>![[Capture d’écran 2024-08-18 140834.png]]</p>
+<p>As we can see, kong-proxy type in <em>ClusterIP</em>, which means we can&rsquo;t access it outside the cluster, it needs to be type of <em>NodePort</em> and we need to enable http communication so that we can access it via the browser.</p>
+<p>Create values.yaml:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yml" data-lang="yml"><span style="display:flex;"><span><span style="color:#f92672">kong</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">proxy</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">type</span>: <span style="color:#ae81ff">NodePort</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">http</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">enabled</span>: <span style="color:#66d9ef">true</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>helm upgrade kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard -f values.yaml --namespace kubernetes-dashboard  
+</span></span></code></pre></div><p>![[Capture d’écran 2024-08-18 152814.png]]</p>
+<p>To access Dashboard run:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Forwarding from 127.0.0.1:8443 -&gt; <span style="color:#ae81ff">8443</span>
+</span></span><span style="display:flex;"><span>Forwarding from <span style="color:#f92672">[</span>::1<span style="color:#f92672">]</span>:8443 -&gt; <span style="color:#ae81ff">8443</span>
+</span></span></code></pre></div><p>Now go to <code>https://localhost:8443</code> and it will ask you to prompt the bearer token.</p>
+<p>![[Capture d’écran 2024-08-18 153040.png]]</p>
+<h3 id="creating-a-user-with-administration-privileges">Creating a User with Administration Privileges<a href="#creating-a-user-with-administration-privileges" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<p>Before you can authenticate in the login screen, you need to create a ServiceAccount and ClusterRoleBinding object that grant admin permissions. Start by creating the file admin-user-serviceaccount.yaml .</p>
+<p>![[Capture d’écran 2024-08-18 144426.png]]</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>kubectl create -f admin-user-serviceaccount.yaml
+</span></span><span style="display:flex;"><span>kubectl create -f admin-user-clusterrole<span style="color:#ae81ff">\ </span>binding.yaml
+</span></span></code></pre></div><p>You can now create the bearer token of the admin user with the following command. The command will generate a token for the provided ServiceAccount object and render it on the console.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>kubectl create token admin-user -n kubernetes-dashboard
+</span></span></code></pre></div><p>![[Capture d’écran 2024-08-18 223627.png]]</p>
+<p>Go to the Dashboard and feed it the token to access.</p>
+<p>![[Capture d’écran 2024-08-18 153249.png]]</p>
+<h3 id="creating-a-user-with-restricted-privileges">Creating a User with Restricted Privileges<a href="#creating-a-user-with-restricted-privileges" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<p>In the previous section, you learned how to create a user with cluster-wide admin‐ istrative permissions. Most users of the Dashboard only need a restricted set of per‐ missions, though. For example, developers implementing and operating cloud-native applications will likely only need a subset of administrative permissions to perform their tasks on a Kubernetes cluster.</p>
+<p>Creating a user for the Dashboard with restricted privileges consists of a three-step approach:</p>
+<ol>
+<li>Create a ServiceAccount object.</li>
+<li>Create a ClusterRole object that defines the permissions.</li>
+<li>Create a ClusterRoleBinding that maps the ClusterRole to the ServiceAccount.</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yml" data-lang="yml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">ServiceAccount</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">developer-user</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">kubernetes-dashboard</span>
+</span></span><span style="display:flex;"><span>---
+</span></span><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">rbac.authorization.k8s.io/v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">ClusterRole</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">annotations</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">rbac.authorization.kubernetes.io/autoupdate</span>: <span style="color:#e6db74">&#34;true&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">cluster-developer</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">rules</span>:
+</span></span><span style="display:flex;"><span>- <span style="color:#f92672">apiGroups</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#e6db74">&#39;*&#39;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">resources</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#e6db74">&#39;*&#39;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">verbs</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">get</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">list</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">watch</span>
+</span></span><span style="display:flex;"><span>- <span style="color:#f92672">nonResourceURLs</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#e6db74">&#39;*&#39;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">verbs</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">get</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">list</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">watch</span>
+</span></span><span style="display:flex;"><span>---
+</span></span><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">rbac.authorization.k8s.io/v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">ClusterRoleBinding</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">developer-user</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">roleRef</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">apiGroup</span>: <span style="color:#ae81ff">rbac.authorization.k8s.io</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">kind</span>: <span style="color:#ae81ff">ClusterRole</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">cluster-developer</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">subjects</span>:
+</span></span><span style="display:flex;"><span>- <span style="color:#f92672">kind</span>: <span style="color:#ae81ff">ServiceAccount</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">developer-user</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">kubernetes-dashboard</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>kubectl create token developer-user -n kubernetes-dashboard
+</span></span></code></pre></div><p>![[Capture d’écran 2024-08-18 223352.png]]</p>
+<p>Developer user cannot delete a pod, let&rsquo;s try;</p>
+<p>![[Capture d’écran 2024-08-18 155914.png]]</p>
+<p>An error message rendered when trying to invoke a permitted operation.</p>
+<h3 id="avoiding-insecure-configuration-arguments">Avoiding Insecure Configuration Arguments<a href="#avoiding-insecure-configuration-arguments" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<p>Securing the Dashboard in production environments involves the usage of execution arguments necessary for properly configuring authentication and authorization. By default, login functionality is enabled and the HTTPS endpoint will be exposed on port 8443. You can provide TLS certificates with the &ndash;tls-cert-file and &ndash;tlscert-key command line options if you don’t want them to be auto-generated.</p>
+<p>Avoid setting the command line arguments &ndash;insecure-port to expose an HTTP endpoint and &ndash;enable-insecure-login to enable serving the login page over HTTP instead of HTTPS. Furthermore, make sure you don’t use the option &ndash;enable-skip-login as it would allow circumventing an authentication method by simply clicking a Skip button in the login screen.</p>
+<h2 id="verifying-kubernetes-platform-binaries">Verifying Kubernetes Platform Binaries<a href="#verifying-kubernetes-platform-binaries" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>The Kubernetes project publishes client and server binaries with every release</p>
+<p>The executables kubectl and kubeadm are essential for interacting with Kubernetes. kubectl lets you run commands against the API server.</p>
+<p>Know how to detect modified platform binaries</p>
+<p>Platform binaries like kubectl and kubeadm can be verified against their corresponding hash code. Know where to find the hash file and how to use a validation tool to identify if the binary has been tempered with.</p>
+<p>You can download the corresponding hash code for a binary from <a href="https://dl.k8s.io">https://dl.k8s.io</a>. The full URL for a hash code reflects the version, operating system, and architecture of the binary. The following list shows example URLs for platform binaries compati‐ ble with Linux AMD64:</p>
+<ul>
+<li>kubectl: <a href="https://dl.k8s.io/v1.26.1/bin/linux/amd64/kubectl.sha256">https://dl.k8s.io/v1.26.1/bin/linux/amd64/kubectl.sha256</a></li>
+<li>kubeadm: <a href="https://dl.k8s.io/v1.26.1/bin/linux/amd64/kubeadm.sha256">https://dl.k8s.io/v1.26.1/bin/linux/amd64/kubeadm.sha256</a></li>
+<li>kubelet: <a href="https://dl.k8s.io/v1.26.1/bin/linux/amd64/kubelet.sha256">https://dl.k8s.io/v1.26.1/bin/linux/amd64/kubelet.sha256</a></li>
+<li>kube-apiserver: <a href="https://dl.k8s.io/v1.26.1/bin/linux/amd64/kube-apiserver.sha256">https://dl.k8s.io/v1.26.1/bin/linux/amd64/kube-apiserver.sha256</a></li>
+</ul>
+<p>The following commands demonstrate downloading the kubeadm binary for version 1.26.1 and its corresponding SHA256 hash file:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>curl -LO <span style="color:#e6db74">&#34;https://dl.k8s.io/v1.26.1/bin/linux/amd64/kubeadm&#34;</span> 
+</span></span><span style="display:flex;"><span>curl -LO <span style="color:#e6db74">&#34;https://dl.k8s.io/v1.26.1/bin/linux/amd64/kubeadm.sha256&#34;</span> 
+</span></span></code></pre></div><p>The validation tool shasum can verify if the checksum matches:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>echo <span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span>cat kubeadm.sha256<span style="color:#66d9ef">)</span><span style="color:#e6db74"> kubeadm&#34;</span> | shasum -a <span style="color:#ae81ff">256</span> --check 
+</span></span><span style="display:flex;"><span>kubeadm: OK 
+</span></span></code></pre></div><p>The previous command returned with an “OK” message. The binary file wasn’t tampered with. Any other message indicates a potential security risk when executing the binary</p>
+<h2 id="summary">Summary<a href="#summary" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>![[Capture d’écran 2024-08-18 130827.png]]</p>
+<h4 id="understand-the-purpose-and-effects-of-network-policies">Understand the Purpose and Effects of Network Policies<a href="#understand-the-purpose-and-effects-of-network-policies" class="hanchor" ariaLabel="Anchor">#</a> </h4>
+<ul>
+<li><strong>Default Behavior</strong>: By default, Pod-to-Pod communication is unrestricted.</li>
+<li><strong>Default Deny Rule</strong>: Instantiate a default deny rule to restrict Pod-to-Pod network traffic, applying the principle of least privilege.</li>
+<li><strong>Network Policy Attributes</strong>:
+<ul>
+<li><strong><code>spec.podSelector</code></strong>: Selects the target Pod for the rules based on label selection.</li>
+<li><strong>Ingress and Egress Rules</strong>: Define Pods, namespaces, IP addresses, and ports for allowing incoming and outgoing traffic.</li>
+</ul>
+</li>
+<li><strong>Aggregation of Policies</strong>: Network policies can be aggregated. A default deny rule may disallow ingress and/or egress traffic. Additional policies can open up those rules with more fine-grained definitions.</li>
+</ul>
+<h4 id="practice-the-use-of-kube-bench-to-detect-cluster-component-vulnerabilities">Practice the Use of <code>kube-bench</code> to Detect Cluster Component Vulnerabilities<a href="#practice-the-use-of-kube-bench-to-detect-cluster-component-vulnerabilities" class="hanchor" ariaLabel="Anchor">#</a> </h4>
+<ul>
+<li><strong>Kubernetes CIS Benchmark</strong>: A set of best practices for recommended security settings in a production Kubernetes environment.</li>
+<li><strong>Automation with <code>kube-bench</code></strong>: Automate the detection of security risks using <code>kube-bench</code>.</li>
+<li><strong>Report Interpretation</strong>: The generated report describes detailed remediation actions to fix detected issues. Learn to interpret the results and mitigate issues.</li>
+</ul>
+<h4 id="know-how-to-configure-ingress-with-tls-termination">Know How to Configure Ingress with TLS Termination**<a href="#know-how-to-configure-ingress-with-tls-termination" class="hanchor" ariaLabel="Anchor">#</a> </h4>
+<ul>
+<li><strong>Ingress Configuration</strong>: An Ingress can be configured to expose an HTTPS endpoint to send and receive encrypted data.</li>
+<li><strong>TLS Secret</strong>: Create a TLS Secret object and assign it a TLS certificate and key. The Secret can be consumed by the Ingress using the <code>spec.tls[]</code> attribute.</li>
+</ul>
+<h4 id="know-how-to-configure-gui-elements-for-secure-access">Know How to Configure GUI Elements for Secure Access**<a href="#know-how-to-configure-gui-elements-for-secure-access" class="hanchor" ariaLabel="Anchor">#</a> </h4>
+<ul>
+<li><strong>GUI Protection</strong>: GUI elements, like the Kubernetes Dashboard, must be protected from unauthorized access to prevent potential harm.</li>
+<li><strong>RBAC Configuration</strong>: Properly set up RBAC (Role-Based Access Control) for specific stakeholders.</li>
+<li><strong>Security-Related Command Line Arguments</strong>: Have a rough understanding of security-related command line arguments. Practice installing the Dashboard, tweaking command line arguments, and setting permissions for different users.</li>
+</ul>
+<h4 id="know-how-to-detect-modified-platform-binaries">Know How to Detect Modified Platform Binaries<a href="#know-how-to-detect-modified-platform-binaries" class="hanchor" ariaLabel="Anchor">#</a> </h4>
+<ul>
+<li><strong>Binary Verification</strong>: Platform binaries like <code>kubectl</code> and <code>kubeadm</code> can be verified against their corresponding hash codes.</li>
+<li><strong>Hash Files and Validation</strong>: Know where to find the hash files and how to use validation tools to check if the binaries have been tampered with.</li>
+</ul>
+
+      </div></div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2024 Powered by <a href="https://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/newblog/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

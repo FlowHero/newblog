@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/newblog/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=newblog/livereload" data-no-instant defer></script>
+  
+    <title>Bypassing WAFs :: My New Hugo Site</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Have you ever been blocked by a webserver that you are performing pentesting on ? Check out the best techniques used Bypass WAFs and perform your Bug Hunting/ Pentesting without obstacles !" />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="http://localhost:1313/newblog/posts/bypassing-wafs/" />
+
+
+  
+
+
+
+
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/buttons.min.3be0bba9fe18b5b77c8fe97175a5ff803eb3b8d6b94a4c43e6c842bc229040f1.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/code.min.00125962708925857e7b66dbc58391d55be1191a3d0ce2034de8c9cd2c481c36.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/fonts.min.90c955c31dd7c0e05aae3d4f583d4d8a2af799d69c961337eaf2a825063a55dd.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/footer.min.2e3eb191baee58dd05a9f0104ac1fab0827bca7c64dafe0b2579f934c33a1d69.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/gist.min.a751e8b0abe1ba8bc53ced52a38b19d8950fe78ca29454ea8c2595cf26aad5c0.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/header.min.b6fb4423cf82a9f9d7abc9cd010223fa3d70a6526a3f28f8e17d814c06e18f9e.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/main.min.1d8be2dd1b5de9fdaed058c8c59fcf4485f36619574abfb47ed0cfda4812c16d.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/menu.min.83637a90d903026bc280d3f82f96ceb06c5fc72b7c1a8d686afb5bbf818a29f7.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/pagination.min.82f6400eae7c7c6dc3c866733c2ec0579e4089608fea69400ff85b3880aa0d3c.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/post.min.ae96bd858b485e91dd4d30f50f4298bdc371cb1a2a55dcfa043d76a6c95b59b0.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/prism.min.9023bbc24533d09e97a51a0a42a5a7bfe4c591ae167c5551fb1d2191d11977c0.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/syntax.min.cc789ed9377260d7949ea4c18781fc58959a89287210fe4edbff44ebfc1511b6.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/terminal.min.fa7e148bd9d175a5fda1e62ea44a0e535f3bb05f7634ec615154cccbe71b3a9a.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/newblog/css/terms.min.b81791663c3790e738e571cdbf802312390d30e4b1d8dc9d814a5b5454d0ac11.css">
+
+
+
+
+
+
+
+<link rel="shortcut icon" href="http://localhost:1313/newblog/favicon.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/newblog/apple-touch-icon.png">
+
+
+<meta name="twitter:card" content="summary" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Bypassing WAFs">
+<meta property="og:description" content="Have you ever been blocked by a webserver that you are performing pentesting on ? Check out the best techniques used Bypass WAFs and perform your Bug Hunting/ Pentesting without obstacles !" />
+<meta property="og:url" content="http://localhost:1313/newblog/posts/bypassing-wafs/" />
+<meta property="og:site_name" content="My New Hugo Site" />
+
+  <meta property="og:image" content="http://localhost:1313/newblog/og-image.png">
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+  <meta property="article:published_time" content="2023-08-05 00:15:21 &#43;0100 &#43;01" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body>
+
+
+<div class="container">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="http://localhost:1313/newblog/">
+  <div class="logo">
+    Terminal
+  </div>
+</a>
+
+    </div>
+    
+    
+  </div>
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="http://localhost:1313/newblog/posts/bypassing-wafs/">Bypassing WAFs</a>
+  </h1>
+  <div class="post-meta"><time class="post-date">2023-08-05</time></div>
+
+  
+    <span class="post-tags">
+      
+      #<a href="http://localhost:1313/newblog/tags/web-hacking/">Web Hacking</a>&nbsp;
+      
+      #<a href="http://localhost:1313/newblog/tags/api-hacking/">API Hacking</a>&nbsp;
+      
+      #<a href="http://localhost:1313/newblog/tags/bug-bounty/">Bug Bounty</a>&nbsp;
+      
+    </span>
+  
+  
+
+
+  
+
+  <div class="post-content"><div>
+        <h2 id="i---toolkits">I - Toolkits<a href="#i---toolkits" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<ul>
+<li><code>nmap</code>  http-waf-detect</li>
+<li><code>wafw00f</code></li>
+<li><code>ffuf</code></li>
+<li><code>wfuzz</code></li>
+<li><code>IP Rotate</code> Burp Extension</li>
+</ul>
+<h2 id="ii---detecting-waf">II - Detecting WAF<a href="#ii---detecting-waf" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>We get detected by :
+<em>IP address</em>, <em>origin</em> <strong>headers</strong>, <em>authorization tokens</em>, and <em>metadata</em>. Metadata is information extrapo-lated by the API defenders, such as patterns of requests, the rate of request,and the combination of the headers included in requests.</p>
+<blockquote>
+<p>Instead of the attack-first, ask-questions-later approach, I recommend you first use the API as it was intended. That way, you should have a chance to understand the app’s functionality before getting into trouble. You could, for example, review documentation or build out a collection of valid requests and then map out the API as a valid user.</p>
+</blockquote>
+<ul>
+<li>A <em>302</em> <em>response</em> that forwards you to a CDN</li>
+<li>Using <em>nmap</em></li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>nmap -p <span style="color:#ae81ff">80</span> –script http-waf-detect http://hapihacker.com
+</span></span></code></pre></div><ul>
+<li>Using <em>Wafw00f</em></li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>wafw00f <span style="color:#f92672">[</span>target<span style="color:#f92672">]</span>
+</span></span></code></pre></div><ul>
+<li>Paying attention to <em>headers</em> such as <em>X-CDN</em>,<em>CDNs</em> provide a way to reduce latency globally by caching the API pro-
+vider’s requests. ,  CDNs will often provide WAFs as a service
+<strong>X-CDN</strong>: akamai
+<strong>X-CDN</strong>: Incapsula
+<strong>X-Kong-Proxy-Latency</strong>: 123
+<strong>Server</strong>: Zenedge
+&hellip;</li>
+</ul>
+<h2 id="iii---evasing-waf">III - Evasing WAF<a href="#iii---evasing-waf" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<h3 id="1----null-bytes">1 -  Null Bytes<a href="#1----null-bytes" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<ul>
+<li>
+<p>Could terminate the API security control filters that may be in place.</p>
+</li>
+<li>
+<p>If the null byte is processed by a backend program thatvalidates user input, that validation program could be bypassed because itstops processing the input.</p>
+</li>
+</ul>
+<p>string terminators you can use</p>
+<pre tabindex="0"><code>%00
+0x00
+//
+;
+%
+!
+?
+[]
+%5B%5D
+%09
+%0a
+%0b
+%0c
+%0e
+</code></pre><p>Can be placed in <strong>different parts</strong> of the request to attempt to bypass any restrictions in place,</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>&#34;uname&#34;: &#34;<span style="color:#f92672">&lt;s</span><span style="color:#960050;background-color:#1e0010">%00cript</span><span style="color:#f92672">&gt;</span>alert(1);<span style="color:#960050;background-color:#1e0010">&lt;</span>/s%00cript&gt;&#34;
+</span></span><span style="display:flex;"><span>&#34;email&#34;: &#34;hapi@hacker.com&#34;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;--</span><span style="color:#960050;background-color:#1e0010">!</span> <span style="color:#960050;background-color:#1e0010">We</span> <span style="color:#960050;background-color:#1e0010">can</span> <span style="color:#960050;background-color:#1e0010">even</span> <span style="color:#960050;background-color:#1e0010">use</span> <span style="color:#960050;background-color:#1e0010">it</span> <span style="color:#960050;background-color:#1e0010">more</span> <span style="color:#960050;background-color:#1e0010">than</span> <span style="color:#960050;background-color:#1e0010">once</span> <span style="color:#960050;background-color:#1e0010">on</span> <span style="color:#960050;background-color:#1e0010">the</span> <span style="color:#960050;background-color:#1e0010">same</span> <span style="color:#960050;background-color:#1e0010">place</span> <span style="color:#960050;background-color:#1e0010">:</span> <span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>&#34;uname&#34;: &#34;<span style="color:#f92672">&lt;s</span><span style="color:#960050;background-color:#1e0010">%000000cript</span><span style="color:#f92672">&gt;</span>alert(1);<span style="color:#960050;background-color:#1e0010">&lt;</span>/s%000000cript&gt;&#34;
+</span></span><span style="display:flex;"><span>&#34;email&#34;: &#34;hapi@hacker.com&#34;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Wordlist</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">~/tools/SecLists</span><span style="color:#ae81ff">-2023.2</span><span style="color:#960050;background-color:#1e0010">Fuzzing/Metacharacters.fuzzdb.txt</span>
+</span></span></code></pre></div><h3 id="2---case-switching">2 - Case Switching<a href="#2---case-switching" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">&lt;sCriPt&gt;alert(&#39;supervuln&#39;)&lt;/scrIpT&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">SeLeCT</span> <span style="color:#960050;background-color:#1e0010">*</span> <span style="color:#960050;background-color:#1e0010">RoM</span> <span style="color:#960050;background-color:#1e0010">all_tables</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">sELecT</span> <span style="color:#960050;background-color:#1e0010">@@vErSion</span>
+</span></span></code></pre></div><h3 id="3----encoding">3 -  Encoding<a href="#3----encoding" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<p>When encoding, focus on the characters that may be blocked, such as
+these:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">&lt;</span> <span style="color:#960050;background-color:#1e0010">&gt;</span> <span style="color:#960050;background-color:#1e0010">(</span> <span style="color:#960050;background-color:#1e0010">)</span> [ ] { } <span style="color:#960050;background-color:#1e0010">;</span> <span style="color:#960050;background-color:#1e0010">&#39;</span> <span style="color:#960050;background-color:#1e0010">/</span> <span style="color:#960050;background-color:#1e0010">\</span> <span style="color:#960050;background-color:#1e0010">|</span>
+</span></span></code></pre></div><p>You could either encode part of a payload or encode all</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">%</span><span style="color:#ae81ff">3</span><span style="color:#960050;background-color:#1e0010">cscript%</span><span style="color:#ae81ff">3</span><span style="color:#960050;background-color:#1e0010">ealert</span> <span style="color:#960050;background-color:#1e0010">%</span><span style="color:#ae81ff">28</span><span style="color:#960050;background-color:#1e0010">%</span><span style="color:#ae81ff">27</span><span style="color:#960050;background-color:#1e0010">supervuln%</span><span style="color:#ae81ff">27</span><span style="color:#960050;background-color:#1e0010">%</span><span style="color:#ae81ff">28</span><span style="color:#960050;background-color:#1e0010">%</span><span style="color:#ae81ff">3</span><span style="color:#960050;background-color:#1e0010">c%</span><span style="color:#ae81ff">2</span><span style="color:#960050;background-color:#1e0010">fscript</span> <span style="color:#960050;background-color:#1e0010">%</span><span style="color:#ae81ff">3</span><span style="color:#960050;background-color:#1e0010">e</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">%</span><span style="color:#ae81ff">3</span><span style="color:#960050;background-color:#1e0010">c%</span><span style="color:#ae81ff">73</span><span style="color:#960050;background-color:#1e0010">%</span><span style="color:#ae81ff">63</span><span style="color:#960050;background-color:#1e0010">%</span><span style="color:#ae81ff">72</span><span style="color:#960050;background-color:#1e0010">%</span><span style="color:#ae81ff">69</span><span style="color:#960050;background-color:#1e0010">%</span><span style="color:#ae81ff">70</span><span style="color:#960050;background-color:#1e0010">%</span><span style="color:#ae81ff">74</span><span style="color:#960050;background-color:#1e0010">%</span><span style="color:#ae81ff">3</span><span style="color:#960050;background-color:#1e0010">ealert(&#39;supervuln&#39;)%</span><span style="color:#ae81ff">3</span><span style="color:#960050;background-color:#1e0010">c%</span><span style="color:#ae81ff">2</span><span style="color:#960050;background-color:#1e0010">f%</span><span style="color:#ae81ff">73</span><span style="color:#960050;background-color:#1e0010">%</span><span style="color:#ae81ff">63</span><span style="color:#960050;background-color:#1e0010">%</span><span style="color:#ae81ff">72</span><span style="color:#960050;background-color:#1e0010">%</span><span style="color:#ae81ff">69</span><span style="color:#960050;background-color:#1e0010">%</span><span style="color:#ae81ff">70</span><span style="color:#960050;background-color:#1e0010">%</span><span style="color:#ae81ff">74</span><span style="color:#960050;background-color:#1e0010">%</span><span style="color:#ae81ff">3</span><span style="color:#960050;background-color:#1e0010">e</span>
+</span></span></code></pre></div><h4 id="11---charset-encoding">1.1 - Charset Encoding<a href="#11---charset-encoding" class="hanchor" ariaLabel="Anchor">#</a> </h4>
+<p>This technique involves modifying the <code>Content-Type</code> header to use a different charset (e.g. <code>ibm500</code>). A WAF that is not configured to detect malicious payloads in different encodings may not recognize the request as malicious. The charset encoding can be done in Python</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># Charset encoding</span>
+</span></span><span style="display:flex;"><span>application<span style="color:#f92672">/</span>x<span style="color:#f92672">-</span>www<span style="color:#f92672">-</span>form<span style="color:#f92672">-</span>urlencoded;charset<span style="color:#f92672">=</span>ibm037
+</span></span><span style="display:flex;"><span>multipart<span style="color:#f92672">/</span>form<span style="color:#f92672">-</span>data; charset<span style="color:#f92672">=</span>ibm037,boundary<span style="color:#f92672">=</span>blah
+</span></span><span style="display:flex;"><span>multipart<span style="color:#f92672">/</span>form<span style="color:#f92672">-</span>data; boundary<span style="color:#f92672">=</span>blah; charset<span style="color:#f92672">=</span>ibm037
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">##Python code</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> urllib
+</span></span><span style="display:flex;"><span>s <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;payload&#39;</span>
+</span></span><span style="display:flex;"><span>print(urllib<span style="color:#f92672">.</span>parse<span style="color:#f92672">.</span>quote_plus(s<span style="color:#f92672">.</span>encode(<span style="color:#e6db74">&#34;IBM037&#34;</span>))) 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Request example</span>
+</span></span><span style="display:flex;"><span>GET <span style="color:#f92672">/</span> HTTP<span style="color:#f92672">/</span><span style="color:#ae81ff">1.1</span>
+</span></span><span style="display:flex;"><span>Host: buggy
+</span></span><span style="display:flex;"><span>Content<span style="color:#f92672">-</span>Type: application<span style="color:#f92672">/</span>x<span style="color:#f92672">-</span>www<span style="color:#f92672">-</span>form<span style="color:#f92672">-</span>urlencoded; charset<span style="color:#f92672">=</span>ibm500
+</span></span><span style="display:flex;"><span>Content<span style="color:#f92672">-</span>Length: <span style="color:#ae81ff">61</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">%</span><span style="color:#ae81ff">86</span><span style="color:#f92672">%</span><span style="color:#ae81ff">89</span><span style="color:#f92672">%</span><span style="color:#ae81ff">93</span><span style="color:#f92672">%</span><span style="color:#ae81ff">85</span><span style="color:#f92672">%</span><span style="color:#ae81ff">95</span><span style="color:#f92672">%</span><span style="color:#ae81ff">81</span><span style="color:#f92672">%</span><span style="color:#ae81ff">94</span><span style="color:#f92672">%</span><span style="color:#ae81ff">85</span><span style="color:#f92672">=</span>KKaKKa<span style="color:#f92672">%</span>C6<span style="color:#f92672">%</span>D3<span style="color:#f92672">%</span>C1<span style="color:#f92672">%</span>C7K<span style="color:#f92672">%</span>A3<span style="color:#f92672">%</span>A7<span style="color:#f92672">%</span>A3<span style="color:#f92672">&amp;</span>x<span style="color:#f92672">=</span>L<span style="color:#f92672">%</span>A7n
+</span></span></code></pre></div><h3 id="4---automation-wburp-intruder--wfuzz">4 - Automation w/<em>Burp Intruder</em> &amp; <em>Wfuzz</em><a href="#4---automation-wburp-intruder--wfuzz" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<ul>
+<li>
+<p><em>Intruder</em> -&gt; <em>Payloads</em>, <strong>Payload Processing Option</strong> allows you to add rules that Burp will apply to each payload before it is sent.</p>
+</li>
+<li>
+<p>Let&rsquo;s say we can bypass WAF by The following rule , we can apply it then start fuzzing for passwords or whatso</p>
+</li>
+<li>
+<p>Rules are applied from <strong>TOP</strong> to <strong>BOTTOM</strong> , in this example , suffix and prefix are added after encoding so they are not encoded.
+<img src="https://flowhero.github.io/assets/images/shemas/2023_08_01_004051.png" alt="image"></p>
+</li>
+<li>
+<p><code>Wfuzz</code> <a href="https://wfuzz.readthedocs.io/en/latest/user/advanced.html#iterators-combining-payloads">Usage</a></p>
+</li>
+<li>
+<p>List encoding methods:</p>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#a6e22e">wfuzz</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">e</span> <span style="color:#a6e22e">encoders</span>
+</span></span></code></pre></div><ul>
+<li>Encode payload before it&rsquo;s sent</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#a6e22e">wfuzz</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">z</span> <span style="color:#a6e22e">file</span>,<span style="color:#a6e22e">wordlist</span><span style="color:#f92672">/</span><span style="color:#a6e22e">general</span><span style="color:#f92672">/</span><span style="color:#a6e22e">common</span>.<span style="color:#a6e22e">txt</span>,<span style="color:#a6e22e">md5</span> <span style="color:#a6e22e">http</span><span style="color:#f92672">:</span><span style="color:#75715e">//testphp.vulnweb.com/FUZZ
+</span></span></span></code></pre></div><ul>
+<li>Multiple Encoders</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#a6e22e">wfuzz</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">z</span> <span style="color:#a6e22e">list</span>,<span style="color:#ae81ff">1</span><span style="color:#f92672">-</span><span style="color:#ae81ff">2</span><span style="color:#f92672">-</span><span style="color:#ae81ff">3</span>,<span style="color:#a6e22e">md5</span><span style="color:#f92672">-</span><span style="color:#a6e22e">sha1</span><span style="color:#f92672">-</span><span style="color:#a6e22e">none</span> <span style="color:#a6e22e">http</span><span style="color:#f92672">:</span><span style="color:#75715e">//webscantest.com/FUZZ
+</span></span></span></code></pre></div><h3 id="5---using-ip-address-instead-of-the-domain">5 - Using IP Address instead of the domain<a href="#5---using-ip-address-instead-of-the-domain" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<p>Sometimes there could be some some <em>Subdomains</em> and/or <em>endpoints</em> that are protected by WAF :</p>
+<p><img src="https://flowhero.github.io/assets/images/shemas/2023_08_03_110036.png" alt="image"></p>
+<p>A very common way to bypass this is by using the IP Address instead of the domain , we can get the IP by using <code>Shodan</code> extension</p>
+<p><img src="https://flowhero.github.io/assets/images/shemas/2023_08_03_110452.png" alt="image"></p>
+<p>But this IP is provided by a CDN (Cloudflare in this example), so it&rsquo;s used by more that one host. Thus, we need to test all active ports until we find which one maps to the website we are testing.</p>
+<p>Scenarios :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>curl target.com/  <span style="color:#f92672">=</span>&gt; Forbidden <span style="color:#ae81ff">403</span>
+</span></span><span style="display:flex;"><span>curl ip:port      <span style="color:#f92672">=</span>&gt; Success <span style="color:#ae81ff">200</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>curl target.com/  <span style="color:#f92672">=</span>&gt; Success <span style="color:#ae81ff">200</span>
+</span></span><span style="display:flex;"><span>curl target.com/protected/endpoint  <span style="color:#f92672">=</span>&gt; Forbidden <span style="color:#ae81ff">403</span>
+</span></span><span style="display:flex;"><span>curl ip:port/protected/endpoint  <span style="color:#f92672">=</span>&gt; Success <span style="color:#ae81ff">200</span>
+</span></span></code></pre></div><p>CDNs <strong>sometimes</strong> blocks access by IP Address to protect from this bypass technique</p>
+<p><img src="https://flowhero.github.io/assets/images/shemas/2023_08_03_111118.png" alt="image"></p>
+<h3 id="6---rate-limits-testing">6 - Rate Limits Testing<a href="#6---rate-limits-testing" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<ul>
+<li>API providers may include its rate limiting details publicly on its website or in API documentation.</li>
+<li>Check Headers</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#a6e22e">x</span><span style="color:#f92672">-</span><span style="color:#a6e22e">rate</span><span style="color:#f92672">-</span><span style="color:#a6e22e">limit</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">x</span><span style="color:#f92672">-</span><span style="color:#a6e22e">rate</span><span style="color:#f92672">-</span><span style="color:#a6e22e">limit</span><span style="color:#f92672">-</span><span style="color:#a6e22e">remaining</span><span style="color:#f92672">:</span>
+</span></span></code></pre></div><ul>
+<li>
+<p>Other APIs won&rsquo;t have an indication but once you exceed the limit you receive <code>429 Too Many Requests</code></p>
+</li>
+<li>
+<p><code>Retry-After:</code> Indicates when you can submit additional requests.</p>
+</li>
+<li>
+<p><em>How to test Rate Limiting ?</em></p>
+</li>
+<li>
+<p><input disabled="" type="checkbox"> avoid being rate limited altogether</p>
+</li>
+<li>
+<p><input disabled="" type="checkbox"> bypass the mechanism that is blocking you once you are rate limited (Blocked because of IP ? Auth Token ?)</p>
+</li>
+</ul>
+<h4 id="61---lax-rate-limits">6.1 - Lax Rate Limits<a href="#61---lax-rate-limits" class="hanchor" ariaLabel="Anchor">#</a> </h4>
+<p>Let&rsquo;s say <code>Rate limit  = 15 000 Request/min</code></p>
+<p><em>-t</em> option allows you to specify the concurrent <strong>number of connections</strong>,
+<em>-s</em> option allows you to specify a <strong>time delay</strong> between requests.</p>
+<p><img src="https://flowhero.github.io/assets/images/shemas/2023_08_01_010914.png" alt="image"></p>
+<p>This will send <code>12 000 Request/min</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>wfuzz -s 0.0005
+</span></span></code></pre></div><p>Or use Burp <em>Intruder</em>/<em>Ressource Pool</em></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="https://flowhero.github.io/assets/images/shemas/2023_08_01_011645.png" alt="image"></td>
+<td><img src="https://flowhero.github.io/assets/images/shemas/2023_08_01_011508.png" alt="image"></td>
+</tr>
+</tbody>
+</table>
+<h4 id="62---path-bypass">6.2 - Path Bypass<a href="#62---path-bypass" class="hanchor" ariaLabel="Anchor">#</a> </h4>
+<ul>
+<li>If you reach the rate limit, try <em>Null Bytes</em> , <em>Case</em> &amp;  <em>Meaningless Parameters</em> at the end , this could :
+Restart the rate limit
+Bypass Rate limiting</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#a6e22e">POST</span> <span style="color:#f92672">/</span><span style="color:#a6e22e">api</span><span style="color:#f92672">/</span><span style="color:#a6e22e">myprofile</span><span style="color:#f92672">%</span><span style="color:#ae81ff">00</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">POST</span> <span style="color:#f92672">/</span><span style="color:#a6e22e">api</span><span style="color:#f92672">/</span><span style="color:#a6e22e">myprofile</span><span style="color:#f92672">%</span><span style="color:#ae81ff">20</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">POST</span> <span style="color:#f92672">/</span><span style="color:#a6e22e">api</span><span style="color:#f92672">/</span><span style="color:#a6e22e">myProfile</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">POST</span> <span style="color:#f92672">/</span><span style="color:#a6e22e">api</span><span style="color:#f92672">/</span><span style="color:#a6e22e">MyProfile</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">POST</span> <span style="color:#f92672">/</span><span style="color:#a6e22e">api</span><span style="color:#f92672">/</span><span style="color:#a6e22e">my</span><span style="color:#f92672">-</span><span style="color:#a6e22e">profile</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">POST</span> <span style="color:#f92672">/</span><span style="color:#a6e22e">api</span><span style="color:#f92672">/</span><span style="color:#a6e22e">myprofile</span><span style="color:#f92672">?</span><span style="color:#a6e22e">test</span><span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>
+</span></span></code></pre></div><p>If meaningless Parameters are restarting rate limiting just change parameter value in every request :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#a6e22e">POST</span> <span style="color:#f92672">/</span><span style="color:#a6e22e">api</span><span style="color:#f92672">/</span><span style="color:#a6e22e">myprofile</span><span style="color:#f92672">?</span><span style="color:#a6e22e">test</span><span style="color:#f92672">=</span><span style="color:#960050;background-color:#1e0010">§</span><span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">§</span>
+</span></span></code></pre></div><p>Set the attack type to <em>pitchfork</em> and use the same value for both payload positions.
+This tactic allows you to use the smallest number of requests required to brute-force the <strong>uid</strong>.</p>
+<h4 id="63---origin-header-spoofing">6.3 - Origin Header Spoofing<a href="#63---origin-header-spoofing" class="hanchor" ariaLabel="Anchor">#</a> </h4>
+<p>Add these headers <strong>one by one</strong> (If you include all headers at once, you may
+receive a 431 Request Header Fields Too Large status code)</p>
+<pre tabindex="0"><code>X-Forwarded-For: 127.0.0.1
+X-Forwarded-Host: 127.0.0.1
+X-Host: 127.0.0.1
+X-Originating-IP: 127.0.0.1
+X-Remote-IP: 127.0.0.1
+X-Client-IP: 127.0.0.1
+X-Remote-Addr: 127.0.0.1
+</code></pre><p>Sometimes, <strong>User-Agent</strong> header will be used in combination with other headers to help identify and block an attacker.</p>
+<p>Use <code>SecLists/Fuzzing/User-Agents/UserAgents.fuzz.txt</code> to cycle trough user-agents</p>
+<pre tabindex="0"><code class="language-ad-done" data-lang="ad-done">title: Bypassed 
+You’ll know you’ve succeeded if an `x-rate-limit` header **resets** or if you’re able to make successful requests after being blocked.
+</code></pre><h4 id="64---rotating-ip-addresses-in-burp-suite">6.4 - Rotating IP Addresses in Burp Suite<a href="#64---rotating-ip-addresses-in-burp-suite" class="hanchor" ariaLabel="Anchor">#</a> </h4>
+<p>If WAF Blocks IP, Use <em>IP Rotate</em> <strong>Burp Extension</strong></p>
+<p><img src="https://flowhero.github.io/assets/images/shemas/2023_08_01_122633.png" alt="image"></p>
+<ul>
+<li>Install <em>boto3</em></li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>pip3 install boto3
+</span></span></code></pre></div><ul>
+<li>
+<p>Install <em>Jython</em> for BurpSuite</p>
+</li>
+<li>
+<p>Install <em>IP Rotate</em></p>
+</li>
+<li>
+<p><em>Add User</em> in aws -&gt; IAM
+<img src="https://flowhero.github.io/assets/images/shemas/2023_08_01_123117.png" alt="image"></p>
+</li>
+</ul>
+<p><img src="https://flowhero.github.io/assets/images/shemas/2023_08_01_123340.png" alt="image"></p>
+<p><img src="https://flowhero.github.io/assets/images/shemas/2023_08_01_123417.png" alt="image"></p>
+<p>Create User</p>
+<p><img src="https://flowhero.github.io/assets/images/shemas/2023_08_01_123526.png" alt="image"></p>
+<p>Download <em>CSV file</em> containing your user’s <strong>access key</strong> and <strong>secret access key</strong>.</p>
+<p>In Burp :</p>
+<p><img src="https://flowhero.github.io/assets/images/shemas/2023_08_01_124007.png" alt="image"></p>
+<p><em>Save Keys</em> =&gt; <em>Enable</em></p>
+<p>Now, security controls that block you based solely on your IP address
+will stand no chance.</p>
+
+      </div></div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2024 Powered by <a href="https://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/newblog/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>
