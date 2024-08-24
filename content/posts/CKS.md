@@ -1,10 +1,12 @@
 +++
-title = 'CKS'
+title = 'Certified Kubernetes Security - Chapter 1 Notes'
 date = 2024-08-23T23:17:59+01:00
 draft = false
+description = "This blog is a summary of the first chapter from CKS Exam (Certified Kubernetes Security Specialist)"
 +++
 
 
+## Table of Content
 
 - [[#Using Network Policies to Restrict Pod-to-Pod Communication|Using Network Policies to Restrict Pod-to-Pod Communication]]
 	- [[#Using Network Policies to Restrict Pod-to-Pod Communication#Attacker gain initial access to a Pod|Attacker gain initial access to a Pod]]
@@ -31,7 +33,7 @@ draft = false
 
 
 
-![[Capture d’écran 2024-08-17 192014.png]]
+![image](https://flowhero.github.io/assets/images/shemas/2024_08_17_192014.png)
 
 ## Using Network Policies to Restrict Pod-to-Pod Communication
 
@@ -48,7 +50,7 @@ Pods on a node can communicate with all other pods running on any other node of 
 
 ### Attacker gain initial access to a Pod
 
-![[Capture d’écran 2024-08-17 193605.png]]
+![image](https://flowhero.github.io/assets/images/shemas/2024_08_17_193605.png)
 
 Without defining Network Policies, Attacker can talk to all pods and cause additional damage.
 ### Denying Directional Network Traffic
@@ -120,9 +122,9 @@ kubectl apply -f ng04.yml
 
 Verify that the pods are up and running:
 
-![[Capture d’écran 2024-08-18 222913.png]]
+![image](https://flowhero.github.io/assets/images/shemas/2024_08_18_222913.png)
 
-![[Capture d’écran 2024-08-18 222953.png]]
+![image](https://flowhero.github.io/assets/images/shemas/2024_08_18_222953.png)
 
 
 The cluster have 2 pods on g04 namespace and a pod on default namespace.
@@ -230,7 +232,7 @@ To run CIS benchmark on Control Plane:
 kubectl apply -f https://raw.githubusercontent.com/aquasecurity/kube-bench/main/job-master.yaml
 ```
 
-![[Capture d’écran 2024-08-18 230627.png]]
+![image](https://flowhero.github.io/assets/images/shemas/2024_08_18_230627.png)
 
 Upon Job execution, the corresponding Pod running the verification process can be identified by its name in the default namespace. The Pod’s name starts with the prefix kube-bench, then appended with the type of the node plus a hash at the end.
 
@@ -243,7 +245,7 @@ docker ps
 ```
 ## Creating an Ingress with TLS Termination
 
-![[Capture d’écran 2024-08-18 132607.png]]
+![image](https://flowhero.github.io/assets/images/shemas/2024_08_18_132607.png)
 
 It’s important to point out that the communication typically uses unencrypted HTTP network communication as soon as it passes the Ingress.
 
@@ -252,7 +254,7 @@ Configuring the Ingress for HTTPS communication relieves you from having to deal
 
 In the context of an Ingress, a backend is the combination of Service name and port. Before creating the Ingress, we’ll take care of the Service, a Deployment, and the Pods running nginx so we can later on demonstrate the routing of HTTPS traffic to an actual application. All of those objects are supposed to exist in the namespace t75. `t75.yml` defines all of those resources as a means to quickly create the Ingress backend.
 
-![[Capture d’écran 2024-08-18 115911.png]]
+![image](https://flowhero.github.io/assets/images/shemas/2024_08_18_115911.png)
 
 
 This command runs a one-off Pod named `tmp` with the `busybox` image. It does not automatically restart if the container exits and will be deleted after the command completes. Inside this Pod, it executes `wget` to attempt a connection to the IP address `10.107.8.33` on port `80`, which is useful for testing network connectivity or checking if a web server is reachable from within the cluster.
@@ -325,7 +327,7 @@ The Ingress Controller doesn’t run automatically with a Kubernetes cluster, so
 kubectl apply -f accounting-ingress.yml
 ```
 
-![[Capture d’écran 2024-08-18 120222.png]]
+![image](https://flowhero.github.io/assets/images/shemas/2024_08_18_120222.png)
 
 or with kubectl: 
 
@@ -337,7 +339,7 @@ the port 443 is listed in the “PORT” column, indicating that TLS termination
 
 Creating an ingress object with no ingress controller in place will result in the following outpout:
 
-![[Capture d’écran 2024-08-18 123006.png]]
+![image](https://flowhero.github.io/assets/images/shemas/2024_08_18_123006.png)
 
 your ingress object will not get an ip address.
 
@@ -353,7 +355,7 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/cont
 kubectl get service ingress-nginx-controller --namespace=ingress-nginx
 ```
 
-![[Capture d’écran 2024-08-18 123146.png]]
+![image](https://flowhero.github.io/assets/images/shemas/2024_08_18_123146.png)
 
 Now your ingress object will get an ip:
 
@@ -366,7 +368,7 @@ accounting-ingress   nginx   accounting.internal.acme.com   10.102.150.36   80, 
 
 or for more details on the ingress object, use describe:
 
-![[Capture d’écran 2024-08-18 123415.png]]
+![image](https://flowhero.github.io/assets/images/shemas/2024_08_18_123415.png)
 
 
 add this line to your hosts file, for windows it's on `C:\Windows\system32\drivers\etc\hosts`: 
@@ -375,7 +377,7 @@ add this line to your hosts file, for windows it's on `C:\Windows\system32\drive
 10.102.150.36 accounting.internal.acme.com 
 ```
 
-![[Capture d’écran 2024-08-18 124233.png]]
+![image](https://flowhero.github.io/assets/images/shemas/2024_08_18_124233.png)
 
 - **Encryption Provided by TLS:** The TLS configuration in the Ingress resource only encrypts traffic from external clients to the Ingress controller.
 - **Internal Communication (Service to Pod):** Within the Kubernetes cluster, communication between services and pods remains unencrypted unless additional measures are taken.
@@ -393,17 +395,17 @@ Kubernetes clusters expose ports used to communicate with cluster components. Fo
 
 Inbound control plane node ports:
 
-![[Capture d’écran 2024-08-18 135818.png]]
+![image](https://flowhero.github.io/assets/images/shemas/2024_08_18_135818.png)
 
 Many of those ports are configurable. For example, you can modify the API server port by providing a different value with the flag --secure-port in the configuration file `/etc/kubernetes/manifests/kube-apiserver.yaml`, as documented for the cluster component. For all other cluster components, please refer to their corresponding documentation.
 
-![[Capture d’écran 2024-08-18 135919.png]]
+![image](https://flowhero.github.io/assets/images/shemas/2024_08_18_135919.png)
 
 To secure the ports used by cluster components, set up firewall rules to minimize the attack surface area. For example, you could decide not to expose the API server to anyone outside of the intranet. Clients using kubectl would only be able to run commands against the Kubernetes cluster if logged into the VPN, making the cluster less vulnerable to attacks. 
 
 Cloud provider Kubernetes clusters (e.g., on AWS, Azure, or Google Cloud) expose so-called metadata services. Metadata services are APIs that can provide sensitive data like an authentication token for consumption from VMs or Pods without any additional authorization
 
-![[Capture d’écran 2024-08-18 140112.png]]
+![image](https://flowhero.github.io/assets/images/shemas/2024_08_18_140112.png)
 
 For example, In AWS, the metadata server can be reached with the IP address 169.254.169.254.
 
@@ -411,7 +413,7 @@ This link for example is the metadata endpoint of an Ec2 Instance in aws http://
 
 This is how content would look like:
 
-![[Capture d’écran 2024-08-18 224321.png]]
+![image](https://flowhero.github.io/assets/images/shemas/2024_08_18_224321.png)
 
 The attacker would then simply create a profile file under  `~/.aws/credentials/exploited-endpoint`
 
@@ -467,7 +469,7 @@ helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dash
 kubectl get deployments,pods,services -n kubernetes-dashboard
 ```
 
-![[Capture d’écran 2024-08-18 140834.png]]
+![image](https://flowhero.github.io/assets/images/shemas/2024_08_18_140834.png)
 
 As we can see, kong-proxy type in *ClusterIP*, which means we can't access it outside the cluster, it needs to be type of *NodePort* and we need to enable http communication so that we can access it via the browser.
 
@@ -484,7 +486,7 @@ kong:
 helm upgrade kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard -f values.yaml --namespace kubernetes-dashboard  
 ```
 
-![[Capture d’écran 2024-08-18 152814.png]]
+![image](https://flowhero.github.io/assets/images/shemas/2024_08_18_152814.png)
 
 To access Dashboard run:
 
@@ -497,13 +499,13 @@ Forwarding from [::1]:8443 -> 8443
 
 Now go to `https://localhost:8443` and it will ask you to prompt the bearer token.
 
-![[Capture d’écran 2024-08-18 153040.png]]
+![image](https://flowhero.github.io/assets/images/shemas/2024_08_18_153040.png)
 
 ### Creating a User with Administration Privileges
 
 Before you can authenticate in the login screen, you need to create a ServiceAccount and ClusterRoleBinding object that grant admin permissions. Start by creating the file admin-user-serviceaccount.yaml .
 
-![[Capture d’écran 2024-08-18 144426.png]]
+![image](https://flowhero.github.io/assets/images/shemas/2024_08_18_144426.png)
 
 ```sh
 kubectl create -f admin-user-serviceaccount.yaml
@@ -516,11 +518,11 @@ You can now create the bearer token of the admin user with the following command
 kubectl create token admin-user -n kubernetes-dashboard
 ```
 
-![[Capture d’écran 2024-08-18 223627.png]]
+![image](https://flowhero.github.io/assets/images/shemas/2024_08_18_223627.png)
 
 Go to the Dashboard and feed it the token to access.
 
-![[Capture d’écran 2024-08-18 153249.png]]
+![image](https://flowhero.github.io/assets/images/shemas/2024_08_18_153249.png)
 
 ### Creating a User with Restricted Privileges
 
@@ -580,11 +582,11 @@ subjects:
 kubectl create token developer-user -n kubernetes-dashboard
 ```
 
-![[Capture d’écran 2024-08-18 223352.png]]
+![image](https://flowhero.github.io/assets/images/shemas/2024_08_18_223352.png)
 
 Developer user cannot delete a pod, let's try;
 
-![[Capture d’écran 2024-08-18 155914.png]]
+![image](https://flowhero.github.io/assets/images/shemas/2024_08_18_155914.png)
 
 An error message rendered when trying to invoke a permitted operation.
 
@@ -630,7 +632,7 @@ The previous command returned with an “OK” message. The binary file wasn’t
 
 ## Summary
 
-![[Capture d’écran 2024-08-18 130827.png]]
+![image](https://flowhero.github.io/assets/images/shemas/2024_08_18_130827.png)
 
 #### Understand the Purpose and Effects of Network Policies
 
