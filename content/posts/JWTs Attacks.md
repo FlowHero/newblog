@@ -2,7 +2,7 @@
 title = "JWTs Attacks Cheat-Sheet"
 date = 2023-08-13T11:47:29+01:00
 draft = false
-description = Explore the most common JWTs Attacks !
+description = "Explore the most common JWTs Attacks !"
 +++
 
 ## Toolkits

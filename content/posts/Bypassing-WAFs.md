@@ -1,10 +1,9 @@
----
-title: "Bypassing WAFs"
-date: 2023-08-05T00:15:21+01:00
-draft: false
-summary: Have you ever been blocked by a webserver that you are performing pentesting on ? Check out the best techniques used Bypass WAFs and perform your Bug Hunting/ Pentesting without obstacles !
-tags: ["Web Hacking","API Hacking", "Bug Bounty"]
----
++++
+title = "Bypassing WAFs"
+date = 2023-08-05T00:15:21+01:00
+draft = false
+description = "Have you ever been blocked by a webserver that you are performing pentesting on ? Check out the best techniques used Bypass WAFs and perform your Bug Hunting/ Pentesting without obstacles !"
++++
 
 ## I - Toolkits
 
